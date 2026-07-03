@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HORIZON AGENCY · BRANDING & DIRECTION ARTISTIQUE</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#060606" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #060606;
+        --ink: #f2f4f6;
+        --dim: #5e636b;
+        --line: #1a1d22;
+        --panel: #0b0c0e;
+        --vk: #7c83ff;
+        --schema: #40916c;
+      }
+      * { margin: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Space Mono", ui-monospace, Menlo, monospace;
+        letter-spacing: 0.04em;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* léger grain + vignette pour coller au rendu cinématique du site */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+        z-index: 100;
+        mix-blend-mode: multiply;
+      }
+      a { color: inherit; }
+      ::selection { background: var(--ink); color: var(--bg); }
+
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+      /* ---- HERO ---- */
+      header {
+        border-bottom: 1px solid var(--line);
+        padding: 96px 0 64px;
+        position: relative;
+        overflow: hidden;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.34em;
+        color: var(--dim);
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(2.4rem, 8vw, 5.4rem);
+        font-weight: 700;
+        line-height: 0.98;
+        margin: 18px 0 22px;
+        letter-spacing: 0.01em;
+      }
+      .lead {
+        max-width: 640px;
+        color: #cfd3d9;
+        font-size: 15px;
+      }
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: radial-gradient(circle at 80% 30%, #000 0%, transparent 60%);
+        -webkit-mask-image: radial-gradient(circle at 80% 30%, #000 0%, transparent 60%);
+        opacity: 0.5;
+      }
+
+      /* ---- SECTIONS ---- */
+      section { padding: 64px 0; border-bottom: 1px solid var(--line); }
+      .sec-tag {
+        font-size: 10px;
+        letter-spacing: 0.28em;
+        color: var(--dim);
+        text-transform: uppercase;
+        margin-bottom: 26px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .sec-tag::before {
+        content: "";
+        width: 22px;
+        height: 1px;
+        background: var(--ink);
+      }
+      h2 {
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      h3 {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      p.body { color: #cfd3d9; font-size: 14px; max-width: 680px; }
+      .muted { color: var(--dim); font-size: 13px; }
+
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 28px;
+      }
+      .cell { background: var(--panel); padding: 22px 22px 26px; }
+      .cell ul { list-style: none; margin-top: 10px; }
+      .cell li {
+        font-size: 13px;
+        color: #aeb3ba;
+        padding: 5px 0 5px 16px;
+        position: relative;
+      }
+      .cell li::before {
+        content: "·";
+        position: absolute;
+        left: 2px;
+        color: var(--ink);
+      }
+
+      /* ---- PALETTE ---- */
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .sw {
+        border: 1px solid var(--line);
+        background: var(--panel);
+      }
+      .sw__chip { height: 96px; border-bottom: 1px solid var(--line); }
+      .sw__meta { padding: 12px 14px; }
+      .sw__name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; }
+      .sw__hex { font-size: 11px; color: var(--dim); margin-top: 3px; text-transform: uppercase; }
+      .sw__use { font-size: 10px; color: var(--dim); margin-top: 8px; line-height: 1.5; }
+
+      /* ---- TYPO ---- */
+      .type-row {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 22px 24px;
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .type-spec { font-size: 10px; color: var(--dim); letter-spacing: 0.12em; }
+      .t-display { font-size: 2.4rem; font-weight: 700; }
+      .t-h { font-size: 1.25rem; font-weight: 700; }
+      .t-body { font-size: 1rem; }
+      .t-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--dim); }
+
+      /* ---- LAYERS (langage 3D) ---- */
+      .layers {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .layer {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 0;
+        overflow: hidden;
+      }
+      .layer__viz {
+        height: 130px;
+        display: grid;
+        place-items: center;
+        border-bottom: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(124, 131, 255, 0.04), transparent 70%),
+          #08090b;
+      }
+      .layer__viz svg { width: 100%; height: 100%; }
+      .layer__body { padding: 16px 18px 20px; }
+
+      /* ---- COMPONENTS ---- */
+      .demo {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 26px;
+        align-items: center;
+      }
+      .btn {
+        font-family: inherit;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink);
+        background: var(--ink);
+        color: var(--bg);
+        border: 1px solid var(--ink);
+        padding: 12px 20px;
+        cursor: pointer;
+      }
+      .btn--ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+      .pill {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        color: var(--dim);
+        border: 1px solid var(--line);
+        padding: 6px 12px;
+        text-transform: uppercase;
+      }
+      .stat { font-size: 11px; letter-spacing: 0.06em; color: var(--dim); }
+      .stat b { color: var(--ink); font-weight: 700; }
+
+      /* ---- DO / DON'T ---- */
+      .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+      .rule { border: 1px solid var(--line); background: var(--panel); padding: 20px 22px; }
+      .rule h3 { display: flex; align-items: center; gap: 8px; }
+      .rule--do h3 { color: #7fd6a3; }
+      .rule--dont h3 { color: #e2727a; }
+      .rule li { font-size: 13px; color: #aeb3ba; padding: 5px 0 5px 18px; position: relative; list-style: none; }
+      .rule--do li::before { content: "+"; position: absolute; left: 0; color: #7fd6a3; }
+      .rule--dont li::before { content: "−"; position: absolute; left: 0; color: #e2727a; }
+
+      footer { padding: 56px 0 80px; color: var(--dim); font-size: 11px; letter-spacing: 0.14em; }
+
+      @media (max-width: 640px) {
+        .rules { grid-template-columns: 1fr; }
+        section { padding: 48px 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="hero-grid"></div>
+      <div class="wrap">
+        <span class="eyebrow">Horizon Agency · Brandbook</span>
+        <h1>DATA / WIREFRAME<br />STUDY</h1>
+        <p class="lead">
+          La direction artistique du site Horizon Agency. Un objet montré comme
+          une donnée brute : points, arêtes et triangulation qui se révèlent par
+          balayage, sur fond presque noir. Précision d'ingénieur, finition de
+          belle mécanique. Cette page documente les règles pour que tout reste
+          cohérent.
+        </p>
+      </div>
+    </header>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">01 · Concept</div>
+        <h2>Montrer le travail comme de la data</h2>
+        <p class="body">
+          Le fil conducteur : tout objet (une R8, un portrait, un produit) est
+          d'abord une structure. On l'affiche en rendu « data » — nuage de
+          points, arêtes vives, maillage triangulé — révélé par un scan vertical,
+          comme un scanner 3D qui découvre la forme. C'est froid, technique et
+          précis, mais réchauffé par un léger bloom et du grain pour l'effet
+          cinématique.
+        </p>
+        <div class="cols">
+          <div class="cell">
+            <h3>Principes</h3>
+            <ul>
+              <li>Fond quasi noir, lumière qui sculpte</li>
+              <li>Monochrome : le blanc structure, la couleur est rare</li>
+              <li>Révélation par balayage, jamais d'apparition brute</li>
+              <li>La densité varie selon les zones (plein vs presque vide)</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <h3>Sensation visée</h3>
+            <ul>
+              <li>Atelier d'ingénierie, pas agence marketing</li>
+              <li>Précision et maîtrise technique</li>
+              <li>Belle mécanique : du « bien foutu »</li>
+              <li>Calme et premium, jamais clinquant</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">02 · Palette</div>
+        <h2>Monochrome + accents rares</h2>
+        <p class="body">
+          La base est neutre et froide. La couleur n'apparaît que pour signer un
+          projet (accent de marque) ou un état lumineux. On ne colorie jamais
+          l'interface « pour décorer ».
+        </p>
+        <div class="swatches">
+          <div class="sw">
+            <div class="sw__chip" style="background: #060606"></div>
+            <div class="sw__meta">
+              <div class="sw__name">BG / NOIR</div>
+              <div class="sw__hex">#060606</div>
+              <div class="sw__use">Fond global. Le vide d'où la forme émerge.</div>
+            </div>
+          </div>
+          <div class="sw">
+            <div class="sw__chip" style="background: #f2f4f6"></div>
+            <div class="sw__meta">
+              <div class="sw__name">INK / BLANC</div>
+              <div class="sw__hex">#F2F4F6</div>
+              <div class="sw__use">Texte, traits, structure. La couleur principale.</div>
+            </div>
+          </div>
+          <div class="sw">
+            <div class="sw__chip" style="background: #5e636b"></div>
+            <div class="sw__meta">
+              <div class="sw__name">DIM / GRIS</div>
+              <div class="sw__hex">#5E636B</div>
+              <div class="sw__use">Libellés secondaires, métadonnées, légendes.</div>
+            </div>
+          </div>
+          <div class="sw">
+            <div class="sw__chip" style="background: #1a1d22"></div>
+            <div class="sw__meta">
+              <div class="sw__name">LINE / TRAIT</div>
+              <div class="sw__hex">#1A1D22</div>
+              <div class="sw__use">Bordures, séparateurs, grilles.</div>
+            </div>
+          </div>
+          <div class="sw">
+            <div class="sw__chip" style="background: #7c83ff"></div>
+            <div class="sw__meta">
+              <div class="sw__name">ACCENT · VK STUDIO</div>
+              <div class="sw__hex">#7C83FF</div>
+              <div class="sw__use">Couleur de marque du projet VK Studio.</div>
+            </div>
+          </div>
+          <div class="sw">
+            <div class="sw__chip" style="background: #40916c"></div>
+            <div class="sw__meta">
+              <div class="sw__name">ACCENT · SCHEMA</div>
+              <div class="sw__hex">#40916C</div>
+              <div class="sw__use">Couleur de marque des projets Schema (BTP).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">03 · Typographie</div>
+        <h2>Space Mono, partout</h2>
+        <p class="body">
+          Une seule famille : <b>Space Mono</b>. Monospace = lecture « machine »,
+          rigueur, alignement. Les titres en 700, le corps en 400. Les libellés
+          techniques sont en MAJUSCULES avec un fort interlettrage.
+        </p>
+        <div class="type-row">
+          <span class="t-display">Aa 700</span>
+          <span class="type-spec">DISPLAY / TITRES · 700 · -0/+1% LS</span>
+        </div>
+        <div class="type-row">
+          <span class="t-h">Aa 700</span>
+          <span class="type-spec">SOUS-TITRES · 700 · +12% LS</span>
+        </div>
+        <div class="type-row">
+          <span class="t-body">Aa 400 — corps de texte courant.</span>
+          <span class="type-spec">BODY · 400 · +4% LS · interligne 1.7</span>
+        </div>
+        <div class="type-row">
+          <span class="t-label">Label technique</span>
+          <span class="type-spec">LABEL · 400 · UPPERCASE · +24% LS</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">04 · Langage visuel 3D</div>
+        <h2>Les couches de rendu</h2>
+        <p class="body">
+          Tout modèle se décompose en couches superposables. On cycle entre elles
+          ou on les mélange selon le bruit, pour des zones tantôt denses tantôt
+          presque vides — c'est ce contraste qui fait la signature.
+        </p>
+        <div class="layers">
+          <div class="layer">
+            <div class="layer__viz">
+              <svg viewBox="0 0 120 80" fill="#f2f4f6">
+                <circle cx="20" cy="20" r="1.6" /><circle cx="40" cy="14" r="1.6" />
+                <circle cx="62" cy="22" r="1.6" /><circle cx="84" cy="16" r="1.6" />
+                <circle cx="100" cy="26" r="1.6" /><circle cx="28" cy="40" r="1.6" />
+                <circle cx="52" cy="46" r="1.6" /><circle cx="74" cy="40" r="1.6" />
+                <circle cx="94" cy="50" r="1.6" /><circle cx="36" cy="62" r="1.6" />
+                <circle cx="60" cy="66" r="1.6" /><circle cx="82" cy="60" r="1.6" />
+              </svg>
+            </div>
+            <div class="layer__body">
+              <h3>Points</h3>
+              <p class="muted">Nuage échantillonné sur la surface. L'accent, jamais la masse.</p>
+            </div>
+          </div>
+          <div class="layer">
+            <div class="layer__viz">
+              <svg viewBox="0 0 120 80" stroke="#f2f4f6" stroke-width="1" fill="none">
+                <path d="M18 58 L34 22 L58 30 L72 14 L98 24 L104 56 L70 64 Z" />
+                <path d="M34 22 L58 56" opacity="0.6" />
+              </svg>
+            </div>
+            <div class="layer__body">
+              <h3>Arêtes vives</h3>
+              <p class="muted">Seulement les arêtes structurelles. Le squelette de la forme.</p>
+            </div>
+          </div>
+          <div class="layer">
+            <div class="layer__viz">
+              <svg viewBox="0 0 120 80" stroke="#f2f4f6" stroke-width="0.6" fill="none" opacity="0.85">
+                <path d="M16 60 L30 20 L48 40 L30 20 L52 18 L48 40 L52 18 L72 34 L48 40 L72 34 L70 60 L48 40 L70 60 L40 64 L48 40 M72 34 L96 26 L94 54 L70 60 L94 54 L100 60" />
+              </svg>
+            </div>
+            <div class="layer__body">
+              <h3>Triangulation</h3>
+              <p class="muted">Maillage complet, fin. Dense par endroits, vide ailleurs.</p>
+            </div>
+          </div>
+          <div class="layer">
+            <div class="layer__viz">
+              <svg viewBox="0 0 120 80" fill="none">
+                <path d="M18 58 L34 22 L58 30 L72 14 L98 24 L104 56 L70 64 Z" fill="#15171b" stroke="#f2f4f6" stroke-width="0.8" />
+                <path d="M34 22 L58 30 L52 50 Z" fill="#1e2227" />
+              </svg>
+            </div>
+            <div class="layer__body">
+              <h3>Coque + scan</h3>
+              <p class="muted">Volume sombre qui occulte le fond, révélé par une ligne lumineuse.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cols">
+          <div class="cell">
+            <h3>Post-traitement</h3>
+            <ul>
+              <li>Bloom léger : les blancs irradient, sans cramer</li>
+              <li>Grain animé fin + vignettage doux</li>
+              <li>Ligne de scan vive comme front de révélation</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <h3>Densité &amp; contraste</h3>
+            <ul>
+              <li>Le bruit module la présence : trous noirs assumés</li>
+              <li>Zones « 5k triangles » vs zones « 100 triangles »</li>
+              <li>La coque garde toujours la silhouette lisible</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">05 · Mouvement</div>
+        <h2>Tout se révèle, rien ne surgit</h2>
+        <div class="cols">
+          <div class="cell">
+            <h3>Principes d'animation</h3>
+            <ul>
+              <li>Easing doux (out-expo / out-quint), jamais linéaire</li>
+              <li>Entrées en cascade, décalées dans le temps</li>
+              <li>Auto-rotation lente, suivi souris subtil</li>
+              <li>Une animation joue une fois puis se fige</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <h3>Hero projet</h3>
+            <ul>
+              <li>Logo net + reflet métallique qui balaie sa forme</li>
+              <li>Titre en typo cinétique (lettre par lettre)</li>
+              <li>Trait lumineux qui se trace, halo de marque qui respire</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">06 · Composants UI</div>
+        <h2>Instruments de bord</h2>
+        <p class="body">
+          L'interface imite un tableau de bord technique : libellés courts en
+          majuscules, valeurs surveillées, fins traits. Discrète, elle ne vole
+          jamais la vedette à la scène.
+        </p>
+        <div class="demo">
+          <button class="btn">PRENDRE LA ROUTE</button>
+          <button class="btn btn--ghost">ME CONTACTER</button>
+          <span class="pill">NEXT.JS</span>
+          <span class="pill">FUNNEL</span>
+          <span class="stat">RENDER · <b>WIREFRAME + PARTICLES</b></span>
+          <span class="stat">FPS · <b>60</b></span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">07 · Voix &amp; ton</div>
+        <h2>Cash, direct, sans bullshit</h2>
+        <p class="body">
+          On parle comme on bosse : franc, concret, un peu argot quand ça sert.
+          Pas de jargon marketing, pas de tirets cadratins, pas de formules
+          « écrites par une IA ». Des phrases courtes, des chiffres réels.
+        </p>
+        <div class="cols">
+          <div class="cell">
+            <h3>On dit</h3>
+            <ul>
+              <li>« Tu m'amènes un problème, je te ramène la solution »</li>
+              <li>« 2,6 M€ générés pour un client »</li>
+              <li>« Du truc bien foutu »</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <h3>On évite</h3>
+            <ul>
+              <li>Le jargon corporate et les superlatifs vides</li>
+              <li>Les tirets cadratins (—) : virgule, deux-points ou ·</li>
+              <li>Les promesses floues sans preuve chiffrée</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">08 · Logo &amp; marque</div>
+        <h2>Pixel-art R8</h2>
+        <p class="body">
+          La signature visuelle est une R8 en pixel-art (favicon + préloader) :
+          un clin d'œil à la belle mécanique, rendu en pixels nets façon « donnée
+          basse résolution ». La marque s'écrit <b>HORIZON AGENCY · DEV &amp; GROWTH</b>,
+          en majuscules monospace.
+        </p>
+        <div class="demo">
+          <img src="/favicon.svg" alt="Favicon R8" width="64" height="64" style="image-rendering: pixelated; border: 1px solid var(--line); background: #000; padding: 8px" />
+          <span class="t-label">HORIZON AGENCY · DEV &amp; GROWTH</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="sec-tag">09 · Règles</div>
+        <h2>Do &amp; Don't</h2>
+        <div class="rules">
+          <div class="rule rule--do">
+            <h3>À faire</h3>
+            <ul>
+              <li>Garder le fond noir et le blanc dominant</li>
+              <li>Révéler les éléments par balayage / cascade</li>
+              <li>Réserver la couleur aux accents de marque</li>
+              <li>Espacer les libellés techniques en majuscules</li>
+              <li>Laisser respirer : du vide, du calme</li>
+            </ul>
+          </div>
+          <div class="rule rule--dont">
+            <h3>À éviter</h3>
+            <ul>
+              <li>Multiplier les couleurs ou les dégradés criards</li>
+              <li>Changer de police (Space Mono uniquement)</li>
+              <li>Apparitions brutes, animations agressives</li>
+              <li>Surcharger l'UI au point de cacher la scène</li>
+              <li>Le ton corporate et les tirets cadratins</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        HORIZON AGENCY · BRANDBOOK · DATA/WIREFRAME · horizon-agency.co
+      </div>
+    </footer>
+  </body>
+</html>

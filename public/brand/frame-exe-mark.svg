@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Film-strip notches top -->
+  <rect x="2"  y="2" width="4" height="4" fill="#2a3a2a"/>
+  <rect x="9"  y="2" width="4" height="4" fill="#2a3a2a"/>
+  <rect x="19" y="2" width="4" height="4" fill="#2a3a2a"/>
+  <rect x="26" y="2" width="4" height="4" fill="#2a3a2a"/>
+
+  <!-- Film-strip notches bottom -->
+  <rect x="2"  y="26" width="4" height="4" fill="#2a3a2a"/>
+  <rect x="9"  y="26" width="4" height="4" fill="#2a3a2a"/>
+  <rect x="19" y="26" width="4" height="4" fill="#2a3a2a"/>
+  <rect x="26" y="26" width="4" height="4" fill="#2a3a2a"/>
+
+  <!-- Pixel "F"  neon green -->
+  <rect x="6"  y="8"  width="13" height="3" fill="#00ff41"/>
+  <rect x="6"  y="8"  width="3"  height="16" fill="#00ff41"/>
+  <rect x="6"  y="15" width="9"  height="3" fill="#00ff41"/>
+
+  <!-- Cyan dot (period) -->
+  <rect x="21" y="21" width="3" height="3" fill="#00d4ff"/>
+
+  <!-- Small "E"  cyan, top right -->
+  <rect x="21" y="8"  width="4" height="2" fill="#00d4ff" opacity="0.75"/>
+  <rect x="21" y="10" width="2" height="4" fill="#00d4ff" opacity="0.75"/>
+  <rect x="21" y="14" width="4" height="2" fill="#00d4ff" opacity="0.75"/>
+</svg>

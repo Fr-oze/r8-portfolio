@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <title>HORIZON AGENCY · DEV & GROWTH</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#08090b" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Scène 3D -->
+    <div id="scene"></div>
+
+    <!-- ============ PRELOADER : R8 pixel-art + compteur ============ -->
+    <div id="preloader" class="preloader">
+      <canvas id="pixel-canvas" class="preloader__canvas"></canvas>
+      <div class="preloader__hud">
+        <span class="preloader__label">LOADING</span>
+        <span id="preloader-count" class="preloader__count">000</span>
+      </div>
+    </div>
+
+    <!-- ============ UI OVERLAY (cachée jusqu'à la fin du scan) ============ -->
+    <div id="ui" class="ui ui--hidden">
+      <!-- NAV -->
+      <nav class="ui__nav">
+        <span class="ui__brand">HORIZON AGENCY · DEV & GROWTH</span>
+        <span class="ui__links">
+          <a href="#" class="ui__link" id="nav-projects">PROJECTS</a>
+          <a href="#" class="ui__link" id="nav-about">ABOUT</a>
+          <a href="#" class="ui__link" id="nav-contact">CONTACT</a>
+        </span>
+        <span class="ui__mobile-actions">
+          <button id="about-mobile" class="ui__about-mobile">ABOUT</button>
+          <button id="contact-mobile" class="ui__about-mobile">CONTACT</button>
+        </span>
+      </nav>
+
+      <!-- Phrase signature / transition vers les projets (centrée haut) -->
+      <p class="ui__quip">
+        BON, J'AI FLEX MA CAISSE,
+        <button id="quip-projects" class="ui__quip-link">MAINTENANT MATE MES PROJETS →</button>
+      </p>
+
+      <!-- COIN BAS-GAUCHE : heure + ville -->
+      <div class="ui__corner ui__corner--bl">
+        <span id="clock" class="ui__clock">--:--:--</span>
+        <span class="ui__city">PARIS · FR</span>
+      </div>
+
+      <!-- COIN BAS-DROITE : labels techniques -->
+      <div class="ui__corner ui__corner--br">
+        <span class="ui__stat">RENDER · <b id="stat-mode">WIREFRAME + PARTICLES</b></span>
+        <span class="ui__stat">PARTICLES · <b id="stat-particles">0</b></span>
+        <span class="ui__stat">FPS · <b id="stat-fps">0</b></span>
+      </div>
+
+      <!-- COIN HAUT-GAUCHE : bouton projets + titre étude -->
+      <div class="ui__corner ui__corner--tl ui__study">
+        <button id="open-projects" class="ui__projects-btn">
+          <span class="ui__projects-dot"></span>PROJECTS
+        </button>
+        <span class="ui__dim">NO.014 / SCAN REVEAL</span>
+      </div>
+
+      <!-- Sliders discrets -->
+      <div id="controls" class="ui__controls"></div>
+
+      <!-- Bouton PRENDRE LA ROUTE (bas centre, desktop uniquement) -->
+      <button id="drive-start" class="ui__drive">
+        <span class="ui__drive-ic">▸</span> PRENDRE LA ROUTE
+      </button>
+
+      <!-- Bouton VOIR LES PROJETS (bas centre, tactile/mobile uniquement) -->
+      <button id="open-projects-cta" class="ui__drive ui__cta-projects">
+        <span class="ui__drive-ic">▦</span> VOIR LES PROJETS
+      </button>
+    </div>
+
+    <!-- ============ HUD CONDUITE ============ -->
+    <div id="drive-hud" class="drive-hud drive-hud--hidden">
+      <div class="drive-hud__panel">
+        <div class="drive-hud__row">
+          <span>MODE</span>
+          <button id="drive-auto" class="drive-hud__auto drive-hud__auto--on">● AUTOPILOT</button>
+        </div>
+        <div class="drive-hud__row"><span>SPEED</span><b><span id="drive-speed">0</span> KM/H</b></div>
+      </div>
+      <div class="drive-hud__keys">
+        <span class="drive-hud__keycap">↑</span>
+        <span class="drive-hud__keycap">↓</span>
+        <span class="drive-hud__keycap">←</span>
+        <span class="drive-hud__keycap">→</span>
+      </div>
+      <button id="drive-exit" class="drive-hud__exit">EXIT ✕</button>
+      <div class="drive-hud__radar">
+        <canvas id="drive-map" width="320" height="320"></canvas>
+        <span class="drive-hud__radar-lbl">RADAR</span>
+      </div>
+
+      <!-- Contrôles tactiles (mobile) -->
+      <div class="drive-touch drive-touch--steer">
+        <button class="drive-touch__btn" data-k="left" aria-label="Gauche">◀</button>
+        <button class="drive-touch__btn" data-k="right" aria-label="Droite">▶</button>
+      </div>
+      <div class="drive-touch drive-touch--gas">
+        <button class="drive-touch__btn" data-k="up" aria-label="Accélérer">▲</button>
+        <button class="drive-touch__btn" data-k="down" aria-label="Freiner">▼</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
