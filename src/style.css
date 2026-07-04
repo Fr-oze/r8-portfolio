@@ -37,66 +37,49 @@ body.panel-open {
   display: block;
 }
 
-/* Headline hero — gauche, superposée à la R8 (z2, sous l'UI z10) */
+/* Headline hero — haut gauche, lisible sans empiéter sur la R8 */
 .hero-headline {
   position: fixed;
   left: clamp(20px, 4vw, 56px);
-  top: 50%;
+  top: clamp(148px, 17vh, 168px);
   z-index: 2;
   pointer-events: none;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.12em;
   width: max-content;
-  max-width: min(78vw, 920px);
+  max-width: min(36vw, 420px);
   margin: 0;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.06;
   letter-spacing: -0.02em;
   text-transform: none;
-  transform: translateY(calc(-50% + 12px));
+  transform: translateY(10px);
   opacity: 0;
   transition: opacity 0.85s ease-out 0.08s, transform 0.85s ease-out 0.08s;
-  /* Le texte s'estompe vers le centre où passe la R8 */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    #000 0%,
-    #000 48%,
-    rgba(0, 0, 0, 0.55) 68%,
-    rgba(0, 0, 0, 0.15) 82%,
-    transparent 94%
-  );
-  mask-image: linear-gradient(
-    to right,
-    #000 0%,
-    #000 48%,
-    rgba(0, 0, 0, 0.55) 68%,
-    rgba(0, 0, 0, 0.15) 82%,
-    transparent 94%
-  );
 }
 body.ui-ready .hero-headline {
   opacity: 1;
-  transform: translateY(-50%);
+  transform: translateY(0);
 }
 .hero-headline__line {
   display: block;
   white-space: nowrap;
-  font-size: clamp(2.1rem, 5.2vw, 4.5rem);
+  font-size: clamp(1.35rem, 2.6vw, 2.5rem);
   color: var(--ink);
   text-shadow:
-    0 0 40px rgba(242, 244, 246, 0.12),
-    0 2px 24px rgba(0, 0, 0, 0.75);
+    0 0 32px rgba(242, 244, 246, 0.1),
+    0 2px 18px rgba(0, 0, 0, 0.8);
 }
 .hero-headline__line--overlap {
-  padding-left: clamp(32px, 7vw, 112px);
-  color: rgba(242, 244, 246, 0.78);
+  padding-left: clamp(10px, 1.8vw, 28px);
+  color: rgba(242, 244, 246, 0.82);
   font-weight: 400;
 }
 body.driving .hero-headline,
 body.past-hero .hero-headline {
   opacity: 0;
-  transform: translateY(calc(-50% - 10px));
+  transform: translateY(-8px);
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
@@ -1430,7 +1413,7 @@ body.touch .drive-hud__keys {
     line-height: 1.5;
   }
 
-  /* Headline hero : plus compacte, sous la nav */
+  /* Headline hero : compacte, haut gauche */
   .hero-headline {
     left: 16px;
     top: auto;
@@ -1438,30 +1421,16 @@ body.touch .drive-hud__keys {
     width: max-content;
     max-width: calc(100vw - 32px);
     transform: translateY(8px);
-    -webkit-mask-image: linear-gradient(
-      to right,
-      #000 0%,
-      #000 62%,
-      rgba(0, 0, 0, 0.35) 85%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      #000 0%,
-      #000 62%,
-      rgba(0, 0, 0, 0.35) 85%,
-      transparent 100%
-    );
   }
   body.ui-ready .hero-headline {
     transform: translateY(0);
   }
   .hero-headline__line {
     white-space: nowrap;
-    font-size: clamp(1.25rem, 6.8vw, 2rem);
+    font-size: clamp(1.15rem, 5.8vw, 1.65rem);
   }
   .hero-headline__line--overlap {
-    padding-left: 22px;
+    padding-left: 8px;
   }
 
   /* --- Déclutter : on retire sliders, bouton projets redondant et stats --- */
