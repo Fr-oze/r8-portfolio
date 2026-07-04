@@ -26,11 +26,13 @@
       </div>
     </div>
 
-    <!-- Tagline hero : sous la nav, devant la scène 3D (effet profondeur) -->
-    <p class="hero-tagline" aria-hidden="true">
-      <span class="hero-tagline__line">Des outils internes</span>
-      <span class="hero-tagline__line">et des SaaS qui claquent</span>
-    </p>
+    <!-- Headline hero : gauche, superposée à la R8 -->
+    <h1 class="hero-headline">
+      <span class="hero-headline__line">Des outils</span>
+      <span class="hero-headline__line hero-headline__line--overlap">internes</span>
+      <span class="hero-headline__line hero-headline__line--soft">et des SaaS</span>
+      <span class="hero-headline__line hero-headline__line--soft hero-headline__line--overlap">qui claquent</span>
+    </h1>
 
     <!-- ============ UI OVERLAY (cachée jusqu'à la fin du scan) ============ -->
     <div id="ui" class="ui ui--hidden">
@@ -162,7 +164,7 @@
           <article class="project-card" data-project="schema-chantierpilot">
             <span class="project-card__no">NO.004</span>
             <h3 class="project-card__name">SCHEMA</h3>
-            <p class="project-card__desc">Exploration produit : SaaS de gestion pour le BTP.</p>
+            <p class="project-card__desc">Exploration produit, SaaS de gestion pour le BTP.</p>
             <div class="project-card__shot">
               <img src="/projects/schema/chantierpilot_chantiers.png" alt="" loading="lazy" />
             </div>
@@ -178,46 +180,70 @@
         </header>
         <ol class="process-timeline">
           <li class="process-step">
-            <span class="process-step__no">01</span>
-            <div class="process-step__body">
-              <h3 class="process-step__title">Premier RDV · Audit</h3>
-              <p>On creuse le problème, on regarde si un outil interne ou un SaaS a du sens. Pas de bullshit : si c'est pas cohérent, je te le dis.</p>
+            <div class="process-step__marker">
+              <span class="process-step__dot" aria-hidden="true"></span>
+              <span class="process-step__no">01</span>
             </div>
+            <article class="process-step__card">
+              <span class="process-step__phase">AUDIT</span>
+              <h3 class="process-step__title">Premier RDV</h3>
+              <p>On creuse le problème, on regarde si un outil interne ou un SaaS a du sens. Pas de bullshit, si c'est pas cohérent je te le dis.</p>
+            </article>
           </li>
           <li class="process-step">
-            <span class="process-step__no">02</span>
-            <div class="process-step__body">
+            <div class="process-step__marker">
+              <span class="process-step__dot" aria-hidden="true"></span>
+              <span class="process-step__no">02</span>
+            </div>
+            <article class="process-step__card">
+              <span class="process-step__phase">SCOPE</span>
               <h3 class="process-step__title">Cahier des charges</h3>
               <p>On formalise le scope, les priorités, les contraintes. Tu sais exactement ce qu'on construit avant qu'une ligne de code parte.</p>
-            </div>
+            </article>
           </li>
           <li class="process-step">
-            <span class="process-step__no">03</span>
-            <div class="process-step__body">
-              <h3 class="process-step__title">Second RDV · Validation</h3>
-              <p>On valide le plan ensemble. Questions, ajustements, go/no-go avant de lancer le build.</p>
+            <div class="process-step__marker">
+              <span class="process-step__dot" aria-hidden="true"></span>
+              <span class="process-step__no">03</span>
             </div>
+            <article class="process-step__card">
+              <span class="process-step__phase">VALIDATION</span>
+              <h3 class="process-step__title">Second RDV</h3>
+              <p>On valide le plan ensemble. Questions, ajustements, go no go avant de lancer le build.</p>
+            </article>
           </li>
           <li class="process-step">
-            <span class="process-step__no">04</span>
-            <div class="process-step__body">
+            <div class="process-step__marker">
+              <span class="process-step__dot" aria-hidden="true"></span>
+              <span class="process-step__no">04</span>
+            </div>
+            <article class="process-step__card">
+              <span class="process-step__phase">BUILD</span>
               <h3 class="process-step__title">Mise en place</h3>
               <p>Je construis, tu vois avancer. Un seul interlocuteur, du concept au déploiement.</p>
-            </div>
+            </article>
           </li>
           <li class="process-step">
-            <span class="process-step__no">05</span>
-            <div class="process-step__body">
-              <h3 class="process-step__title">Troisième RDV · Présentation</h3>
+            <div class="process-step__marker">
+              <span class="process-step__dot" aria-hidden="true"></span>
+              <span class="process-step__no">05</span>
+            </div>
+            <article class="process-step__card">
+              <span class="process-step__phase">LIVRAISON</span>
+              <h3 class="process-step__title">Troisième RDV</h3>
               <p>Je te présente l'outil fini, on passe en revue le fonctionnement et les points d'attention.</p>
-            </div>
+            </article>
           </li>
           <li class="process-step">
-            <span class="process-step__no">06</span>
-            <div class="process-step__body">
-              <h3 class="process-step__title">1 mois de test · Retours · Maintenance</h3>
-              <p>Tu utilises en conditions réelles, tu remontes ce qui coince, j'itère. Ensuite on bascule en maintenance si besoin.</p>
+            <div class="process-step__marker">
+              <span class="process-step__dot" aria-hidden="true"></span>
+              <span class="process-step__no">06</span>
             </div>
+            <article class="process-step__card">
+              <span class="process-step__phase">RUN</span>
+              <h3 class="process-step__title">Test, retours, maintenance</h3>
+              <p>Un mois en conditions réelles, tu remontes ce qui coince, j'itère. Ensuite on bascule en maintenance si besoin.</p>
+            </article>
           </li>
         </ol>
       </section>
@@ -228,7 +254,7 @@
         </header>
         <p class="scroll-manifeste">
           Creative developer. Je construis des outils métier et des SaaS avec une exigence visuelle
-          que la plupart des devs ne portent pas — parce qu'un logiciel utile mérite aussi d'être
+          que la plupart des devs ne portent pas, parce qu'un logiciel utile mérite aussi d'être
           bien foutu.
         </p>
       </section>
