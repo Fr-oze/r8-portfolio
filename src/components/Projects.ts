@@ -134,7 +134,7 @@ export class Projects {
       ${
         p.url
           ? `<a class="pj-visit" href="https://${p.url}" target="_blank" rel="noreferrer">
-               VOIR LE PROJET EN LIGNE · ${p.url} ↗
+               VOIR LE SITE / ${p.url} ↗
              </a>`
           : ""
       }

@@ -20,7 +20,7 @@ export interface Project {
   brand: { logo: string; accent: string };
   text: string;
   tags: string[];
-  url: string;
+  url: string | null;
   image: string | null;
   detail: ProjectDetail;
 }
@@ -72,7 +72,7 @@ export const PROJECTS: Project[] = [
     brand: { logo: "/brand/vkstudio-white.png", accent: "#7c83ff" },
     text: "Une galaxie de planètes à explorer, des niveaux à débloquer, de la progression gamifiée. Plus les outils pour passer pro : CRM élève et portfolio public.",
     tags: ["3D", "GAMIFICATION", "LMS"],
-    url: "intra.vkstudio.fr",
+    url: null,
     image: "/projects/vkstudio/polaris-galaxy.png",
     detail: {
       role: "PRODUIT · PLATEFORME DE DELIVERY ÉLÈVE",
@@ -106,7 +106,7 @@ export const PROJECTS: Project[] = [
     brand: { logo: "/brand/vkstudio-white.png", accent: "#7c83ff" },
     text: "Un dashboard maison pour voir ce qui convertit vraiment : quelle technique, quelle vidéo, quel canal ramènent le plus de ventes. On pilote la pub avec des chiffres.",
     tags: ["CAPI", "GA4", "ANALYTICS"],
-    url: "vkstudio.fr",
+    url: null,
     image: "/projects/vkstudio/tracking.png",
     detail: {
       role: "DATA · PILOTAGE DE LA CROISSANCE",
@@ -134,7 +134,7 @@ export const PROJECTS: Project[] = [
     brand: { logo: "/brand/schema-mark.svg", accent: "#40916C" },
     text: "Le logiciel de gestion de chantiers pour les PME du bâtiment. Le patron voit tous ses chantiers, son planning et ses marges au même endroit, en temps réel.",
     tags: ["BTP", "GESTION", "PLANNING"],
-    url: "schema.build",
+    url: null,
     image: "/projects/schema/chantierpilot_chantiers.png",
     detail: {
       role: "CONÇU ET DÉVELOPPÉ PAR HORIZON",
@@ -164,7 +164,7 @@ export const PROJECTS: Project[] = [
     brand: { logo: "/brand/schema-mark.svg", accent: "#40916C" },
     text: "La pointeuse mobile géolocalisée pour les équipes de chantier. Les heures remontent directement côté patron, prêtes pour la paie, sans ressaisie.",
     tags: ["BTP", "POINTEUSE", "PAIE"],
-    url: "schema.build",
+    url: null,
     image: "/projects/schema/toituresmartin_pointage.png",
     detail: {
       role: "CONÇU ET DÉVELOPPÉ PAR HORIZON",
@@ -194,7 +194,7 @@ export const PROJECTS: Project[] = [
     brand: { logo: "/brand/frame-exe-mark.svg", accent: "#00ff41" },
     text: "L'outil de prod sur mesure d'une boîte de production YouTube. La pipeline qui dit où en est chaque vidéo, plus un éditeur de scripts guidé et des schémas de trame.",
     tags: ["YOUTUBE", "PRODUCTION", "PIPELINE", "SCRIPT"],
-    url: "",
+    url: null,
     image: "/projects/frame-exe/dashboard.png",
     detail: {
       role: "CONÇU ET DÉVELOPPÉ PAR HORIZON",
@@ -227,7 +227,7 @@ export const PROJECTS: Project[] = [
     brand: { logo: "/brand/pulseod-mark.svg", accent: "#2563eb" },
     text: "Le poste de pilotage des équipes commerciales. Chaque closer remplit son rapport de fin de journée en deux minutes, le manager voit la perf en temps réel, et une IA transforme les commentaires en actions.",
     tags: ["SALES", "REPORTING", "IA", "DASHBOARD"],
-    url: "",
+    url: null,
     image: "/projects/pulseod/dashboard.png",
     detail: {
       role: "CONÇU ET DÉVELOPPÉ PAR HORIZON",
