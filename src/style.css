@@ -65,7 +65,7 @@ body.ui-ready .hero-headline {
 .hero-headline__line {
   display: block;
   white-space: nowrap;
-  font-size: clamp(1.35rem, 2.6vw, 2.5rem);
+  font-size: clamp(1.5rem, 2.9vw, 2.75rem);
   color: var(--ink);
   text-shadow:
     0 0 32px rgba(242, 244, 246, 0.1),
@@ -1427,7 +1427,7 @@ body.touch .drive-hud__keys {
   }
   .hero-headline__line {
     white-space: nowrap;
-    font-size: clamp(1.15rem, 5.8vw, 1.65rem);
+    font-size: clamp(1.25rem, 6.2vw, 1.8rem);
   }
   .hero-headline__line--overlap {
     padding-left: 8px;
