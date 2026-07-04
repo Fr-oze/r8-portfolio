@@ -47,10 +47,11 @@ body.panel-open {
   display: flex;
   flex-direction: column;
   gap: 0;
-  width: min(62vw, 720px);
+  width: max-content;
+  max-width: min(78vw, 920px);
   margin: 0;
   font-weight: 700;
-  line-height: 0.92;
+  line-height: 1;
   letter-spacing: -0.02em;
   text-transform: none;
   transform: translateY(calc(-50% + 12px));
@@ -80,7 +81,8 @@ body.ui-ready .hero-headline {
 }
 .hero-headline__line {
   display: block;
-  font-size: clamp(2.1rem, 6.2vw, 5rem);
+  white-space: nowrap;
+  font-size: clamp(2.1rem, 5.2vw, 4.5rem);
   color: var(--ink);
   text-shadow:
     0 0 40px rgba(242, 244, 246, 0.12),
@@ -1433,7 +1435,8 @@ body.touch .drive-hud__keys {
     left: 16px;
     top: auto;
     bottom: calc(108px + env(safe-area-inset-bottom, 0px));
-    width: calc(100% - 32px);
+    width: max-content;
+    max-width: calc(100vw - 32px);
     transform: translateY(8px);
     -webkit-mask-image: linear-gradient(
       to right,
@@ -1454,7 +1457,8 @@ body.touch .drive-hud__keys {
     transform: translateY(0);
   }
   .hero-headline__line {
-    font-size: clamp(1.75rem, 9.5vw, 2.5rem);
+    white-space: nowrap;
+    font-size: clamp(1.25rem, 6.8vw, 2rem);
   }
   .hero-headline__line--overlap {
     padding-left: 22px;
