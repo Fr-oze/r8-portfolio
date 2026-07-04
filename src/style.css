@@ -20,6 +20,13 @@ body {
   font-family: "Space Mono", ui-monospace, Menlo, monospace;
   letter-spacing: 0.04em;
 }
+body.panel-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+}
 
 #scene {
   position: fixed;
@@ -73,26 +80,16 @@ body.ui-ready .hero-headline {
 }
 .hero-headline__line {
   display: block;
-  font-size: clamp(2rem, 5.8vw, 4.75rem);
+  font-size: clamp(2.1rem, 6.2vw, 5rem);
   color: var(--ink);
   text-shadow:
     0 0 40px rgba(242, 244, 246, 0.12),
     0 2px 24px rgba(0, 0, 0, 0.75);
 }
-.hero-headline__line--soft {
-  font-weight: 400;
-  font-size: clamp(1.55rem, 4.6vw, 3.75rem);
-  color: rgba(242, 244, 246, 0.72);
-  letter-spacing: -0.01em;
-}
-/* Lignes qui avancent vers la R8 = effet de profondeur */
 .hero-headline__line--overlap {
-  padding-left: clamp(28px, 6vw, 88px);
-  opacity: 0.88;
-}
-.hero-headline__line--soft.hero-headline__line--overlap {
-  padding-left: clamp(56px, 11vw, 160px);
-  opacity: 0.62;
+  padding-left: clamp(32px, 7vw, 112px);
+  color: rgba(242, 244, 246, 0.78);
+  font-weight: 400;
 }
 body.driving .hero-headline,
 body.past-hero .hero-headline {
@@ -426,6 +423,9 @@ body.driving .ui__quip {
   background: #060606;
   display: flex;
   flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -474,7 +474,9 @@ body.driving .ui__quip {
 }
 .projects__scroll {
   flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   position: relative;
   z-index: 2;
@@ -870,7 +872,9 @@ body.touch .drive-hud__keys {
 .projects__detail {
   position: absolute;
   inset: 70px 0 0 0; /* sous le head */
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   padding: 0 0 80px;
   opacity: 0;
@@ -1450,16 +1454,10 @@ body.touch .drive-hud__keys {
     transform: translateY(0);
   }
   .hero-headline__line {
-    font-size: clamp(1.65rem, 9vw, 2.35rem);
-  }
-  .hero-headline__line--soft {
-    font-size: clamp(1.35rem, 7.5vw, 1.9rem);
+    font-size: clamp(1.75rem, 9.5vw, 2.5rem);
   }
   .hero-headline__line--overlap {
-    padding-left: 18px;
-  }
-  .hero-headline__line--soft.hero-headline__line--overlap {
-    padding-left: 36px;
+    padding-left: 22px;
   }
 
   /* --- Déclutter : on retire sliders, bouton projets redondant et stats --- */
@@ -1547,6 +1545,9 @@ body.touch .drive-hud__keys {
   background: #060606;
   display: flex;
   flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -1595,7 +1596,9 @@ body.touch .drive-hud__keys {
 }
 .about__body {
   flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
@@ -1830,6 +1833,9 @@ body.touch .drive-hud__keys {
   background: #060606;
   display: flex;
   flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -1880,11 +1886,13 @@ body.touch .drive-hud__keys {
 }
 .contact__body {
   flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 48px;
 }

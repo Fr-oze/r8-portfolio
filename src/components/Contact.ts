@@ -1,8 +1,7 @@
 // =====================================================================
-// CONTACT — panneau plein écran (DA wireframe) : "canal de transmission".
-// Deux canaux cliquables (email / téléphone) + meta de disponibilité.
-// Même langage visuel que About / Projects (mono, lignes, scan).
+// CONTACT — panneau plein écran : email et WhatsApp.
 // =====================================================================
+import { lockPageScroll, unlockPageScroll, bindPanelWheel } from "../core/scrollLock";
 const EMAIL = "oze.fr.contact@gmail.com";
 const PHONE_DISPLAY = "+33 6 74 24 74 94";
 // Le canal "téléphone" ouvre WhatsApp (wa.me attend le numéro sans + ni espaces).
@@ -22,7 +21,7 @@ export class Contact {
     el.className = "contact";
     el.innerHTML = `
       <div class="contact__head">
-        <span class="contact__title">CONTACT · ON SE PARLE</span>
+        <span class="contact__title">CONTACT</span>
         <button class="contact__close" aria-label="close">CLOSE ✕</button>
       </div>
 
@@ -31,10 +30,10 @@ export class Contact {
 
         <div class="contact__inner">
           <div class="contact__intro">
-            <span class="contact__tag">// CANAL DE TRANSMISSION OUVERT</span>
-            <h2 class="contact__lead">Un projet, une idée,<br /><span>un « c'est impossible »</span> à régler&nbsp;?</h2>
+            <span class="contact__tag">DISPONIBLE</span>
+            <h2 class="contact__lead">Un projet à lancer,<br /><span>ou un problème à régler</span>&nbsp;?</h2>
             <p class="contact__sub">
-              Tu m'écris, je réponds vite. Pas de formulaire à rallonge, pas de standard&nbsp;: tu parles direct à celui qui code.
+              Écris moi, je réponds vite. Pas de formulaire interminable, tu parles direct à celui qui code.
             </p>
           </div>
 
@@ -66,7 +65,7 @@ export class Contact {
             </div>
             <div class="contact__cell">
               <span class="contact__k">BASE</span>
-              <span class="contact__v">ANDORRE · 🇦🇩</span>
+              <span class="contact__v">ANDORRE AD</span>
             </div>
             <div class="contact__cell">
               <span class="contact__k">RÉPONSE</span>
@@ -79,15 +78,19 @@ export class Contact {
     this.el = el;
 
     el.querySelector(".contact__close")!.addEventListener("click", () => this.hide());
+
+    bindPanelWheel(el, () => el.querySelector(".contact__body"));
   }
 
   show() {
     this.open = true;
+    lockPageScroll();
     this.el.classList.add("contact--open");
   }
 
   hide() {
     this.open = false;
+    unlockPageScroll();
     this.el.classList.remove("contact--open");
   }
 

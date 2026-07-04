@@ -1,4 +1,5 @@
 import { PROJECTS, type Project } from "../data/projects";
+import { lockPageScroll, unlockPageScroll, bindPanelWheel } from "../core/scrollLock";
 // =====================================================================
 // PROJECTS — panneau plein écran (DA wireframe)
 //  · vue LISTE en scroll infini (liste rendue 3× → boucle sans couture)
@@ -35,7 +36,7 @@ export class Projects {
         <span class="pj-row__idx">${idx}</span>
         <div class="pj-row__media">${media}</div>
         <div class="pj-row__body">
-          <span class="pj-row__kind">${p.kind} · ${p.year}</span>
+          <span class="pj-row__kind">${p.kind} / ${p.year}</span>
           <span class="pj-row__name">${p.name}</span>
           <span class="pj-row__text">${p.text}</span>
           <span class="pj-row__tags">${p.tags.map((t) => `<i>${t}</i>`).join("")}</span>
@@ -177,7 +178,7 @@ export class Projects {
     el.className = "projects";
     el.innerHTML = `
       <div class="projects__head">
-        <span class="projects__title">PROJECTS · INDEX</span>
+        <span class="projects__title">PROJECTS</span>
         <button class="projects__close" aria-label="close">CLOSE ✕</button>
       </div>
       <div class="projects__scroll">
@@ -206,6 +207,10 @@ export class Projects {
     this.inner.innerHTML = once + once + once;
 
     el.querySelector(".projects__close")!.addEventListener("click", () => this.hide());
+
+    bindPanelWheel(el, () =>
+      this.el.classList.contains("projects--detail") ? this.detail : this.scroll
+    );
 
     // Clic sur une ligne → vue détail.
     this.inner.addEventListener("click", (e) => {
@@ -328,6 +333,7 @@ export class Projects {
 
   show() {
     this.open = true;
+    lockPageScroll();
     this.showList();
     this.el.classList.add("projects--open");
     requestAnimationFrame(() => {
@@ -337,6 +343,7 @@ export class Projects {
 
   hide() {
     this.open = false;
+    unlockPageScroll();
     this._cancelAutoNext();
     this.closeLightbox();
     this.showList();

@@ -1,3 +1,4 @@
+import { lockPageScroll, unlockPageScroll, bindPanelWheel } from "../core/scrollLock";
 import { PortraitScene } from "./PortraitScene";
 
 // =====================================================================
@@ -24,7 +25,7 @@ export class About {
     el.className = "about";
     el.innerHTML = `
       <div class="about__head">
-        <span class="about__title">ABOUT · L'HUMAIN DERRIÈRE</span>
+        <span class="about__title">ABOUT</span>
         <button class="about__close" aria-label="close">CLOSE ✕</button>
       </div>
 
@@ -36,33 +37,33 @@ export class About {
             <span class="about__loader-txt">CHARGEMENT DU MODÈLE 3D…</span>
           </div>
           <figcaption class="about__cap">
-            <span>SUBJECT · MAXIMILLIEN</span>
-            <span>RENDER · POINTS / EDGES / MESH</span>
+            <span>SUBJECT / MAXIMILLIEN</span>
+            <span>RENDER / POINTS EDGES MESH</span>
           </figcaption>
         </figure>
 
         <div class="about__text">
-          <span class="about__kind">SOLO FOUNDER · DEV &amp; GROWTH</span>
+          <span class="about__kind">GROWTH DEVELOPER</span>
           <h2 class="about__name">MAXIMILLIEN</h2>
           <p class="about__lead">
-            Mon taf, c'est de trouver la solution. Tu m'amènes un problème, je te ramène le logiciel qui le règle. Le « c'est pas possible », j'y crois pas : y a toujours un moyen, et c'est mon métier de le trouver.
+            Tu m'amènes un problème, je te ramène le logiciel qui le règle. J'aime les dossiers compliqués, ceux où il faut creuser avant de coder.
           </p>
 
           <div class="about__cols">
             <div class="about__col">
               <span class="about__h">CE QUE J'AMÈNE</span>
               <ul>
-                <li>2,6 M€ générés pour une boîte, en lui construisant ses outils et ses tunnels</li>
-                <li>Partenaire de croissance : je joue le résultat avec toi, pas juste la livraison</li>
-                <li>Je m'adapte à toutes les demandes, c'est ton problème qui décide de la solution</li>
+                <li>2,6 M€ générés pour une boîte en construisant ses outils et ses tunnels</li>
+                <li>Partenaire de croissance, je joue le résultat avec toi pas juste la livraison</li>
+                <li>Je m'adapte à ta situation, c'est ton problème qui décide de la solution</li>
               </ul>
             </div>
             <div class="about__col">
               <span class="about__h">COMMENT</span>
               <ul>
-                <li>Le « c'est impossible », ça me fait sourire. On trouve toujours un moyen.</li>
-                <li>Un seul interlocuteur, de l'idée à la prod : tu parles direct à celui qui code</li>
-                <li>Je livre vite, je corrige en direct, j'attends pas le comité</li>
+                <li>On trouve toujours un moyen, même quand ça paraît bloqué au départ</li>
+                <li>Un seul interlocuteur, de l'idée à la prod, tu parles à celui qui code</li>
+                <li>Je livre vite, je corrige en direct, sans attendre le comité</li>
               </ul>
             </div>
           </div>
@@ -74,7 +75,7 @@ export class About {
           </div>
 
           <p class="about__quip">
-            Si une caisse tourne ici plutôt qu'un logo, c'est pas un hasard. Une belle mécanique ou un logiciel qui tourne carré, c'est le même kiff : du truc bien foutu.
+            Si une caisse tourne ici plutôt qu'un logo, ce n'est pas un hasard. Une belle mécanique ou un logiciel qui tourne carré, c'est le même kiff.
           </p>
 
           <div class="about__cta">
@@ -90,6 +91,8 @@ export class About {
     this.loader = el.querySelector("[data-loader]");
 
     el.querySelector(".about__close")!.addEventListener("click", () => this.hide());
+
+    bindPanelWheel(el, () => el.querySelector(".about__body"));
 
     // parallaxe : le portrait suit légèrement le curseur.
     this.canvas.addEventListener("pointermove", (e) => {
@@ -113,6 +116,7 @@ export class About {
 
   show() {
     this.open = true;
+    lockPageScroll();
     this.el.classList.add("about--open");
     this._ensurePortrait();
     // attendre le layout (canvas a sa taille) avant de dimensionner + lancer.
@@ -142,6 +146,7 @@ export class About {
 
   hide() {
     this.open = false;
+    unlockPageScroll();
     this.el.classList.remove("about--open");
     // on coupe la boucle pour ne pas consommer le GPU en arrière-plan.
     this.portrait?.stop();
