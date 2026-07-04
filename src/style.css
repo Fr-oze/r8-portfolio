@@ -30,6 +30,67 @@ body {
   display: block;
 }
 
+/* Tagline hero — entre la scène 3D (z0) et l'UI (z10), sans pointer-events */
+.hero-tagline {
+  position: fixed;
+  top: 86px;
+  right: 36px;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: min(320px, 38vw);
+  text-align: right;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.75s ease-out 0.12s, transform 0.75s ease-out 0.12s;
+  /* Fade côté gauche : le texte semble passer derrière la R8 sans toucher au 3D */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 22%,
+    rgba(0, 0, 0, 0.85) 48%,
+    #000 72%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 22%,
+    rgba(0, 0, 0, 0.85) 48%,
+    #000 72%
+  );
+}
+body.ui-ready .hero-tagline {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-tagline__line {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  line-height: 1.45;
+  color: rgba(242, 244, 246, 0.82);
+  text-shadow:
+    0 0 24px rgba(242, 244, 246, 0.18),
+    0 0 1px rgba(0, 0, 0, 1),
+    0 2px 14px rgba(0, 0, 0, 0.9);
+}
+/* Ligne du dessous légèrement plus en retrait = effet profondeur */
+.hero-tagline__line:last-child {
+  color: rgba(242, 244, 246, 0.58);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.13em;
+}
+body.driving .hero-tagline,
+body.past-hero .hero-tagline {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
 /* ============ PRELOADER ============ */
 .preloader {
   position: fixed;
@@ -1353,6 +1414,11 @@ body.touch .drive-hud__keys {
     line-height: 1.5;
   }
 
+  /* Tagline hero : masquée sur mobile (conflit nav / quip / CTA) */
+  .hero-tagline {
+    display: none;
+  }
+
   /* --- Déclutter : on retire sliders, bouton projets redondant et stats --- */
   .ui__controls {
     display: none;
@@ -1996,6 +2062,7 @@ body.touch .drive-hud__keys {
 }
 
 /* Masque l'UI hero (pas la nav) une fois qu'on a scrollé */
+body.past-hero .hero-tagline,
 body.past-hero .ui__corner,
 body.past-hero .ui__quip,
 body.past-hero .ui__controls,
@@ -2144,6 +2211,52 @@ body.past-hero .ui__cta-projects {
   padding-bottom: 56px;
   border-top: 1px solid var(--line);
 }
+
+/* --- PROCESS / TIMELINE --- */
+.scroll-section--process {
+  border-top: 1px solid var(--line);
+}
+.process-timeline {
+  list-style: none;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--line);
+}
+.process-step {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 20px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+.process-step:last-child {
+  border-bottom: none;
+}
+.process-step__no {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+  padding-top: 2px;
+}
+.process-step__title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.process-step__body p {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #aeb3ba;
+}
+
 .scroll-manifeste {
   max-width: 640px;
   margin: 0 auto;
@@ -2224,5 +2337,13 @@ body.past-hero .ui__cta-projects {
   }
   .scroll-contact__title {
     font-size: 18px;
+  }
+  .process-step {
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    padding: 18px 16px;
+  }
+  .process-step__title {
+    font-size: 12px;
   }
 }

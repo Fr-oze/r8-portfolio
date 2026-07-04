@@ -29,6 +29,7 @@ export class UI {
   reveal() {
     this.el.classList.remove("ui--hidden");
     this.el.classList.add("ui--reveal");
+    document.body.classList.add("ui-ready");
     this.startClock();
   }
 
