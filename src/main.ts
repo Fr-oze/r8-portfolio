@@ -69,6 +69,43 @@ const navLink = (id: string, fn: () => void) =>
 navLink("nav-projects", () => projects.show());
 navLink("nav-about", () => about.show());
 navLink("nav-contact", () => contact.show());
+
+// --- Sections de scroll (sous le hero — sans toucher à la scène R8) ----------
+const heroSpacer = document.querySelector(".hero-spacer");
+const scrollSections = document.querySelectorAll(".scroll-section");
+
+const syncPastHero = () => {
+  const threshold = (heroSpacer?.clientHeight ?? window.innerHeight) * 0.55;
+  document.body.classList.toggle("past-hero", window.scrollY > threshold);
+};
+window.addEventListener("scroll", syncPastHero, { passive: true });
+syncPastHero();
+
+if ("IntersectionObserver" in window) {
+  const sectionIo = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("scroll-section--in");
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+  );
+  scrollSections.forEach((s) => sectionIo.observe(s));
+} else {
+  scrollSections.forEach((s) => s.classList.add("scroll-section--in"));
+}
+
+document.querySelectorAll(".project-card[data-project]").forEach((card) => {
+  card.addEventListener("click", () => {
+    const id = (card as HTMLElement).dataset.project;
+    if (!id) return;
+    projects.show();
+    projects.showDetail(id);
+  });
+});
+
+document.getElementById("scroll-contact-cta")?.addEventListener("click", () => contact.show());
+
 window.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
   // Lightbox d'abord : on ferme l'image agrandie avant le reste.

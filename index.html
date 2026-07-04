@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
-    <title>HORIZON AGENCY · DEV & GROWTH</title>
+    <title>HORIZON · CREATIVE DEVELOPER — OUTILS MÉTIER & SAAS</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#08090b" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,7 +30,7 @@
     <div id="ui" class="ui ui--hidden">
       <!-- NAV -->
       <nav class="ui__nav">
-        <span class="ui__brand">HORIZON AGENCY · DEV & GROWTH</span>
+        <span class="ui__brand">HORIZON · CREATIVE DEVELOPER — OUTILS MÉTIER &amp; SAAS</span>
         <span class="ui__links">
           <a href="#" class="ui__link" id="nav-projects">PROJECTS</a>
           <a href="#" class="ui__link" id="nav-about">ABOUT</a>
@@ -114,6 +114,86 @@
         <button class="drive-touch__btn" data-k="down" aria-label="Freiner">▼</button>
       </div>
     </div>
+
+    <!-- Espace hero (100vh) — le scroll commence en dessous -->
+    <div class="hero-spacer" aria-hidden="true"></div>
+
+    <!-- ============ SECTIONS DE SCROLL (sous le hero) ============ -->
+    <main class="page-scroll">
+      <section id="work" class="scroll-section scroll-section--projects">
+        <header class="scroll-section__head">
+          <span class="scroll-section__label">NO.015 / PROJECT INDEX</span>
+          <h2 class="scroll-section__title">PROJECTS</h2>
+        </header>
+        <div class="project-grid">
+          <article class="project-card" data-project="vkstudio">
+            <span class="project-card__no">NO.001</span>
+            <h3 class="project-card__name">VK STUDIO</h3>
+            <p class="project-card__desc">Architecture LMS &amp; funnels pour une plateforme de formation vidéo.</p>
+            <div class="project-card__shot">
+              <span class="project-card__ph">SCREEN · PLACEHOLDER</span>
+            </div>
+            <span class="project-card__tags"><i>LMS</i><i>PLATFORM</i></span>
+          </article>
+          <article class="project-card" data-project="pulseod">
+            <span class="project-card__no">NO.002</span>
+            <h3 class="project-card__name">PULSEOD</h3>
+            <p class="project-card__desc">SaaS multi-tenant de sales AI, architecture multi-comptes.</p>
+            <div class="project-card__shot">
+              <span class="project-card__ph">SCREEN · PLACEHOLDER</span>
+            </div>
+            <span class="project-card__tags"><i>SAAS</i><i>AI</i></span>
+          </article>
+          <article class="project-card" data-project="frame-exe">
+            <span class="project-card__no">NO.003</span>
+            <h3 class="project-card__name">FRAME.EXE</h3>
+            <p class="project-card__desc">Pipeline de production YouTube automatisé.</p>
+            <div class="project-card__shot">
+              <span class="project-card__ph">SCREEN · PLACEHOLDER</span>
+            </div>
+            <span class="project-card__tags"><i>TOOL</i><i>PIPELINE</i></span>
+          </article>
+          <article class="project-card" data-project="schema-chantierpilot">
+            <span class="project-card__no">NO.004</span>
+            <h3 class="project-card__name">SCHEMA</h3>
+            <p class="project-card__desc">Exploration produit : SaaS de gestion pour le BTP.</p>
+            <div class="project-card__shot">
+              <span class="project-card__ph">SCREEN · PLACEHOLDER</span>
+            </div>
+            <span class="project-card__tags"><i>CASE STUDY</i></span>
+          </article>
+        </div>
+      </section>
+
+      <section id="approche" class="scroll-section scroll-section--approche">
+        <header class="scroll-section__head scroll-section__head--center">
+          <span class="scroll-section__label">NO.016 / APPROCHE</span>
+        </header>
+        <p class="scroll-manifeste">
+          Creative developer. Je construis des outils métier et des SaaS avec une exigence visuelle
+          que la plupart des devs ne portent pas — parce qu'un logiciel utile mérite aussi d'être
+          bien foutu.
+        </p>
+      </section>
+
+      <section id="stack" class="scroll-section scroll-section--stack">
+        <div class="stack-band">
+          <span>THREE.JS</span><i>·</i>
+          <span>GLSL</span><i>·</i>
+          <span>REACT</span><i>·</i>
+          <span>TYPESCRIPT</span><i>·</i>
+          <span>NODE</span><i>·</i>
+          <span>SAAS</span>
+        </div>
+      </section>
+
+      <section id="contact-scroll" class="scroll-section scroll-section--contact">
+        <h2 class="scroll-contact__title">UN OUTIL À CONSTRUIRE ?</h2>
+        <button id="scroll-contact-cta" class="ui__drive scroll-contact__btn" type="button">
+          <span class="ui__drive-ic">▸</span> ME CONTACTER
+        </button>
+      </section>
+    </main>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
