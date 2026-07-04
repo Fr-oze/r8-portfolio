@@ -1413,11 +1413,12 @@ body.touch .drive-hud__keys {
     line-height: 1.5;
   }
 
-  /* Headline hero : compacte, haut gauche */
+  /* Headline hero : haut gauche, au dessus de la voiture (pas en bas) */
   .hero-headline {
     left: 16px;
-    top: auto;
-    bottom: calc(108px + env(safe-area-inset-bottom, 0px));
+    right: auto;
+    top: clamp(78px, 12vh, 104px);
+    bottom: auto;
     width: max-content;
     max-width: calc(100vw - 32px);
     transform: translateY(8px);
@@ -1425,9 +1426,13 @@ body.touch .drive-hud__keys {
   body.ui-ready .hero-headline {
     transform: translateY(0);
   }
+  body.driving .hero-headline,
+  body.past-hero .hero-headline {
+    transform: translateY(-8px);
+  }
   .hero-headline__line {
     white-space: nowrap;
-    font-size: clamp(1.25rem, 6.2vw, 1.8rem);
+    font-size: clamp(1.2rem, 5.4vw, 1.65rem);
   }
   .hero-headline__line--overlap {
     padding-left: 8px;
