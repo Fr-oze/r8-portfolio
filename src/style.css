@@ -65,7 +65,7 @@ body.ui-ready .hero-headline {
 .hero-headline__line {
   display: block;
   white-space: nowrap;
-  font-size: clamp(1.15rem, 1.9vw, 1.85rem);
+  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
   color: var(--ink);
   text-shadow:
     0 0 32px rgba(242, 244, 246, 0.1),
@@ -1342,7 +1342,7 @@ body.diving .ui__quip {
   }
   .hero-headline__line {
     white-space: nowrap;
-    font-size: clamp(0.8rem, 3.8vw, 1.05rem);
+    font-size: clamp(1rem, 5vw, 1.4rem);
   }
   .hero-headline__line--overlap {
     padding-left: 8px;

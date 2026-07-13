@@ -28,8 +28,8 @@
 
     <!-- Headline hero : gauche, superposée à la sphère -->
     <h1 class="hero-headline">
-      <span class="hero-headline__line">Et si une solution web pouvait</span>
-      <span class="hero-headline__line hero-headline__line--overlap">régler l'intégralité de vos problèmes ?</span>
+      <span class="hero-headline__line">Et si un outil web</span>
+      <span class="hero-headline__line hero-headline__line--overlap">réglait tous vos problèmes ?</span>
     </h1>
 
     <!-- ============ UI OVERLAY (cachée jusqu'à la fin du scan) ============ -->
@@ -93,16 +93,18 @@
     <div id="dive-hud" class="dive-hud dive-hud--hidden">
       <!-- Consigne, affichée à l'entrée puis fondue -->
       <p id="dive-intro" class="dive-hud__intro">
-        DÉRIVE.<br />
+        TRAVERSE LES NOYAUX LUMINEUX.<br />
         LA SOURIS GUIDE · LE CLIC MAINTENU ACCÉLÈRE.<br />
-        RESTE AUSSI LONGTEMPS QUE TU VEUX.
+        ENCHAÎNE LES CAPTURES POUR MONTER LE COMBO.
       </p>
       <div class="dive-hud__panel">
+        <div class="dive-hud__row"><span>NOYAUX</span><b id="dive-score">0</b></div>
+        <div class="dive-hud__row"><span>COMBO</span><b id="dive-combo">x0</b></div>
         <div class="dive-hud__row"><span>SPEED</span><b><span id="dive-speed">0</span> U/S</b></div>
         <div class="dive-hud__row"><span>DIST</span><b><span id="dive-dist">0</span> U</b></div>
       </div>
       <div class="dive-hud__keys">
-        <span class="dive-hud__hint">SOURIS · DÉRIVER — CLIC MAINTENU · ACCÉLÉRER — ÉCHAP · SORTIR</span>
+        <span class="dive-hud__hint">SOURIS · VISER — CLIC MAINTENU · ACCÉLÉRER — ÉCHAP · SORTIR</span>
       </div>
       <button id="dive-exit" class="dive-hud__exit">EXIT ✕</button>
     </div>

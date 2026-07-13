@@ -181,10 +181,12 @@ export class OrbScene {
 
     for (let i = 0; i < rings; i++) {
       const t = (i + 1) / rings;
-      const r = R_VOID + (R_MAX - R_VOID) * Math.pow(t, 0.82);
+      // pow > 1 : resserre les anneaux vers le centre (sinon tout se
+      // concentre sur le bord extérieur de la forme).
+      const r = R_VOID + (R_MAX - R_VOID) * Math.pow(t, 1.65);
       const z = -0.55 * Math.pow(1 - t, 1.6); // perspective tunnel
       const seed = i * 0.37;
-      const rand = i / rings;
+      const rand = Math.random(); // culling de densité réparti, pas par zone
 
       for (let s = 0; s < RING_SEGS; s++) {
         for (let e = 0; e < 2; e++) {
@@ -227,7 +229,7 @@ export class OrbScene {
             a = baseA + Math.sin(k * 8 + seed) * 0.22;
             z = -0.12 * k + Math.sin(k * 6 + seed) * 0.08;
           } else {
-            r = R_VOID + (R_MAX - R_VOID) * (0.35 + k * 0.65);
+            r = R_VOID + (R_MAX - R_VOID) * (0.12 + k * 0.88);
             a = baseA + k * 1.8 + Math.sin(k * 5 + seed) * 0.35;
             z = Math.sin(k * 4 + seed * 0.5) * 0.14 - 0.08;
           }
@@ -316,7 +318,8 @@ export class OrbScene {
 
     for (let i = 0; i < POINT_COUNT; i++) {
       const t = Math.random();
-      const r = R_VOID + (R_MAX - R_VOID) * Math.pow(t, 0.75);
+      // pow > 1 : particules plus denses vers le coeur, clairsemées au bord.
+      const r = R_VOID + (R_MAX - R_VOID) * Math.pow(t, 1.5);
       const a = Math.random() * Math.PI * 2;
       const z = -0.2 * (1 - t) + (Math.random() - 0.5) * 0.12;
       pos[i * 3] = Math.cos(a) * r;
