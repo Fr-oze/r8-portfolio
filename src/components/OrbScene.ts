@@ -430,13 +430,23 @@ export class OrbScene {
   // que le mode vol calcule les collisions côté JS.
   regeneratePeaks(): THREE.Vector4[] {
     const peaks: THREE.Vector4[] = this.uniforms.uPeaks.value;
+    const talls: { a: number; r: number }[] = [];
     for (const p of peaks) {
       const a = Math.random() * Math.PI * 2;
       const r = R_MAX * (0.3 + Math.random() * 0.62);
       // certains pics dépassent l'altitude max du vaisseau : impossible de
       // tout survoler, il faut aussi esquiver latéralement.
-      const height = 0.35 + Math.random() * 0.75;
+      let height = 0.35 + Math.random() * 0.75;
       const width = 0.18 + Math.random() * 0.3;
+      if (height > 0.7) {
+        // deux pics infranchissables trop proches en angle bloqueraient toute
+        // la bande de vol : on écrase le second en colline passable.
+        const crowded = talls.some(
+          (q) => Math.abs(Math.atan2(Math.sin(a - q.a), Math.cos(a - q.a))) < 0.55
+        );
+        if (crowded) height = 0.45 + Math.random() * 0.2;
+        else talls.push({ a, r });
+      }
       p.set(Math.cos(a) * r, Math.sin(a) * r, height, width);
     }
     return peaks;

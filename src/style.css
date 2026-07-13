@@ -748,6 +748,13 @@ body.diving .ui__quip {
 .dive-hud__exit:hover {
   border-color: var(--ink);
 }
+/* Indicateur AUTO : pulse tant que l'autopilote est engagé */
+.dive-hud--auto #dive-mode {
+  animation: dive-auto-pulse 1.4s ease-in-out infinite;
+}
+@keyframes dive-auto-pulse {
+  50% { opacity: 0.4; }
+}
 
 /* Écran de crash */
 .dive-over {

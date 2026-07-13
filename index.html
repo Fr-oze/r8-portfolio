@@ -93,11 +93,12 @@
     <div id="dive-hud" class="dive-hud dive-hud--hidden">
       <!-- Consigne, affichée à l'entrée puis fondue -->
       <p id="dive-intro" class="dive-hud__intro">
-        ESQUIVE LES MONTAGNES.<br />
-        SOURIS GAUCHE / DROITE · CHANGER DE COULOIR<br />
-        SOURIS HAUT / BAS · ALTITUDE
+        PILOTE AUTOMATIQUE ENGAGÉ.<br />
+        FLÈCHES · PRENDRE LES COMMANDES<br />
+        ← → COULOIR · ↑ ↓ ALTITUDE · A · AUTOPILOTE
       </p>
       <div class="dive-hud__panel">
+        <div class="dive-hud__row"><span>MODE</span><b id="dive-mode">AUTO</b></div>
         <div class="dive-hud__row"><span>DIST</span><b><span id="dive-dist">0</span> U</b></div>
         <div class="dive-hud__row"><span>BEST</span><b><span id="dive-best">0</span> U</b></div>
         <div class="dive-hud__row"><span>SPEED</span><b id="dive-speed">0</b></div>
@@ -108,11 +109,11 @@
         <p class="dive-over__stats">
           DISTANCE <b id="dive-over-dist">0</b> U — RECORD <b id="dive-over-best">0</b> U
         </p>
-        <p class="dive-over__hint">CLIQUE POUR REJOUER · ÉCHAP POUR SORTIR</p>
+        <p class="dive-over__hint">CLIC OU FLÈCHE POUR REJOUER · ÉCHAP POUR SORTIR</p>
       </div>
       <div id="dive-flash" class="dive-flash"></div>
       <div class="dive-hud__keys">
-        <span class="dive-hud__hint">SOURIS · PILOTER — ÉCHAP · SORTIR</span>
+        <span class="dive-hud__hint">FLÈCHES · PILOTER — A · AUTOPILOTE — ÉCHAP · SORTIR</span>
       </div>
       <button id="dive-exit" class="dive-hud__exit">EXIT ✕</button>
     </div>

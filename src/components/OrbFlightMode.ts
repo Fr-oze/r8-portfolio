@@ -6,8 +6,10 @@ import { OrbScene } from "./OrbScene";
 // ORB FLIGHT — mode vaisseau : l'orbe bascule à l'horizontale, des
 // montagnes se lèvent sur le disque, et un petit vaisseau doit les
 // esquiver le plus longtemps possible. Le disque tourne sous le
-// vaisseau (le terrain défile), la souris pilote : X = latéral,
-// Y = altitude. Crash = fin de run, clic pour rejouer.
+// vaisseau (le terrain défile). Pilote automatique engagé à l'entrée
+// (il montre comment on esquive) ; les FLÈCHES prennent la main
+// (←/→ = couloir, ↑/↓ = altitude), A ré-engage l'auto.
+// Crash = fin de run, clic (ou flèche) pour rejouer.
 // =====================================================================
 
 const ENTER_DURATION = 1.9; // s — bascule de l'orbe + descente caméra
@@ -46,6 +48,11 @@ export class OrbFlightMode {
   private best = 0;
   private grace = 0; // s sans collision au départ (le temps de s'orienter)
 
+  private auto = true; // pilote automatique (démo) — flèches = reprise en main
+  private keys = { left: false, right: false, up: false, down: false };
+  private ctrlX = 1.35; // consignes courantes (couloir, altitude)
+  private ctrlAlt = 0.6;
+
   private savedCam = {
     pos: new THREE.Vector3(),
     quat: new THREE.Quaternion(),
@@ -55,12 +62,14 @@ export class OrbFlightMode {
   private targetCamPos = new THREE.Vector3();
   private targetCamQuat = new THREE.Quaternion();
   private _v = new THREE.Vector3();
+  private _v2 = new THREE.Vector3();
   private _dummy = new THREE.PerspectiveCamera();
 
   private hud: HTMLElement | null;
   private distEl: HTMLElement | null;
   private bestEl: HTMLElement | null;
   private speedEl: HTMLElement | null;
+  private modeEl: HTMLElement | null;
   private introEl: HTMLElement | null;
   private overEl: HTMLElement | null;
   private overDistEl: HTMLElement | null;
@@ -80,6 +89,7 @@ export class OrbFlightMode {
     this.distEl = document.getElementById("dive-dist");
     this.bestEl = document.getElementById("dive-best");
     this.speedEl = document.getElementById("dive-speed");
+    this.modeEl = document.getElementById("dive-mode");
     this.introEl = document.getElementById("dive-intro");
     this.overEl = document.getElementById("dive-over");
     this.overDistEl = document.getElementById("dive-over-dist");
@@ -92,6 +102,36 @@ export class OrbFlightMode {
       if ((e.target as HTMLElement).closest("button")) return;
       this._restart();
     });
+
+    // Clavier : flèches = piloter (et couper l'autopilote), A = ré-engager.
+    const ARROWS = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+    window.addEventListener("keydown", (e) => {
+      if (!this.active) return;
+      if (ARROWS.includes(e.key)) {
+        e.preventDefault();
+        if (this.state === "crashed") this._restart();
+        if (this.auto) this._setAuto(false);
+        if (e.key === "ArrowLeft") this.keys.left = true;
+        if (e.key === "ArrowRight") this.keys.right = true;
+        if (e.key === "ArrowUp") this.keys.up = true;
+        if (e.key === "ArrowDown") this.keys.down = true;
+      } else if (e.key === "a" || e.key === "A") {
+        this._setAuto(true);
+      }
+    });
+    window.addEventListener("keyup", (e) => {
+      if (e.key === "ArrowLeft") this.keys.left = false;
+      if (e.key === "ArrowRight") this.keys.right = false;
+      if (e.key === "ArrowUp") this.keys.up = false;
+      if (e.key === "ArrowDown") this.keys.down = false;
+    });
+  }
+
+  private _setAuto(v: boolean) {
+    this.auto = v;
+    if (v) this.keys = { left: false, right: false, up: false, down: false };
+    if (this.modeEl) this.modeEl.textContent = v ? "AUTO" : "MANUEL";
+    this.hud?.classList.toggle("dive-hud--auto", v);
   }
 
   // Petit vaisseau wireframe : dard + ailes, tout en lignes additives.
@@ -153,6 +193,50 @@ export class OrbFlightMode {
     return Math.min(h, 1.15) * this.orb.uniforms.uTerrain.value;
   }
 
+  // Hauteur du terrain qui sera sous le couloir x dans tau secondes : le
+  // disque tourne, donc on fait tourner les coordonnées locales de +speed·tau
+  // (prédiction exacte le long de l'arc, pas d'approximation en ligne droite).
+  private _futureTerrain(x: number, tau: number) {
+    this._v2.set(x, 0, 0);
+    this.orb.group.worldToLocal(this._v2);
+    const d = this.speed * tau;
+    const cos = Math.cos(d);
+    const sin = Math.sin(d);
+    const lx = this._v2.x * cos - this._v2.y * sin;
+    const ly = this._v2.x * sin + this._v2.y * cos;
+    return this._terrainAt(lx, ly);
+  }
+
+  // Pilote automatique : scanne les couloirs et vise le plus dégagé sur les
+  // prochaines secondes (en préférant les petits écarts), altitude au-dessus
+  // du relief à venir.
+  private _autopilot(dt: number) {
+    const LANES = 13;
+    let bestX = this.ctrlX;
+    let bestCost = Infinity;
+    let bestH = 0;
+    for (let i = 0; i < LANES; i++) {
+      const x = LANE_MIN + ((LANE_MAX - LANE_MIN) * i) / (LANES - 1);
+      let danger = 0;
+      for (const tau of [0.15, 0.45, 0.8, 1.2, 1.7]) {
+        danger = Math.max(danger, this._futureTerrain(x, tau));
+      }
+      const blocked = danger > ALT_MAX - 0.2 ? 10 : 0; // couloir infranchissable
+      const cost = danger * 2 + blocked + Math.abs(x - this.shipPos.x) * 0.6;
+      if (cost < bestCost) {
+        bestCost = cost;
+        bestX = x;
+        bestH = danger;
+      }
+    }
+    // réactivité qui suit la vitesse : le terrain arrive plus vite, le
+    // pilote corrige plus vite.
+    const gain = Math.min(1, dt * (2.5 + this.speed * 4));
+    this.ctrlX += (bestX - this.ctrlX) * gain;
+    const altTarget = clampN(bestH + 0.32, ALT_MIN + 0.18, ALT_MAX);
+    this.ctrlAlt += (altTarget - this.ctrlAlt) * gain;
+  }
+
   enter() {
     if (this.active) return;
     this.active = true;
@@ -173,9 +257,12 @@ export class OrbFlightMode {
     this.speed = 0.35;
     this.dist = 0;
     this.grace = 1.8;
-    // spawn en altitude : le temps que le joueur prenne les commandes
+    // spawn en altitude : le temps que la bascule se termine
     this.shipPos.set(1.35, this.orb.group.position.y + 0.85, 0);
     this.shipVel.set(0, 0);
+    this.ctrlX = 1.35;
+    this.ctrlAlt = 0.7;
+    this._setAuto(true); // démo : l'autopilote montre la navigation
 
     document.body.classList.add("diving");
     this.hud?.classList.remove("dive-hud--hidden");
@@ -200,6 +287,9 @@ export class OrbFlightMode {
     this.dist = 0;
     this.grace = 1.8;
     this.shipVel.set(0, 0);
+    const baseY = this.orb.group.position.y;
+    this.ctrlX = this.shipPos.x;
+    this.ctrlAlt = clampN(this.shipPos.y - baseY, ALT_MIN, ALT_MAX);
     this.overEl?.classList.remove("dive-over--show");
     this.state = "playing";
   }
@@ -303,14 +393,23 @@ export class OrbFlightMode {
       // distance parcourue = vitesse tangentielle au rayon du vaisseau
       this.dist += this.speed * this.shipPos.x * dt * 14;
 
-      // souris : X = couloir latéral (rayon), Y = altitude
-      const targetX =
-        (LANE_MIN + LANE_MAX) / 2 + pointer.x * (LANE_MAX - LANE_MIN) * 0.5;
-      const targetAlt = ALT_MIN + (pointer.y * 0.5 + 0.5) * (ALT_MAX - ALT_MIN);
+      // consignes : autopilote ou flèches du clavier
+      if (this.auto) {
+        this._autopilot(dt);
+      } else {
+        const RX = 1.7; // vitesse latérale (unités/s)
+        const RA = 1.15; // vitesse verticale
+        if (this.keys.left) this.ctrlX -= RX * dt;
+        if (this.keys.right) this.ctrlX += RX * dt;
+        if (this.keys.up) this.ctrlAlt += RA * dt;
+        if (this.keys.down) this.ctrlAlt -= RA * dt;
+        this.ctrlX = clampN(this.ctrlX, LANE_MIN, LANE_MAX);
+        this.ctrlAlt = clampN(this.ctrlAlt, ALT_MIN, ALT_MAX);
+      }
       const baseY = group.position.y;
       const curAlt = this.shipPos.y - baseY;
-      const nx = this.shipPos.x + (targetX - this.shipPos.x) * Math.min(1, dt * 4.5);
-      const nAlt = curAlt + (targetAlt - curAlt) * Math.min(1, dt * 4);
+      const nx = this.shipPos.x + (this.ctrlX - this.shipPos.x) * Math.min(1, dt * 6);
+      const nAlt = curAlt + (this.ctrlAlt - curAlt) * Math.min(1, dt * 5);
       this.shipVel.set((nx - this.shipPos.x) / Math.max(dt, 1e-4), (nAlt - curAlt) / Math.max(dt, 1e-4));
       this.shipPos.x = Math.max(LANE_MIN, Math.min(LANE_MAX, nx));
       this.shipPos.y = baseY + nAlt;
