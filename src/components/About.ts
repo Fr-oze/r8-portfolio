@@ -75,7 +75,7 @@ export class About {
           </div>
 
           <p class="about__quip">
-            Si une caisse tourne ici plutôt qu'un logo, ce n'est pas un hasard. Une belle mécanique ou un logiciel qui tourne carré, c'est le même kiff.
+            La sphère qui vit derrière, c'est le même code que celui de mes outils. J'aime quand un logiciel utile est aussi beau à regarder, c'est toute l'idée de ce que je construis.
           </p>
 
           <div class="about__cta">

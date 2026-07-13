@@ -37,7 +37,7 @@ body.panel-open {
   display: block;
 }
 
-/* Headline hero — haut gauche, lisible sans empiéter sur la R8 */
+/* Headline hero — haut gauche, lisible sans empiéter sur la sphère */
 .hero-headline {
   position: fixed;
   left: clamp(20px, 4vw, 56px);
@@ -76,7 +76,6 @@ body.ui-ready .hero-headline {
   color: rgba(242, 244, 246, 0.82);
   font-weight: 400;
 }
-body.driving .hero-headline,
 body.past-hero .hero-headline {
   opacity: 0;
   transform: translateY(-8px);
@@ -176,11 +175,6 @@ body.past-hero .hero-headline {
 .ui__quip--show {
   opacity: 1;
   transform: translateX(-50%);
-}
-/* Jamais pendant la conduite */
-body.driving .ui__quip {
-  opacity: 0;
-  pointer-events: none;
 }
 .ui__quip-link {
   pointer-events: auto;
@@ -587,7 +581,7 @@ body.driving .ui__quip {
   transform: translate(2px, -2px);
 }
 
-/* ============ BOUTON PRENDRE LA ROUTE ============ */
+/* ============ BOUTON CTA HERO (bas centre) ============ */
 .ui__drive {
   position: absolute;
   bottom: 30px;
@@ -618,239 +612,9 @@ body.driving .ui__quip {
   font-size: 11px;
   opacity: 0.8;
 }
-/* masqué pendant la conduite */
-body.driving .ui__nav,
-body.driving .ui__corner,
-body.driving .ui__controls,
-body.driving .ui__about-mobile,
-body.driving .ui__mobile-actions,
-body.driving .ui__drive {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* CTA projets : caché par défaut (desktop garde le jeu) */
+/* CTA projets : visible partout (bas centre du hero) */
 .ui__cta-projects {
-  display: none;
-}
-/* Sur tactile/mobile : pas de jeu, on propose les projets à la place */
-body.touch #drive-start {
-  display: none;
-}
-body.touch .ui__cta-projects {
   display: inline-flex;
-}
-
-/* ============ HUD CONDUITE ============ */
-.drive-hud {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  pointer-events: none;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.5s ease-out, visibility 0s linear 0s;
-}
-/* Caché : visibility:hidden coupe le hit-test de TOUS les enfants (dont le
-   bouton EXIT en haut à droite, qui sinon recouvre le lien CONTACT du nav). */
-.drive-hud--hidden {
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-  transition: opacity 0.5s ease-out, visibility 0s linear 0.5s;
-}
-.drive-hud__panel {
-  position: absolute;
-  top: 26px;
-  left: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.drive-hud__row {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-}
-.drive-hud__row span {
-  color: var(--dim);
-  width: 54px;
-}
-.drive-hud__row b {
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 0.08em;
-}
-.drive-hud__auto {
-  pointer-events: auto;
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--dim);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition: color 0.25s ease-out, border-color 0.25s ease-out, background 0.25s ease-out;
-}
-.drive-hud__auto:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-}
-.drive-hud__auto--on {
-  color: #0a0b0d;
-  background: var(--ink);
-  border-color: var(--ink);
-}
-.drive-hud__keys {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.drive-hud__keycap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border: 1px solid var(--line);
-  font-size: 12px;
-  color: var(--ink);
-}
-.drive-hud__hint {
-  margin-left: 14px;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  color: var(--dim);
-}
-.drive-hud__exit {
-  position: absolute;
-  top: 26px;
-  right: 32px;
-  pointer-events: auto;
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--ink);
-  font: inherit;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  padding: 8px 14px;
-  cursor: pointer;
-  transition: border-color 0.3s ease-out;
-}
-.drive-hud__exit:hover {
-  border-color: var(--ink);
-}
-
-.drive-hud__radar {
-  position: absolute;
-  bottom: 28px;
-  right: 32px;
-  width: 140px;
-  height: 140px;
-  border: 1px solid var(--line);
-  background: rgba(6, 7, 9, 0.55);
-  backdrop-filter: blur(2px);
-}
-.drive-hud__radar canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.drive-hud__radar-lbl {
-  position: absolute;
-  top: 6px;
-  left: 8px;
-  font-size: 8px;
-  letter-spacing: 0.22em;
-  color: var(--dim);
-}
-
-/* ---- Contrôles tactiles (cachés par défaut, affichés sur appareil tactile) ---- */
-.drive-touch {
-  position: absolute;
-  bottom: 26px;
-  display: none;
-  gap: 14px;
-  pointer-events: none;
-}
-.drive-touch--steer {
-  left: 22px;
-}
-.drive-touch--gas {
-  right: 22px;
-}
-.drive-touch__btn {
-  pointer-events: auto;
-  width: 68px;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line);
-  background: rgba(8, 9, 11, 0.5);
-  backdrop-filter: blur(3px);
-  color: var(--ink);
-  font: inherit;
-  font-size: 20px;
-  border-radius: 50%;
-  cursor: pointer;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s ease-out, border-color 0.12s ease-out, transform 0.12s ease-out;
-}
-.drive-touch__btn.--active {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: var(--ink);
-  color: #0a0b0d;
-  transform: scale(0.94);
-}
-/* Sur appareil tactile : montrer les boutons, cacher les hints clavier. */
-body.touch .drive-hud:not(.drive-hud--hidden) .drive-touch {
-  display: flex;
-}
-body.touch .drive-hud__keys {
-  display: none;
-}
-
-@media (max-width: 720px) {
-  .drive-hud__hint {
-    display: none;
-  }
-  .drive-hud__radar {
-    width: 84px;
-    height: 84px;
-    top: 68px;
-    right: 16px;
-    bottom: auto;
-  }
-  .drive-hud__panel {
-    top: 18px;
-    left: 18px;
-  }
-  .drive-hud__exit {
-    top: 18px;
-    right: 16px;
-    padding: 7px 11px;
-  }
-  .drive-touch__btn {
-    width: 62px;
-    height: 62px;
-    font-size: 18px;
-  }
-  .drive-touch {
-    bottom: 22px;
-  }
 }
 
 /* ============ VUE DÉTAIL PROJET ============ */
@@ -1413,7 +1177,7 @@ body.touch .drive-hud__keys {
     line-height: 1.5;
   }
 
-  /* Headline hero : haut gauche, au dessus de la voiture (pas en bas) */
+  /* Headline hero : haut gauche, au dessus de la sphère (pas en bas) */
   .hero-headline {
     left: 16px;
     right: auto;
@@ -1426,7 +1190,6 @@ body.touch .drive-hud__keys {
   body.ui-ready .hero-headline {
     transform: translateY(0);
   }
-  body.driving .hero-headline,
   body.past-hero .hero-headline {
     transform: translateY(-8px);
   }

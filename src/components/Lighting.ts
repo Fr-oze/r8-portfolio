@@ -3,10 +3,10 @@ import * as THREE from "three";
 // =====================================================================
 // LIGHTING — la souris devient source de lumière
 // =====================================================================
-// Projette le curseur sur un plan traversant la voiture pour obtenir un point
+// Projette le curseur sur un plan traversant la scène pour obtenir un point
 // 3D ; y place une PointLight (reflets qui se déplacent) ; ce même point sert
-// d'uMouse aux shaders (glow de proximité). Oriente aussi légèrement la
-// voiture vers le curseur (rotation douce, faible amplitude).
+// d'uMouse aux shaders (glow de proximité). Oriente aussi légèrement le
+// sujet vers le curseur (rotation douce, faible amplitude).
 
 import type { Stage } from "../core/Stage";
 
@@ -38,7 +38,7 @@ export class Lighting {
     this.raycaster = new THREE.Raycaster();
     this.worldMouse = new THREE.Vector3(0, 0, 2);
     this._target = new THREE.Vector3();
-    this.rotAmp = 0.08; // amplitude d'orientation de la voiture (subtile, le drag prime)
+    this.rotAmp = 0.08; // amplitude d'orientation du sujet (subtile, le drag prime)
     // Tilt lissé exposé à main (qui compose avec l'auto-rotation).
     this.tiltX = 0;
     this.tiltY = 0;
@@ -48,7 +48,7 @@ export class Lighting {
   update(pointer: THREE.Vector2, dt: number) {
     this.raycaster.setFromCamera(pointer, this.stage.camera);
     if (this.raycaster.ray.intersectPlane(this.plane, this._target)) {
-      // Reste près du plan de la voiture (z~0) pour que la proximité particules
+      // Reste près du plan du sujet (z~0) pour que la proximité particules
       // se déclenche vraiment. Léger avant pour des reflets visibles.
       this._target.z = 0.5;
       this.worldMouse.lerp(this._target, 0.15);

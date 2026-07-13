@@ -17,7 +17,7 @@
     <!-- Scène 3D -->
     <div id="scene"></div>
 
-    <!-- ============ PRELOADER : R8 pixel-art + compteur ============ -->
+    <!-- ============ PRELOADER : orbe de lignes + compteur ============ -->
     <div id="preloader" class="preloader">
       <canvas id="pixel-canvas" class="preloader__canvas"></canvas>
       <div class="preloader__hud">
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <!-- Headline hero : gauche, superposée à la R8 -->
+    <!-- Headline hero : gauche, superposée à la sphère -->
     <h1 class="hero-headline">
       <span class="hero-headline__line">Des outils internes</span>
       <span class="hero-headline__line hero-headline__line--overlap">et des SaaS qui claquent</span>
@@ -50,7 +50,7 @@
 
       <!-- Phrase signature / transition vers les projets (centrée haut) -->
       <p class="ui__quip">
-        BON, J'AI FLEX MA CAISSE,
+        BON, ASSEZ CONTEMPLÉ,
         <button id="quip-projects" class="ui__quip-link">MAINTENANT MATE MES PROJETS →</button>
       </p>
 
@@ -78,47 +78,10 @@
       <!-- Sliders discrets -->
       <div id="controls" class="ui__controls"></div>
 
-      <!-- Bouton PRENDRE LA ROUTE (bas centre, desktop uniquement) -->
-      <button id="drive-start" class="ui__drive">
-        <span class="ui__drive-ic">▸</span> PRENDRE LA ROUTE
-      </button>
-
-      <!-- Bouton VOIR LES PROJETS (bas centre, tactile/mobile uniquement) -->
+      <!-- Bouton VOIR LES PROJETS (bas centre) -->
       <button id="open-projects-cta" class="ui__drive ui__cta-projects">
         <span class="ui__drive-ic">▦</span> VOIR LES PROJETS
       </button>
-    </div>
-
-    <!-- ============ HUD CONDUITE ============ -->
-    <div id="drive-hud" class="drive-hud drive-hud--hidden">
-      <div class="drive-hud__panel">
-        <div class="drive-hud__row">
-          <span>MODE</span>
-          <button id="drive-auto" class="drive-hud__auto drive-hud__auto--on">● AUTOPILOT</button>
-        </div>
-        <div class="drive-hud__row"><span>SPEED</span><b><span id="drive-speed">0</span> KM/H</b></div>
-      </div>
-      <div class="drive-hud__keys">
-        <span class="drive-hud__keycap">↑</span>
-        <span class="drive-hud__keycap">↓</span>
-        <span class="drive-hud__keycap">←</span>
-        <span class="drive-hud__keycap">→</span>
-      </div>
-      <button id="drive-exit" class="drive-hud__exit">EXIT ✕</button>
-      <div class="drive-hud__radar">
-        <canvas id="drive-map" width="320" height="320"></canvas>
-        <span class="drive-hud__radar-lbl">RADAR</span>
-      </div>
-
-      <!-- Contrôles tactiles (mobile) -->
-      <div class="drive-touch drive-touch--steer">
-        <button class="drive-touch__btn" data-k="left" aria-label="Gauche">◀</button>
-        <button class="drive-touch__btn" data-k="right" aria-label="Droite">▶</button>
-      </div>
-      <div class="drive-touch drive-touch--gas">
-        <button class="drive-touch__btn" data-k="up" aria-label="Accélérer">▲</button>
-        <button class="drive-touch__btn" data-k="down" aria-label="Freiner">▼</button>
-      </div>
     </div>
 
     <!-- Espace hero (100vh) — le scroll commence en dessous -->

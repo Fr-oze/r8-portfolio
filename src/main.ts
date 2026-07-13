@@ -2,20 +2,19 @@ import "./style.css";
 import * as THREE from "three";
 import { Stage } from "./core/Stage";
 import { Preloader } from "./components/Preloader";
-import { CarScene } from "./components/CarScene";
+import { OrbScene } from "./components/OrbScene";
 import { Lighting } from "./components/Lighting";
 import { UI } from "./components/UI";
 import { Projects } from "./components/Projects";
 import { About } from "./components/About";
 import { Contact } from "./components/Contact";
-import { DriveMode } from "./components/DriveMode";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { CinematicShader } from "./shaders/cinematic";
 
-// Détection tactile : active les contrôles de conduite tactiles + ajustements UI.
+// Détection tactile : ajustements UI (CTA, tailles de cibles).
 const isTouch =
   window.matchMedia?.("(pointer: coarse)").matches ||
   "ontouchstart" in window ||
@@ -25,12 +24,18 @@ if (isTouch) document.body.classList.add("touch");
 // --- Setup scène + composants ----------------------------------------------
 const stage = new Stage(document.getElementById("scene"));
 
-// LoadingManager : synchronise le compteur du preloader au VRAI chargement.
-const manager = new THREE.LoadingManager();
+// La sphère est générée (aucun asset à télécharger) : le compteur du preloader
+// est piloté par une rampe courte, le temps que la scène soit prête.
 const preloader = new Preloader(() => onPreloaderDone());
-manager.onProgress = (url, loaded, total) => preloader.setProgress(loaded / total);
-// Sécurité : si peu de requêtes, on pousse la progression à la fin du load.
-manager.onLoad = () => preloader.setProgress(1);
+{
+  const t0 = performance.now();
+  const ramp = () => {
+    const p = Math.min(1, (performance.now() - t0) / 1400);
+    preloader.setProgress(p);
+    if (p < 1) requestAnimationFrame(ramp);
+  };
+  requestAnimationFrame(ramp);
+}
 
 const ui = new UI();
 
@@ -70,7 +75,7 @@ navLink("nav-projects", () => projects.show());
 navLink("nav-about", () => about.show());
 navLink("nav-contact", () => contact.show());
 
-// --- Sections de scroll (sous le hero — sans toucher à la scène R8) ----------
+// --- Sections de scroll (sous le hero — sans toucher à la scène 3D) ----------
 const heroSpacer = document.querySelector(".hero-spacer");
 const scrollSections = document.querySelectorAll(".scroll-section");
 
@@ -127,61 +132,47 @@ window.addEventListener("keydown", (e) => {
   else projects.hide();
 });
 
-const car = new CarScene(stage, manager);
-const lighting = new Lighting(stage, car.group);
-const drive = new DriveMode(stage, car);
-
-document.getElementById("drive-start")?.addEventListener("click", () => drive.enter());
-document.getElementById("drive-exit")?.addEventListener("click", () => drive.exit());
-window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && drive.active) drive.exit();
-});
+const orb = new OrbScene(stage);
+const lighting = new Lighting(stage, orb.group);
 
 let rotationSpeed = 0.1;
 let spin = 0; // angle d'auto-rotation continu
 let density = 0.35; // valeur courante du slider de densité
 
-const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+const clampN = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-// Cadrage responsive : échelle + position de la voiture ET recul de la caméra
-// calculé d'après le ratio écran. En portrait (mobile), le FOV horizontal se
-// resserre → on recule la caméra pour que la voiture (large) reste entière.
-function frameCar() {
+// Cadrage responsive : recul de la caméra calculé d'après le ratio écran pour
+// que la sphère (déformée, donc un peu plus large que son rayon) reste entière.
+function frameOrb() {
   const w = window.innerWidth, h = window.innerHeight;
   const desktop = w > 720;
-  const scale = desktop ? 1.5 : 1.15;
-  car.group.scale.setScalar(scale);
-  car.group.position.y = desktop ? 0.5 : 0.35;
-  // pivot de rotation = origine du groupe → on le laisse au centre écran (x=0),
-  // sinon la voiture orbite autour d'un point décalé. Le recentrage horizontal
-  // se fait à la source, sur l'ancrage de la géométrie (voir CarScene._build).
-  car.group.position.x = 0;
+  orb.group.position.set(0, desktop ? 0.15 : 0.1, 0);
 
-  const long = car.size ? Math.max(car.size.x, car.size.z) : 4.2;
-  const fitW = long * scale * (desktop ? 1.3 : 1.55); // largeur à cadrer + marge
+  const fitD = orb.radius * 2 * (desktop ? 1.5 : 1.7); // diamètre + marge
   const aspect = w / h;
   const vFov = (stage.camera.fov * Math.PI) / 180;
   const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
-  const dist = fitW / 2 / Math.tan(hFov / 2);
-  stage.camera.position.z = clampN(dist + 1.2, 6, 26);
+  const distH = fitD / 2 / Math.tan(hFov / 2);
+  const distV = fitD / 2 / Math.tan(vFov / 2);
+  stage.camera.position.z = clampN(Math.max(distH, distV) + 1.2, 6, 26);
   stage.camera.updateProjectionMatrix();
 }
 
-car.onReady = () => {
-  car.setDetail(density);
-  ui.setParticles(car.particleCount);
-  frameCar();
+orb.onReady = () => {
+  orb.setDetail(density);
+  ui.setParticles(orb.particleCount);
+  frameOrb();
 };
-car.onScanComplete = () => {
+orb.onScanComplete = () => {
   ui.reveal(); // UI en cascade
   // La phrase signature apparaît après 15 s sur l'interface.
   setTimeout(() => {
     document.querySelector(".ui__quip")?.classList.add("ui__quip--show");
   }, 15000);
 };
-car.onModeChange = (label) => ui.setMode(label);
+orb.onModeChange = (label) => ui.setMode(label);
 
-car.load();
+orb.load();
 
 // --- Post-processing : bloom + grain/vignette ------------------------------
 const composer = new EffectComposer(stage.renderer);
@@ -200,10 +191,10 @@ stage.onResize((w, h) => {
   composer.setSize(w, h);
   bloom.resolution.set(w, h);
   grain.uniforms.uResolution.value = [w, h];
-  if (car.ready && !drive.active) frameCar();
+  if (orb.ready) frameOrb();
 });
 // Un panneau plein écran (projets/about) est opaque devant la scène → inutile de
-// rendre la R8 dessous (et ça évite tout flash qui transparaîtrait au scroll).
+// rendre la sphère dessous (et ça évite tout flash qui transparaîtrait au scroll).
 const overlayOpen = () => projects.open || about.open || contact.open;
 stage.setRender(() => {
   if (overlayOpen()) return;
@@ -217,7 +208,7 @@ window.addEventListener("pointermove", (e) => {
   pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
 });
 
-// --- Drag : attraper la R8 pour la faire pivoter gauche/droite (yaw seul) ---
+// --- Drag : attraper la sphère pour la faire pivoter gauche/droite (yaw) ----
 const sceneEl = document.getElementById("scene");
 let dragging = false;
 let dragStartX = 0;
@@ -244,12 +235,12 @@ window.addEventListener("pointermove", (e) => {
 ui.buildControls({
   onDensity: (v) => {
     density = v;
-    car.setDetail(v);
-    if (car.ready) ui.setParticles(car.particleCount);
+    orb.setDetail(v);
+    if (orb.ready) ui.setParticles(orb.particleCount);
   },
   onGlow: (v) => {
     bloom.strength = v;
-    car.uniforms.uGlow.value = v;
+    orb.uniforms.uGlow.value = v;
     lighting.setIntensity(0.4 + v);
   },
   onRotation: (v) => (rotationSpeed = v),
@@ -263,21 +254,16 @@ function onPreloaderDone() {
 stage.start((t, dt) => {
   // Scène figée tant qu'un panneau opaque est ouvert (rien à animer derrière).
   if (overlayOpen()) return;
-  if (drive.active) {
-    // Mode conduite : DriveMode pilote position/rotation de la voiture + caméra.
-    drive.update(t, dt);
-    car.update(t, dt);
-  } else {
-    const mouseWorld = lighting.update(pointer, dt);
-    car.setMouseWorld(mouseWorld);
-    car.update(t, dt);
 
-    // Pendant le drag : pas d'auto-rotation, on ne suit que le geste (yaw).
-    // Sinon : auto-rotation continue + léger tilt vertical vers le curseur.
-    if (!dragging) spin += rotationSpeed * dt * 0.4;
-    car.group.rotation.y = spin + userYaw + (dragging ? 0 : lighting.tiltY);
-    car.group.rotation.x = dragging ? car.group.rotation.x * 0.9 : lighting.tiltX;
-  }
+  const mouseWorld = lighting.update(pointer, dt);
+  orb.setMouseWorld(mouseWorld);
+  orb.update(t, dt);
+
+  // Pendant le drag : pas d'auto-rotation, on ne suit que le geste (yaw).
+  // Sinon : auto-rotation continue + léger tilt vertical vers le curseur.
+  if (!dragging) spin += rotationSpeed * dt * 0.4;
+  orb.group.rotation.y = spin + userYaw + (dragging ? 0 : lighting.tiltY);
+  orb.group.rotation.x = dragging ? orb.group.rotation.x * 0.9 : lighting.tiltX;
 
   grain.uniforms.uTime.value = t;
   ui.tickFps(dt);

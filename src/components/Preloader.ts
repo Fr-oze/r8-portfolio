@@ -1,32 +1,11 @@
 // =====================================================================
-// PRELOADER — R8 en pixel-art qui traverse l'écran + compteur 000→100
+// PRELOADER — orbe de lignes concentriques froissées qui se forme au
+// centre + compteur 000→100 piloté par la progression réelle.
 // =====================================================================
-// Dessine une R8 de profil en pixel-art sur un canvas 2D, la fait défiler
-// de droite à gauche en boucle avec des motion lines. Le compteur est piloté
-// par la VRAIE progression de chargement (voir setProgress / LoadingManager).
+// Même langage que la scène hero : anneaux déformés par un bruit doux,
+// tracés en 2D. À 100 %, l'orbe se dilate et s'efface.
 
-// Grille pixel-art de la R8 (vue de profil). 1 = carrosserie, 2 = vitres,
-// 3 = phares, 4 = roues, 5 = jante. 0 = vide.
-const SPRITE = [
-  "00000000000000000000000000",
-  "00000000111111111000000000",
-  "00000011222222221110000000",
-  "00011112222222222211111000",
-  "01111111111111111111111130",
-  "31111111111111111111111110",
-  "01114011111111111114011100",
-  "00040400000000000004040000",
-  "00040400000000000004040000",
-  "00004000000000000000400000",
-];
-
-const COLORS: Record<string, string> = {
-  1: "#e8edf2", // carrosserie
-  2: "#7f8a96", // vitres
-  3: "#ff5a5a", // phare
-  4: "#1c1f24", // pneu
-  5: "#cfd6dd", // jante
-};
+const RINGS = 26;
 
 export class Preloader {
   el: HTMLElement;
@@ -36,15 +15,15 @@ export class Preloader {
   onComplete?: () => void;
   progress: number;
   shown: number;
-  carX: number;
   done: boolean;
   exiting: boolean;
+  exitK: number; // 0..1 : avancement de la sortie (dilatation + fondu)
   raf: number;
+  t0: number;
   w = 0;
   h = 0;
-  px = 3;
-  exitX = 0;
   private _resize: () => void;
+  private seeds: number[];
 
   constructor(onComplete?: () => void) {
     this.el = document.getElementById("preloader")!;
@@ -53,12 +32,14 @@ export class Preloader {
     this.ctx = this.canvas.getContext("2d")!;
     this.onComplete = onComplete;
 
-    this.progress = 0;       // cible réelle (0→1)
-    this.shown = 0;          // valeur affichée (lerp)
-    this.carX = 0;
+    this.progress = 0; // cible réelle (0→1)
+    this.shown = 0;    // valeur affichée (lerp)
     this.done = false;
     this.exiting = false;
+    this.exitK = 0;
     this.raf = 0;
+    this.t0 = performance.now();
+    this.seeds = Array.from({ length: RINGS }, () => Math.random() * 100);
 
     this._resize = () => this.resize();
     window.addEventListener("resize", this._resize);
@@ -73,43 +54,36 @@ export class Preloader {
     this.canvas.width = this.w * dpr;
     this.canvas.height = this.h * dpr;
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.px = Math.max(3, Math.round(this.w / 240)); // taille d'un "pixel"
   }
 
   setProgress(p: number) {
     this.progress = Math.max(this.progress, Math.min(1, p));
   }
 
-  drawCar(x: number, y: number) {
+  // Anneau déformé : rayon modulé par 2 sinus déphasés (froissé organique).
+  private drawRing(cx: number, cy: number, r: number, seed: number, t: number, alpha: number) {
     const ctx = this.ctx;
-    const px = this.px;
-    const sw = SPRITE[0].length * px;
-
-    // Motion lines / traînée derrière la voiture.
-    ctx.strokeStyle = "rgba(180,200,220,0.18)";
+    ctx.beginPath();
+    const STEPS = 90;
+    for (let i = 0; i <= STEPS; i++) {
+      const a = (i / STEPS) * Math.PI * 2;
+      const wob =
+        Math.sin(a * 3 + seed + t * 0.7) * 0.055 +
+        Math.sin(a * 7 - seed * 1.7 + t * 1.1) * 0.03;
+      const rr = r * (1 + wob);
+      const x = cx + Math.cos(a) * rr;
+      const y = cy + Math.sin(a) * rr;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(232, 237, 242, ${alpha})`;
     ctx.lineWidth = 1;
-    for (let i = 0; i < 7; i++) {
-      const ly = y + (i * SPRITE.length * px) / 7 + px;
-      const len = 40 + Math.random() * 120;
-      ctx.beginPath();
-      ctx.moveTo(x + sw + 10 + i * 6, ly);
-      ctx.lineTo(x + sw + 10 + i * 6 + len, ly);
-      ctx.stroke();
-    }
-
-    // Sprite pixel par pixel.
-    for (let r = 0; r < SPRITE.length; r++) {
-      for (let c = 0; c < SPRITE[r].length; c++) {
-        const k = SPRITE[r][c];
-        if (k === "0") continue;
-        ctx.fillStyle = COLORS[k] || "#fff";
-        ctx.fillRect(x + c * px, y + r * px, px, px);
-      }
-    }
+    ctx.stroke();
   }
 
   loop() {
     const ctx = this.ctx;
+    const t = (performance.now() - this.t0) / 1000;
     ctx.clearRect(0, 0, this.w, this.h);
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, this.w, this.h);
@@ -119,26 +93,34 @@ export class Preloader {
     const pct = Math.round(this.shown * 100);
     this.countEl.textContent = String(Math.min(pct, 100)).padStart(3, "0");
 
-    const sw = SPRITE[0].length * this.px;
-    const y = this.h / 2 - (SPRITE.length * this.px) / 2;
+    const cx = this.w / 2;
+    const cy = this.h / 2;
+    const maxR = Math.min(this.w, this.h) * 0.22;
 
     if (!this.exiting) {
-      // Boucle : traverse de droite à gauche.
-      this.carX -= this.w / 130;
-      if (this.carX < -sw) this.carX = this.w;
-      this.drawCar(this.carX, y);
-
-      // À 100 % (affiché), on déclenche la sortie.
+      // L'orbe se densifie avec la progression : les anneaux apparaissent
+      // du centre vers l'extérieur.
+      const visible = Math.max(2, Math.floor(RINGS * (0.15 + this.shown * 0.85)));
+      for (let i = 0; i < visible; i++) {
+        const k = (i + 1) / RINGS;
+        const alpha = 0.05 + 0.12 * (1 - Math.abs(k - 0.75));
+        this.drawRing(cx, cy, maxR * (0.25 + k * 0.75), this.seeds[i], t, alpha);
+      }
       if (pct >= 100 && !this.done) {
         this.done = true;
         this.exiting = true;
-        this.exitX = this.carX;
       }
     } else {
-      // Sortie : la voiture file vers la gauche hors écran.
-      this.exitX -= this.w / 45;
-      this.drawCar(this.exitX, y);
-      if (this.exitX < -sw - 40) {
+      // Sortie : dilatation + fondu.
+      this.exitK = Math.min(1, this.exitK + 0.035);
+      const grow = 1 + this.exitK * 2.2;
+      const fade = 1 - this.exitK;
+      for (let i = 0; i < RINGS; i++) {
+        const k = (i + 1) / RINGS;
+        const alpha = (0.05 + 0.12 * (1 - Math.abs(k - 0.75))) * fade;
+        this.drawRing(cx, cy, maxR * (0.25 + k * 0.75) * grow, this.seeds[i], t, alpha);
+      }
+      if (this.exitK >= 1) {
         this.finish();
         return;
       }
