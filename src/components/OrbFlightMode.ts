@@ -23,8 +23,8 @@ const BEST_KEY = "orb-flight-best";
 // terrain infini
 const T_LEN = 60; // profondeur visible (unités monde)
 const T_HALF_W = 7; // demi-largeur du maillage
-const FPEAK_N = 26; // pics simultanés (fenêtre glissante)
-const FIRST_PEAK = 26; // distance du premier relief : le départ est plat
+const FPEAK_N = 42; // pics simultanés (fenêtre glissante)
+const FIRST_PEAK = 20; // distance du premier relief : le départ est plat
 const CROSS_LINES = 72;
 const CROSS_SEGS = 110;
 const LON_LINES = 34;
@@ -52,6 +52,8 @@ interface FPeak {
 // deux côtés (GLSL et JS), mêmes données -> hitbox = visuel.
 const TERRAIN_GLSL = /* glsl */ `
   #define FPEAK_N ${FPEAK_N}
+  const float T_ZNEAR = 4.0;
+  const float T_SPAN = ${(T_LEN - 1).toFixed(1)};
   uniform float uScroll;
   uniform float uTime;
   uniform float uOpacity;
@@ -66,6 +68,12 @@ const TERRAIN_GLSL = /* glsl */ `
       h += uPeaks[i].z * exp(-dot(d, d) / (w * w + 0.0001));
     }
     return min(h, 1.2);
+  }
+  // Les éléments AVANCENT avec le monde : décalés de uScroll puis recyclés
+  // derrière la caméra. Entre deux recyclages, (zMoved - uScroll) est
+  // constant : chaque trait reste accroché au même point du terrain.
+  float wrapZ(float z) {
+    return (T_ZNEAR - T_SPAN) + mod(z - (T_ZNEAR - T_SPAN) + uScroll, T_SPAN);
   }
 `;
 
@@ -217,7 +225,7 @@ export class OrbFlightMode {
           }
         }
       }
-      this.terrain.add(new THREE.LineSegments(this._tGeo(pos), this._tLineMat()));
+      this.terrain.add(new THREE.LineSegments(this._tGeo(pos), this._tLineMat(true)));
     }
     // lignes longitudinales (sensation d'avancer tout droit)
     {
@@ -236,7 +244,7 @@ export class OrbFlightMode {
           }
         }
       }
-      this.terrain.add(new THREE.LineSegments(this._tGeo(pos), this._tLineMat()));
+      this.terrain.add(new THREE.LineSegments(this._tGeo(pos), this._tLineMat(false)));
     }
     // poussière posée sur le relief
     {
@@ -257,7 +265,10 @@ export class OrbFlightMode {
     return geo;
   }
 
-  private _tLineMat() {
+  // wrap = true : la ligne avance avec le monde (transversales) ;
+  // false : géométrie fixe, seul le relief y défile (longitudinales, dont
+  // le mouvement le long de leur propre axe est invisible).
+  private _tLineMat(wrap: boolean) {
     return new THREE.ShaderMaterial({
       uniforms: this.tUniforms,
       transparent: true,
@@ -266,12 +277,13 @@ export class OrbFlightMode {
       vertexShader: /* glsl */ `
         ${TERRAIN_GLSL}
         void main() {
-          vec2 q = vec2(position.x, position.z - uScroll);
+          float z = ${wrap ? "wrapZ(position.z)" : "position.z"};
+          vec2 q = vec2(position.x, z - uScroll);
           float h = terrainH(q);
           vH = h;
-          vZ = position.z;
+          vZ = z;
           gl_Position = projectionMatrix * viewMatrix *
-            vec4(position.x, h, position.z, 1.0);
+            vec4(position.x, h, z, 1.0);
         }
       `,
       fragmentShader: /* glsl */ `
@@ -297,13 +309,14 @@ export class OrbFlightMode {
         ${TERRAIN_GLSL}
         uniform float uDpr;
         void main() {
-          vec2 q = vec2(position.x, position.z - uScroll);
+          float z = wrapZ(position.z);
+          vec2 q = vec2(position.x, z - uScroll);
           float h = terrainH(q);
           vH = h;
-          vZ = position.z;
+          vZ = z;
           gl_PointSize = (0.8 + h * 1.6) * uDpr;
           gl_Position = projectionMatrix * viewMatrix *
-            vec4(position.x, h + 0.01, position.z, 1.0);
+            vec4(position.x, h + 0.01, z, 1.0);
         }
       `,
       fragmentShader: /* glsl */ `
@@ -324,8 +337,13 @@ export class OrbFlightMode {
   // largeur aléatoires. Anti-mur : pas deux pics infranchissables trop
   // proches en Z dans le couloir de vol.
   private _makePeak(Z: number): FPeak {
+    // la moitié des pics est biaisée dans le couloir de vol : c'est là que
+    // se joue la difficulté, le reste habille le paysage
+    const inLane = Math.random() < 0.5;
     const p: FPeak = {
-      x: (Math.random() * 2 - 1) * (T_HALF_W - 1.2),
+      x: inLane
+        ? (Math.random() * 2 - 1) * (LANE_X + 0.7)
+        : (Math.random() * 2 - 1) * (T_HALF_W - 1.2),
       Z,
       h: 0.35 + Math.random() * 0.85,
       w: 0.5 + Math.random() * 0.75,
