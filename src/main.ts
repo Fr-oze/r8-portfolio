@@ -139,8 +139,6 @@ const dive = new OrbDiveMode(stage, orb);
 
 document.getElementById("dive-start")?.addEventListener("click", () => dive.enter());
 document.getElementById("dive-exit")?.addEventListener("click", () => dive.exit());
-// Noyau atteint → récompense : on ouvre les projets.
-dive.onComplete = () => projects.show();
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && dive.active) dive.exit();
 });

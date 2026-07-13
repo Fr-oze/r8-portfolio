@@ -89,48 +89,22 @@
       </button>
     </div>
 
-    <!-- ============ HUD PLONGÉE ============ -->
+    <!-- ============ HUD DÉRIVE (tunnel infini) ============ -->
     <div id="dive-hud" class="dive-hud dive-hud--hidden">
-      <!-- Consigne du jeu, affichée à l'entrée -->
+      <!-- Consigne, affichée à l'entrée puis fondue -->
       <p id="dive-intro" class="dive-hud__intro">
-        VISE LE NOYAU AVEC LA SOURIS.<br />
-        CENTRÉ = TU FONCES · DÉSALIGNÉ = TU RALENTIS.<br />
-        ATTEINS 100% DE PROFONDEUR.
+        DÉRIVE.<br />
+        LA SOURIS GUIDE · LE CLIC MAINTENU ACCÉLÈRE.<br />
+        RESTE AUSSI LONGTEMPS QUE TU VEUX.
       </p>
-      <!-- Barre de progression vers le noyau -->
-      <div class="dive-hud__progress">
-        <span class="dive-hud__progress-lbl">NOYAU</span>
-        <div class="dive-hud__progress-track"><div id="dive-bar" class="dive-hud__progress-bar"></div></div>
-      </div>
       <div class="dive-hud__panel">
-        <div class="dive-hud__row">
-          <span>MODE</span>
-          <button id="dive-auto" class="dive-hud__auto dive-hud__auto--on">● AUTOPILOT</button>
-        </div>
-        <div class="dive-hud__row"><span>DEPTH</span><b><span id="dive-depth">000</span>%</b></div>
-        <div class="dive-hud__row"><span>STAB</span><b id="dive-stability">100%</b></div>
-        <div class="dive-hud__row"><span>FLUX</span><b><span id="dive-speed">0.0</span></b></div>
+        <div class="dive-hud__row"><span>SPEED</span><b><span id="dive-speed">0</span> U/S</b></div>
+        <div class="dive-hud__row"><span>DIST</span><b><span id="dive-dist">0</span> U</b></div>
       </div>
       <div class="dive-hud__keys">
-        <span class="dive-hud__keycap">↑</span>
-        <span class="dive-hud__keycap">↓</span>
-        <span class="dive-hud__keycap">←</span>
-        <span class="dive-hud__keycap">→</span>
-        <span class="dive-hud__hint">OU LA SOURIS · VISE LE CENTRE</span>
+        <span class="dive-hud__hint">SOURIS · DÉRIVER — CLIC MAINTENU · ACCÉLÉRER — ÉCHAP · SORTIR</span>
       </div>
       <button id="dive-exit" class="dive-hud__exit">EXIT ✕</button>
-      <div class="dive-hud__radar">
-        <canvas id="dive-radar" width="160" height="160"></canvas>
-        <span class="dive-hud__radar-lbl">ALIGN</span>
-      </div>
-      <div class="dive-touch dive-touch--steer">
-        <button class="dive-touch__btn" data-k="left" aria-label="Gauche">◀</button>
-        <button class="dive-touch__btn" data-k="right" aria-label="Droite">▶</button>
-      </div>
-      <div class="dive-touch dive-touch--gas">
-        <button class="dive-touch__btn" data-k="up" aria-label="Haut">▲</button>
-        <button class="dive-touch__btn" data-k="down" aria-label="Bas">▼</button>
-      </div>
     </div>
 
     <!-- Espace hero (100vh) — le scroll commence en dessous -->

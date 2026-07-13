@@ -3,215 +3,396 @@ import type { Stage } from "../core/Stage";
 import type { OrbScene } from "./OrbScene";
 
 // =====================================================================
-// ORB DIVE — mini-jeu : plonger dans le noyau de l'orbe. Le tunnel défile
-// (les anneaux foncent vers la caméra) ; on vise le centre à la souris ou
-// aux flèches. Bien aligné = on descend vite, désaligné = on ralentit.
-// À 100 % : noyau atteint → ouverture des projets.
+// ORB DIVE — dérive hypnotique : tunnel infini qui serpente, ondes de
+// lumière qui remontent vers la caméra, roulis lent. Souris = dériver,
+// clic maintenu = boost (FOV + vitesse + traînées). Pas d'objectif :
+// on reste tant qu'on veut, Échap / EXIT pour sortir.
 // =====================================================================
 
+const LEN = 60; // profondeur visible du tunnel (unités monde)
+const RING_N = 110;
+const RING_SEGS = 96;
+const STREAK_N = 170;
+const DUST_N = 4200;
+
+// Le tunnel est paramétré par A = uDist + s (coordonnée absolue le long du
+// chemin, en "slots" : 1 slot = LEN unités). curve(A) donne la position
+// latérale du chemin ; on soustrait curve(uDist) pour que la caméra reste à
+// l'origine : le tunnel se courbe devant et se redresse en passant.
+const TUNNEL_GLSL = /* glsl */ `
+  uniform float uDist;
+  uniform float uTime;
+  uniform vec2  uSteer;
+  uniform float uBoost;
+  varying float vS;
+  varying float vPulse;
+  const float LEN = ${LEN.toFixed(1)};
+  const float RADIUS = 2.4;
+
+  vec2 curve(float A) {
+    return vec2(
+      sin(A * 2.2) * 1.8 + sin(A * 0.9) * 2.6,
+      cos(A * 1.4) * 1.2 + sin(A * 0.6) * 0.9
+    );
+  }
+`;
+
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+
+// Miroir JS de curve() pour orienter la caméra vers le virage qui arrive.
+function curveJS(A: number, out: THREE.Vector2) {
+  out.set(
+    Math.sin(A * 2.2) * 1.8 + Math.sin(A * 0.9) * 2.6,
+    Math.cos(A * 1.4) * 1.2 + Math.sin(A * 0.6) * 0.9
+  );
+  return out;
+}
 
 export class OrbDiveMode {
   stage: Stage;
   orb: OrbScene;
   active = false;
-  autopilot = true;
-  depth = 0;       // 0..1
-  stability = 1;   // 0..1
-  speed = 0;
-  onComplete: (() => void) | null = null;
-  private offset = new THREE.Vector2(0, 0);
-  private target = new THREE.Vector2(0, 0);
-  private keys: Record<string, boolean> = {};
-  private savedCam = { pos: new THREE.Vector3(), quat: new THREE.Quaternion() };
-  private savedGroup = { rot: new THREE.Euler(), pos: new THREE.Vector3() };
-  private enterT = 0;
+
+  private group: THREE.Group;
+  private uniforms = {
+    uDist: { value: 0 },
+    uTime: { value: 0 },
+    uSteer: { value: new THREE.Vector2(0, 0) },
+    uBoost: { value: 0 },
+    uDpr: { value: 1 },
+  };
+  private steer = new THREE.Vector2(0, 0);
+  private boosting = false;
+  private speed = 0; // slots/s lissé
+  private savedCam = {
+    pos: new THREE.Vector3(),
+    quat: new THREE.Quaternion(),
+    fov: 42,
+  };
   private hud: HTMLElement | null;
-  private autoBtn: HTMLElement | null;
-  private depthEl: HTMLElement | null;
-  private stabEl: HTMLElement | null;
   private speedEl: HTMLElement | null;
-  private barEl: HTMLElement | null;
+  private distEl: HTMLElement | null;
   private introEl: HTMLElement | null;
-  private radarCanvas: HTMLCanvasElement | null;
-  private radarCtx: CanvasRenderingContext2D | null;
+  private _c1 = new THREE.Vector2();
+  private _c2 = new THREE.Vector2();
 
   constructor(stage: Stage, orb: OrbScene) {
     this.stage = stage;
     this.orb = orb;
-    this._bindKeys();
-    this._bindTouch();
+    this.uniforms.uDpr.value = stage.dpr;
+
+    this.group = new THREE.Group();
+    this.group.visible = false;
+    stage.add(this.group);
+    this._buildRings();
+    this._buildStreaks();
+    this._buildDust();
 
     this.hud = document.getElementById("dive-hud");
-    this.autoBtn = document.getElementById("dive-auto");
-    this.depthEl = document.getElementById("dive-depth");
-    this.stabEl = document.getElementById("dive-stability");
     this.speedEl = document.getElementById("dive-speed");
-    this.barEl = document.getElementById("dive-bar");
+    this.distEl = document.getElementById("dive-dist");
     this.introEl = document.getElementById("dive-intro");
-    this.radarCanvas = document.getElementById("dive-radar") as HTMLCanvasElement | null;
-    this.radarCtx = this.radarCanvas?.getContext("2d") ?? null;
 
-    this.autoBtn?.addEventListener("click", () => {
-      this.autopilot = true;
-      this.autoBtn?.classList.add("dive-hud__auto--on");
+    // Boost : clic maintenu n'importe où (sauf sur un bouton du HUD).
+    window.addEventListener("pointerdown", (e) => {
+      if (!this.active) return;
+      if ((e.target as HTMLElement).closest("button")) return;
+      this.boosting = true;
+    });
+    window.addEventListener("pointerup", () => (this.boosting = false));
+    window.addEventListener("pointercancel", () => (this.boosting = false));
+  }
+
+  // --- ANNEAUX : cercles froissés qui foncent vers la caméra ---------------
+  private _buildRings() {
+    const verts = RING_N * RING_SEGS * 2;
+    const slots = new Float32Array(verts);
+    const angles = new Float32Array(verts);
+    const seeds = new Float32Array(verts);
+    let w = 0;
+    for (let i = 0; i < RING_N; i++) {
+      const slot = i / RING_N;
+      const seed = Math.random() * 10;
+      for (let s = 0; s < RING_SEGS; s++) {
+        for (let e = 0; e < 2; e++) {
+          slots[w] = slot;
+          angles[w] = (((s + e) % RING_SEGS) / RING_SEGS) * Math.PI * 2;
+          seeds[w] = seed;
+          w++;
+        }
+      }
+    }
+    this.group.add(
+      new THREE.LineSegments(
+        this._geo(verts, slots, angles, seeds, null),
+        this._ringMaterial()
+      )
+    );
+  }
+
+  // --- TRAÎNÉES : segments longitudinaux sur la paroi (sensation de vitesse)
+  private _buildStreaks() {
+    const verts = STREAK_N * 2;
+    const slots = new Float32Array(verts);
+    const angles = new Float32Array(verts);
+    const seeds = new Float32Array(verts);
+    const ends = new Float32Array(verts);
+    for (let i = 0; i < STREAK_N; i++) {
+      const slot = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const seed = 0.96 + Math.random() * 0.1; // rayon relatif
+      for (let e = 0; e < 2; e++) {
+        const w = i * 2 + e;
+        slots[w] = slot;
+        angles[w] = angle;
+        seeds[w] = seed;
+        ends[w] = e;
+      }
+    }
+    this.group.add(
+      new THREE.LineSegments(
+        this._geo(verts, slots, angles, seeds, ends),
+        this._streakMaterial()
+      )
+    );
+  }
+
+  // --- POUSSIÈRE : particules dans le volume du tunnel ---------------------
+  private _buildDust() {
+    const slots = new Float32Array(DUST_N);
+    const angles = new Float32Array(DUST_N);
+    const seeds = new Float32Array(DUST_N); // rayon relatif intérieur
+    for (let i = 0; i < DUST_N; i++) {
+      slots[i] = Math.random();
+      angles[i] = Math.random() * Math.PI * 2;
+      seeds[i] = 0.15 + Math.random() * 0.75;
+    }
+    this.group.add(
+      new THREE.Points(this._geo(DUST_N, slots, angles, seeds, null), this._dustMaterial())
+    );
+  }
+
+  private _geo(
+    count: number,
+    slots: Float32Array,
+    angles: Float32Array,
+    seeds: Float32Array,
+    ends: Float32Array | null
+  ) {
+    const geo = new THREE.BufferGeometry();
+    // position requise par Three mais recalculée entièrement dans le shader.
+    geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(count * 3), 3));
+    geo.setAttribute("aSlot", new THREE.BufferAttribute(slots, 1));
+    geo.setAttribute("aAngle", new THREE.BufferAttribute(angles, 1));
+    geo.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+    if (ends) geo.setAttribute("aEnd", new THREE.BufferAttribute(ends, 1));
+    geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, -LEN / 2), LEN);
+    return geo;
+  }
+
+  private _ringMaterial() {
+    return new THREE.ShaderMaterial({
+      uniforms: this.uniforms,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      vertexShader: /* glsl */ `
+        ${TUNNEL_GLSL}
+        attribute float aSlot;
+        attribute float aAngle;
+        attribute float aSeed;
+        void main() {
+          float s = fract(aSlot - uDist);
+          float A = uDist + s;
+          vS = s;
+          // ondes de lumière qui remontent le tunnel vers la caméra
+          vPulse = 0.5 + 0.5 * sin(A * 40.0 + uTime * 2.5);
+          float r = RADIUS * (1.0
+            + 0.05 * sin(aAngle * 5.0 + A * 30.0 + uTime * 0.4)
+            + 0.04 * sin(aAngle * 9.0 - A * 47.0 + aSeed));
+          vec2 c = curve(A) - curve(uDist) + uSteer * s * s * 2.2;
+          vec3 p = vec3(cos(aAngle) * r + c.x, sin(aAngle) * r + c.y, 5.0 - s * LEN);
+          gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        precision highp float;
+        ${TUNNEL_GLSL}
+        void main() {
+          float fadeNear = smoothstep(0.0, 0.03, vS);
+          float fadeFar = smoothstep(1.0, 0.8, vS);
+          float near = 1.0 - vS;
+          float a = fadeNear * fadeFar
+                  * (0.04 + 0.07 * vPulse + 0.22 * near * near)
+                  * (1.0 + 0.5 * uBoost);
+          float b = 0.5 + 0.35 * vPulse + 0.3 * near;
+          gl_FragColor = vec4(vec3(b), a);
+        }
+      `,
     });
   }
 
-  private _bindKeys() {
-    const map: Record<string, string> = {
-      ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right",
-      w: "up", s: "down", a: "left", d: "right",
-    };
-    window.addEventListener("keydown", (e) => {
-      const k = map[e.key];
-      if (!k || !this.active) return;
-      this.keys[k] = true;
-      this.autopilot = false;
-      this.autoBtn?.classList.remove("dive-hud__auto--on");
-    });
-    window.addEventListener("keyup", (e) => {
-      const k = map[e.key];
-      if (k) this.keys[k] = false;
+  private _streakMaterial() {
+    return new THREE.ShaderMaterial({
+      uniforms: this.uniforms,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      vertexShader: /* glsl */ `
+        ${TUNNEL_GLSL}
+        attribute float aSlot;
+        attribute float aAngle;
+        attribute float aSeed;
+        attribute float aEnd;
+        void main() {
+          // la traînée s'étire avec le boost
+          float stretch = 0.006 + uBoost * 0.022;
+          float s = fract(aSlot - uDist) + aEnd * stretch;
+          float A = uDist + s;
+          vS = s;
+          vPulse = 1.0;
+          float r = RADIUS * aSeed;
+          vec2 c = curve(A) - curve(uDist) + uSteer * s * s * 2.2;
+          vec3 p = vec3(cos(aAngle) * r + c.x, sin(aAngle) * r + c.y, 5.0 - s * LEN);
+          gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        precision highp float;
+        ${TUNNEL_GLSL}
+        void main() {
+          float fadeNear = smoothstep(0.0, 0.03, vS);
+          float fadeFar = smoothstep(1.0, 0.8, vS);
+          float near = 1.0 - vS;
+          float a = fadeNear * fadeFar * (0.06 + 0.2 * near * near) * (0.7 + 0.8 * uBoost);
+          gl_FragColor = vec4(vec3(0.75), a);
+        }
+      `,
     });
   }
 
-  private _bindTouch() {
-    document.querySelectorAll(".dive-touch__btn").forEach((btn) => {
-      const k = btn.getAttribute("data-k") || "";
-      const down = (e: Event) => {
-        e.preventDefault();
-        if (!this.active) return;
-        this.keys[k] = true;
-        this.autopilot = false;
-        this.autoBtn?.classList.remove("dive-hud__auto--on");
-        btn.classList.add("--active");
-      };
-      const up = (e: Event) => {
-        e.preventDefault();
-        this.keys[k] = false;
-        btn.classList.remove("--active");
-      };
-      btn.addEventListener("pointerdown", down);
-      btn.addEventListener("pointerup", up);
-      btn.addEventListener("pointercancel", up);
-      btn.addEventListener("pointerleave", up);
+  private _dustMaterial() {
+    return new THREE.ShaderMaterial({
+      uniforms: this.uniforms,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      vertexShader: /* glsl */ `
+        ${TUNNEL_GLSL}
+        uniform float uDpr;
+        attribute float aSlot;
+        attribute float aAngle;
+        attribute float aSeed;
+        void main() {
+          float s = fract(aSlot - uDist);
+          float A = uDist + s;
+          vS = s;
+          vPulse = 0.5 + 0.5 * sin(A * 40.0 + uTime * 2.5);
+          float r = RADIUS * aSeed;
+          vec2 c = curve(A) - curve(uDist) + uSteer * s * s * 2.2;
+          vec3 p = vec3(cos(aAngle) * r + c.x, sin(aAngle) * r + c.y, 5.0 - s * LEN);
+          float near = 1.0 - s;
+          gl_PointSize = (0.7 + near * 2.4 + uBoost * 1.2) * uDpr;
+          gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        precision highp float;
+        ${TUNNEL_GLSL}
+        void main() {
+          vec2 uv = gl_PointCoord - 0.5;
+          if (length(uv) > 0.5) discard;
+          float fadeNear = smoothstep(0.0, 0.02, vS);
+          float fadeFar = smoothstep(1.0, 0.75, vS);
+          float near = 1.0 - vS;
+          float a = fadeNear * fadeFar * (0.1 + 0.3 * near * near + 0.08 * vPulse);
+          gl_FragColor = vec4(vec3(0.85), a);
+        }
+      `,
     });
   }
 
   enter() {
     if (this.active) return;
     this.active = true;
-    this.enterT = 0;
-    this.depth = 0;
-    this.stability = 1;
+    this.boosting = false;
+    this.steer.set(0, 0);
     this.speed = 0;
-    this.offset.set(0, 0);
-    this.target.set(0, 0);
-    this.autopilot = true;
 
     this.savedCam.pos.copy(this.stage.camera.position);
     this.savedCam.quat.copy(this.stage.camera.quaternion);
-    this.savedGroup.rot.copy(this.orb.group.rotation);
-    this.savedGroup.pos.copy(this.orb.group.position);
+    this.savedCam.fov = this.stage.camera.fov;
 
+    this.orb.group.visible = false;
+    this.group.visible = true;
     document.body.classList.add("diving");
     this.hud?.classList.remove("dive-hud--hidden");
-    this.autoBtn?.classList.add("dive-hud__auto--on");
     this.orb.freezeForDive();
 
-    // Consigne affichée quelques secondes à l'entrée.
     this.introEl?.classList.add("dive-hud__intro--show");
-    setTimeout(() => this.introEl?.classList.remove("dive-hud__intro--show"), 4500);
+    setTimeout(() => this.introEl?.classList.remove("dive-hud__intro--show"), 5000);
   }
 
   exit() {
     if (!this.active) return;
     this.active = false;
+    this.boosting = false;
+
+    this.group.visible = false;
+    this.orb.group.visible = true;
     document.body.classList.remove("diving");
     this.hud?.classList.add("dive-hud--hidden");
 
-    this.stage.camera.position.copy(this.savedCam.pos);
-    this.stage.camera.quaternion.copy(this.savedCam.quat);
-    this.orb.group.rotation.copy(this.savedGroup.rot);
-    this.orb.group.position.copy(this.savedGroup.pos);
-    this.orb.setDive(false, 0);
+    const cam = this.stage.camera;
+    cam.position.copy(this.savedCam.pos);
+    cam.quaternion.copy(this.savedCam.quat);
+    cam.fov = this.savedCam.fov;
+    cam.up.set(0, 1, 0);
+    cam.updateProjectionMatrix();
     this.orb.resumeAfterDive();
   }
 
   update(t: number, dt: number, pointer: THREE.Vector2) {
     if (!this.active) return;
 
-    this.enterT += dt;
-    const intro = clamp(this.enterT / 1.2, 0, 1);
+    const u = this.uniforms;
+    u.uTime.value = t;
+    u.uDpr.value = this.stage.dpr;
 
-    // cible : autopilote recentre, sinon souris ou clavier
-    if (this.autopilot) {
-      this.target.lerp(new THREE.Vector2(0, 0), 0.08);
-    } else if (this.keys.left || this.keys.right || this.keys.up || this.keys.down) {
-      this.target.x += (this.keys.right ? 1 : 0) - (this.keys.left ? 1 : 0);
-      this.target.y += (this.keys.up ? 1 : 0) - (this.keys.down ? 1 : 0);
-      this.target.x = clamp(this.target.x, -1.2, 1.2);
-      this.target.y = clamp(this.target.y, -1.2, 1.2);
-    } else {
-      this.target.set(pointer.x * 1.1, pointer.y * 0.9);
-    }
-    this.offset.lerp(this.target, this.autopilot ? 0.12 : 0.18);
+    // vitesse : croisière lente et régulière, boost au clic maintenu.
+    const boostTarget = this.boosting ? 1 : 0;
+    u.uBoost.value += (boostTarget - u.uBoost.value) * Math.min(1, dt * 4);
+    const targetSpeed = 0.16 + u.uBoost.value * 0.42; // slots/s
+    this.speed += (targetSpeed - this.speed) * Math.min(1, dt * 2.5);
+    u.uDist.value += this.speed * dt;
 
-    // Stabilité = à quel point on vise le centre. Bien centré → on fonce,
-    // désaligné → on ralentit presque à l'arrêt (c'est ça, le jeu).
-    const misalign = this.offset.length();
-    this.stability += (clamp(1 - misalign * 1.35, 0, 1) - this.stability) * 0.12;
+    // dérive : la souris tire doucement la trajectoire.
+    this.steer.x += (pointer.x * 0.9 - this.steer.x) * Math.min(1, dt * 3);
+    this.steer.y += (pointer.y * 0.7 - this.steer.y) * Math.min(1, dt * 3);
+    u.uSteer.value.copy(this.steer);
 
-    const baseRate = 0.006 + Math.pow(this.stability, 2.2) * 0.062;
-    this.speed += (baseRate * 60 - this.speed) * 0.08;
-    this.depth = clamp(this.depth + this.speed * dt * 0.018, 0, 1);
-
-    // caméra : zoom vers le noyau + décalage selon l'offset. Quand on est
-    // désaligné, léger tremblement pour signaler qu'on frotte la paroi.
-    const shake = (1 - this.stability) * 0.05;
-    const camZ = THREE.MathUtils.lerp(this.savedCam.pos.z, 2.4, intro * 0.7);
-    this.stage.camera.position.set(
-      this.offset.x * 0.55 + (Math.random() - 0.5) * shake,
-      this.offset.y * 0.4 + 0.1 + (Math.random() - 0.5) * shake,
-      camZ
+    // caméra : respiration + roulis lent (le coeur de l'hypnose) + regard
+    // vers le virage qui arrive.
+    const cam = this.stage.camera;
+    const roll = Math.sin(t * 0.12) * 0.09 + this.steer.x * 0.16;
+    cam.up.set(Math.sin(roll), Math.cos(roll), 0);
+    cam.position.set(
+      this.steer.x * 0.5 + Math.sin(t * 0.4) * 0.04,
+      this.steer.y * 0.35 + 0.05 + Math.cos(t * 0.31) * 0.03,
+      6
     );
-    this.stage.camera.lookAt(this.offset.x * 0.3, this.offset.y * 0.25, 0);
+    const ahead = curveJS(u.uDist.value + 0.22, this._c1)
+      .sub(curveJS(u.uDist.value, this._c2));
+    cam.lookAt(
+      ahead.x * 0.55 + this.steer.x * 1.3,
+      ahead.y * 0.55 + this.steer.y * 0.9,
+      -9
+    );
+    // boost : le champ de vision s'ouvre (effet warp).
+    cam.fov += (this.savedCam.fov + u.uBoost.value * 16 - cam.fov) * Math.min(1, dt * 5);
+    cam.updateProjectionMatrix();
 
-    // Le disque reste face caméra ; le tunnel défile dans le shader (uDive).
-    this.orb.group.scale.setScalar(1);
-    this.orb.group.rotation.set(0, this.offset.x * 0.1, this.offset.x * 0.06);
-    this.orb.setDive(true, this.depth);
-
-    this._updateHud();
-    if (this.depth >= 0.995) {
-      this.exit();
-      this.onComplete?.();
-    }
-  }
-
-  private _updateHud() {
-    if (this.depthEl) this.depthEl.textContent = String(Math.round(this.depth * 100)).padStart(3, "0");
-    if (this.stabEl) this.stabEl.textContent = `${Math.round(this.stability * 100)}%`;
-    if (this.speedEl) this.speedEl.textContent = this.speed.toFixed(1);
-    if (this.barEl) this.barEl.style.width = `${this.depth * 100}%`;
-    if (!this.radarCtx || !this.radarCanvas) return;
-    const ctx = this.radarCtx;
-    const w = this.radarCanvas.width;
-    const h = this.radarCanvas.height;
-    const cx = w / 2;
-    const cy = h / 2;
-    ctx.clearRect(0, 0, w, h);
-    ctx.strokeStyle = "rgba(180,200,220,0.25)";
-    ctx.lineWidth = 1;
-    for (let i = 1; i <= 4; i++) {
-      ctx.beginPath();
-      ctx.arc(cx, cy, (i / 4) * Math.min(cx, cy) * 0.9, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-    ctx.fillStyle = "rgba(242,244,246,0.9)";
-    ctx.beginPath();
-    ctx.arc(cx + this.offset.x * cx * 0.55, cy - this.offset.y * cy * 0.55, 4, 0, Math.PI * 2);
-    ctx.fill();
+    if (this.speedEl) this.speedEl.textContent = String(Math.round(this.speed * LEN));
+    if (this.distEl) this.distEl.textContent = String(Math.round(u.uDist.value * LEN));
   }
 }

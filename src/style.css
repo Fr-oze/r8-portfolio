@@ -691,32 +691,6 @@ body.diving .ui__quip {
 .dive-hud__intro--show {
   opacity: 1;
 }
-.dive-hud__progress {
-  position: absolute;
-  bottom: 78px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: min(420px, 70vw);
-}
-.dive-hud__progress-lbl {
-  font-size: 9px;
-  letter-spacing: 0.22em;
-  color: var(--dim);
-}
-.dive-hud__progress-track {
-  flex: 1;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.12);
-}
-.dive-hud__progress-bar {
-  height: 100%;
-  width: 0%;
-  background: var(--ink);
-  transition: width 0.15s linear;
-}
 .dive-hud__panel {
   position: absolute;
   top: 26px;
@@ -742,28 +716,6 @@ body.diving .ui__quip {
   font-size: 15px;
   letter-spacing: 0.08em;
 }
-.dive-hud__auto {
-  pointer-events: auto;
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--dim);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition: color 0.25s ease-out, border-color 0.25s ease-out, background 0.25s ease-out;
-}
-.dive-hud__auto:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-}
-.dive-hud__auto--on {
-  color: #0a0b0d;
-  background: var(--ink);
-  border-color: var(--ink);
-}
 .dive-hud__keys {
   position: absolute;
   bottom: 30px;
@@ -773,18 +725,7 @@ body.diving .ui__quip {
   align-items: center;
   gap: 8px;
 }
-.dive-hud__keycap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border: 1px solid var(--line);
-  font-size: 12px;
-  color: var(--ink);
-}
 .dive-hud__hint {
-  margin-left: 14px;
   font-size: 9px;
   letter-spacing: 0.2em;
   color: var(--dim);
@@ -807,86 +748,10 @@ body.diving .ui__quip {
 .dive-hud__exit:hover {
   border-color: var(--ink);
 }
-.dive-hud__radar {
-  position: absolute;
-  bottom: 28px;
-  right: 32px;
-  width: 140px;
-  height: 140px;
-  border: 1px solid var(--line);
-  background: rgba(6, 7, 9, 0.55);
-  backdrop-filter: blur(2px);
-}
-.dive-hud__radar canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.dive-hud__radar-lbl {
-  position: absolute;
-  top: 6px;
-  left: 8px;
-  font-size: 8px;
-  letter-spacing: 0.22em;
-  color: var(--dim);
-}
-.dive-touch {
-  position: absolute;
-  bottom: 26px;
-  display: none;
-  gap: 14px;
-  pointer-events: none;
-}
-.dive-touch--steer {
-  left: 22px;
-}
-.dive-touch--gas {
-  right: 22px;
-}
-.dive-touch__btn {
-  pointer-events: auto;
-  width: 68px;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line);
-  background: rgba(8, 9, 11, 0.5);
-  backdrop-filter: blur(3px);
-  color: var(--ink);
-  font: inherit;
-  font-size: 20px;
-  border-radius: 50%;
-  cursor: pointer;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s ease-out, border-color 0.12s ease-out, transform 0.12s ease-out;
-}
-.dive-touch__btn.--active {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: var(--ink);
-  color: #0a0b0d;
-  transform: scale(0.94);
-}
-body.touch .dive-hud:not(.dive-hud--hidden) .dive-touch {
-  display: flex;
-}
-body.touch .dive-hud__keys {
-  display: none;
-}
 
 @media (max-width: 720px) {
   .dive-hud__hint {
     display: none;
-  }
-  .dive-hud__radar {
-    width: 84px;
-    height: 84px;
-    top: 68px;
-    right: 16px;
-    bottom: auto;
   }
   .dive-hud__panel {
     top: 18px;
@@ -896,14 +761,6 @@ body.touch .dive-hud__keys {
     top: 18px;
     right: 16px;
     padding: 7px 11px;
-  }
-  .dive-touch__btn {
-    width: 62px;
-    height: 62px;
-    font-size: 18px;
-  }
-  .dive-touch {
-    bottom: 22px;
   }
 }
 
