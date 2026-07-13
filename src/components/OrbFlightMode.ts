@@ -3,28 +3,29 @@ import type { Stage } from "../core/Stage";
 import { OrbScene } from "./OrbScene";
 
 // =====================================================================
-// ORB FLIGHT — mode vaisseau : l'orbe bascule à l'horizontale et sert
-// de BASE de décollage. On avance TOUT DROIT : le disque défile
-// derrière nous avec le monde (pas de fondu croisé), le terrain proche
-// est plat et les montagnes se génèrent procéduralement à l'horizon.
+// ORB FLIGHT — mode vaisseau. Transition "portail" : la caméra avance
+// tout droit vers l'orbe qui se dilate et s'ouvre autour de nous, et on
+// débouche sur un TERRAIN INFINI généré procéduralement (départ plat,
+// montagnes à l'horizon). Aucune bascule, aucun fondu croisé : un seul
+// mouvement continu vers l'avant.
+// Gameplay sur UN SEUL AXE : altitude fixe, ← → esquivent les
+// montagnes, ↑ accélère (turbo), ↓ freine légèrement. Pilote
+// automatique engagé à l'entrée, A pour le ré-engager.
 // Les pics sont une liste unique (uniform) partagée entre le shader
 // (visuel) et le JS (collision) → la hitbox est exactement le visuel.
-// Pilote automatique engagé à l'entrée ; FLÈCHES pour prendre la main
-// (←/→ = latéral, ↑/↓ = altitude), A ré-engage l'auto.
 // =====================================================================
 
-const ENTER_DURATION = 2.1; // s — bascule de l'orbe + fondu vers le terrain
+const ENTER_DURATION = 2.2; // s — traversée du portail
 const EXIT_DURATION = 1.4;
 const LANE_X = 1.9; // demi-largeur du couloir de vol
-const ALT_MIN = 0.16;
-const ALT_MAX = 1.0;
+const SHIP_ALT = 0.62; // altitude FIXE du vaisseau (monde)
 const BEST_KEY = "orb-flight-best";
 
 // terrain infini
 const T_LEN = 60; // profondeur visible (unités monde)
 const T_HALF_W = 7; // demi-largeur du maillage
 const FPEAK_N = 42; // pics simultanés (fenêtre glissante)
-const FIRST_PEAK = 20; // distance du premier relief : le départ est plat
+const FIRST_PEAK = 18; // distance du premier relief : le départ est plat
 const CROSS_LINES = 72;
 const CROSS_SEGS = 110;
 const LON_LINES = 34;
@@ -101,30 +102,27 @@ export class OrbFlightMode {
   private scroll = 0;
 
   private ship: THREE.Group;
-  private shipPos = new THREE.Vector3(0, 0.85, 0);
-  private shipVel = new THREE.Vector2(0, 0); // vitesses instantanées (x, alt)
+  private shipX = 0;
+  private shipVelX = 0; // vitesse latérale instantanée
   private bank = 0; // roulis lissé
-  private pitch = 0; // tangage lissé
+  private pitch = 0; // tangage lissé (piqué au turbo)
 
-  private speed = 0; // unités monde / s
+  private speed = 0; // vitesse de croisière (unités monde / s)
+  private boost = 0; // 0..1 lissé (↑ maintenu)
+  private brake = 0; // 0..1 lissé (↓ maintenu)
   private dist = 0;
   private best = 0;
-  private grace = 0; // s sans collision au départ (le temps de s'orienter)
+  private grace = 0; // s sans collision au départ
 
   private auto = true; // pilote automatique (démo) — flèches = reprise en main
   private keys = { left: false, right: false, up: false, down: false };
-  private ctrlX = 0; // consignes courantes (latéral, altitude)
-  private ctrlAlt = 0.7;
+  private ctrlX = 0; // consigne latérale courante
 
   private savedCam = {
     pos: new THREE.Vector3(),
     quat: new THREE.Quaternion(),
     fov: 42,
   };
-  private savedRot = new THREE.Euler();
-  private savedOrbZ = 0;
-  private orbZAtExit = 0; // position du disque au moment de la sortie
-  private fadeAtExit = 1;
   private spinPos = 0;
   private targetCamPos = new THREE.Vector3();
   private targetCamQuat = new THREE.Quaternion();
@@ -174,14 +172,17 @@ export class OrbFlightMode {
       this._restart();
     });
 
-    // Clavier : flèches = piloter (et couper l'autopilote), A = ré-engager.
+    // Clavier : ← → = esquiver (et couper l'autopilote), ↑ = turbo,
+    // ↓ = frein, A = ré-engager l'autopilote.
     const ARROWS = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
     window.addEventListener("keydown", (e) => {
       if (!this.active) return;
       if (ARROWS.includes(e.key)) {
         e.preventDefault();
         if (this.state === "crashed") this._restart();
-        if (this.auto) this._setAuto(false);
+        if (this.auto && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+          this._setAuto(false);
+        }
         if (e.key === "ArrowLeft") this.keys.left = true;
         if (e.key === "ArrowRight") this.keys.right = true;
         if (e.key === "ArrowUp") this.keys.up = true;
@@ -200,7 +201,10 @@ export class OrbFlightMode {
 
   private _setAuto(v: boolean) {
     this.auto = v;
-    if (v) this.keys = { left: false, right: false, up: false, down: false };
+    if (v) {
+      this.keys.left = false;
+      this.keys.right = false;
+    }
     if (this.modeEl) this.modeEl.textContent = v ? "AUTO" : "MANUEL";
     this.hud?.classList.toggle("dive-hud--auto", v);
   }
@@ -333,12 +337,10 @@ export class OrbFlightMode {
     });
   }
 
-  // Un pic : position latérale large (visuel au-delà du couloir), hauteur et
-  // largeur aléatoires. Anti-mur : pas deux pics infranchissables trop
-  // proches en Z dans le couloir de vol.
+  // Un pic : la moitié est biaisée dans le couloir de vol (la difficulté),
+  // le reste habille le paysage. Anti-mur : pas deux obstacles
+  // infranchissables trop proches en Z dans le couloir.
   private _makePeak(Z: number): FPeak {
-    // la moitié des pics est biaisée dans le couloir de vol : c'est là que
-    // se joue la difficulté, le reste habille le paysage
     const inLane = Math.random() < 0.5;
     const p: FPeak = {
       x: inLane
@@ -348,10 +350,11 @@ export class OrbFlightMode {
       h: 0.35 + Math.random() * 0.85,
       w: 0.5 + Math.random() * 0.75,
     };
-    if (p.h > 0.78 && Math.abs(p.x) < LANE_X + 0.6) {
+    // obstacle = pic qui dépasse l'altitude de vol
+    if (p.h > SHIP_ALT && Math.abs(p.x) < LANE_X + 0.6) {
       for (const q of this.fpeaks) {
-        if (q.h > 0.78 && Math.abs(q.x) < LANE_X + 0.6 && Math.abs(q.Z - p.Z) < 3.0) {
-          p.h = 0.45 + Math.random() * 0.22;
+        if (q.h > SHIP_ALT && Math.abs(q.x) < LANE_X + 0.6 && Math.abs(q.Z - p.Z) < 2.6) {
+          p.h = 0.3 + Math.random() * 0.25; // colline décorative, survolable
           break;
         }
       }
@@ -362,8 +365,8 @@ export class OrbFlightMode {
   private _initFPeaks() {
     this.fpeaks = [];
     for (let i = 0; i < FPEAK_N; i++) {
-      // le départ est PLAT (la base) : le premier relief n'apparaît qu'à
-      // l'horizon et le monde se génère ensuite en continu
+      // le départ est PLAT : le premier relief n'apparaît qu'au loin et le
+      // monde se génère ensuite en continu
       const Z = -FIRST_PEAK - (i / FPEAK_N) * T_LEN + (Math.random() - 0.5) * 1.6;
       this.fpeaks.push(this._makePeak(Z));
     }
@@ -450,30 +453,26 @@ export class OrbFlightMode {
   }
 
   // Pilote automatique : scanne les couloirs et vise le plus dégagé sur les
-  // prochaines secondes, altitude au-dessus du relief à venir.
+  // prochaines secondes (esquive purement latérale, altitude fixe).
   private _autopilot(dt: number) {
     const LANES = 13;
     let bestX = this.ctrlX;
     let bestCost = Infinity;
-    let bestH = 0;
     for (let i = 0; i < LANES; i++) {
       const x = -LANE_X + (2 * LANE_X * i) / (LANES - 1);
       let danger = 0;
       for (const tau of [0.1, 0.3, 0.55, 0.85, 1.2]) {
         danger = Math.max(danger, this._flightH(x, -this.scroll - this.speed * tau));
       }
-      const blocked = danger > ALT_MAX - 0.2 ? 10 : 0; // couloir infranchissable
-      const cost = danger * 2 + blocked + Math.abs(x - this.shipPos.x) * 0.5;
+      const blocked = danger > SHIP_ALT - 0.1 ? 10 : 0;
+      const cost = danger * 2 + blocked + Math.abs(x - this.shipX) * 0.5;
       if (cost < bestCost) {
         bestCost = cost;
         bestX = x;
-        bestH = danger;
       }
     }
     const gain = Math.min(1, dt * (2.5 + this.speed * 0.6));
     this.ctrlX += (bestX - this.ctrlX) * gain;
-    const altTarget = clampN(bestH + 0.32, ALT_MIN + 0.18, ALT_MAX);
-    this.ctrlAlt += (altTarget - this.ctrlAlt) * gain;
   }
 
   // --- CYCLE DE VIE -------------------------------------------------------------
@@ -487,12 +486,8 @@ export class OrbFlightMode {
     this.savedCam.pos.copy(this.stage.camera.position);
     this.savedCam.quat.copy(this.stage.camera.quaternion);
     this.savedCam.fov = this.stage.camera.fov;
-    this.savedRot.copy(this.orb.group.rotation);
-    this.savedOrbZ = this.orb.group.position.z;
     this.spinPos = this.orb.group.rotation.z;
 
-    // le disque reste PLAT : c'est la base de décollage, le relief ne vient
-    // que du terrain infini généré devant
     this.orb.freezeForFlight();
     this.orb.uniforms.uMouse.value.set(999, 999, 999);
 
@@ -503,12 +498,13 @@ export class OrbFlightMode {
     this.tUniforms.uOpacity.value = 0;
 
     this.speed = 3.2;
+    this.boost = 0;
+    this.brake = 0;
     this.dist = 0;
-    this.grace = 1.8;
-    this.shipPos.set(0, 0.85, 0);
-    this.shipVel.set(0, 0);
+    this.grace = 1.2;
+    this.shipX = 0;
+    this.shipVelX = 0;
     this.ctrlX = 0;
-    this.ctrlAlt = 0.7;
     this._setAuto(true); // démo : l'autopilote montre la navigation
 
     document.body.classList.add("diving");
@@ -523,9 +519,6 @@ export class OrbFlightMode {
   exit() {
     if (!this.active || this.state === "exiting") return;
     this.state = "exiting";
-    // le disque revient de là où il était parti (derrière nous) vers le hero
-    this.orbZAtExit = this.orb.group.position.z;
-    this.fadeAtExit = this.orb.uniforms.uMaster.value;
     this.overEl?.classList.remove("dive-over--show");
     document.body.classList.remove("diving");
     this.hud?.classList.add("dive-hud--hidden");
@@ -536,11 +529,12 @@ export class OrbFlightMode {
     this.tUniforms.uScroll.value = 0;
     this._initFPeaks();
     this.speed = 3.2;
+    this.boost = 0;
+    this.brake = 0;
     this.dist = 0;
-    this.grace = 1.8;
-    this.shipVel.set(0, 0);
-    this.ctrlX = this.shipPos.x;
-    this.ctrlAlt = clampN(this.shipPos.y, ALT_MIN, ALT_MAX);
+    this.grace = 1.2;
+    this.shipVelX = 0;
+    this.ctrlX = this.shipX;
     this.overEl?.classList.remove("dive-over--show");
     this.state = "playing";
   }
@@ -567,59 +561,55 @@ export class OrbFlightMode {
   private _updateHud() {
     if (this.distEl) this.distEl.textContent = String(Math.round(this.dist));
     if (this.bestEl) this.bestEl.textContent = String(this.best);
-    if (this.speedEl) this.speedEl.textContent = String(Math.round(this.speed * 10));
+    if (this.speedEl) {
+      this.speedEl.textContent = String(
+        Math.round(this.speed * (1 + this.boost * 0.8) * 10)
+      );
+    }
   }
 
   // Caméra de jeu : basse, juste derrière le vaisseau, regard DROIT devant.
   private _computeGameCam() {
-    this.targetCamPos.set(this.shipPos.x, this.shipPos.y + 0.5, this.shipPos.z + 2.1);
+    this.targetCamPos.set(this.shipX, SHIP_ALT + 0.52, 2.1);
     const d = this._dummy;
     d.position.copy(this.targetCamPos);
     // la caméra penche légèrement avec le vaisseau
     d.up.set(Math.sin(this.bank * 0.45), Math.cos(this.bank * 0.45), 0);
-    d.lookAt(this.shipPos.x, this.shipPos.y + 0.02, this.shipPos.z - 6);
+    d.lookAt(this.shipX, SHIP_ALT + 0.02, -6);
     this.targetCamQuat.copy(d.quaternion);
   }
 
   update(t: number, dt: number, _pointer: THREE.Vector2) {
     if (!this.active) return;
     const cam = this.stage.camera;
-    const group = this.orb.group;
     this.tUniforms.uTime.value = t;
     this.tUniforms.uDpr.value = this.stage.dpr;
 
-    // --- transitions entrée / sortie ---------------------------------------
+    // --- transitions entrée / sortie : traversée du portail -----------------
     if (this.state === "entering" || this.state === "exiting") {
       const dir = this.state === "entering" ? 1 : -1;
       const dur = this.state === "entering" ? ENTER_DURATION : EXIT_DURATION;
       this.k = Math.max(0, Math.min(1, this.k + (dir * dt) / dur));
       const e = ease(this.k);
 
-      // bascule du disque : de la pose hero à l'horizontale (il reste PLAT,
-      // c'est la base de décollage — aucun fondu croisé)
-      group.rotation.x = this.savedRot.x + (-Math.PI / 2 - this.savedRot.x) * e;
-      group.rotation.y = this.savedRot.y * (1 - e);
-      group.rotation.z = this.spinPos;
-      if (this.state === "entering") {
-        this.orb.setFade(1);
-        group.position.z = this.savedOrbZ;
-      } else {
-        // sortie : le disque revient de là où il était (derrière nous) et
-        // retrouve son opacité en se redressant
-        this.orb.setFade(1 - (1 - this.fadeAtExit) * e);
-        group.position.z = this.savedOrbZ + (this.orbZAtExit - this.savedOrbZ) * e;
-      }
-      // le maillage plat apparaît discrètement sous la base pendant la bascule
-      this.tUniforms.uOpacity.value = sstep(0.25, 0.9, e) * 0.95;
+      // l'orbe se dilate autour de nous (dilatation accélérée : impercep-
+      // tible au début, "traversée" à la fin) puis s'éteint en douceur
+      this.orb.group.scale.setScalar(1 + e * e * 7);
+      this.orb.setFade(1 - sstep(0.55, 0.95, e));
+      // le monde apparaît devant, déjà en mouvement
+      this.tUniforms.uOpacity.value = sstep(0.35, 0.9, e) * 0.95;
+      this.scroll += this.speed * e * dt;
+      this.tUniforms.uScroll.value = this.scroll;
 
+      // caméra : un seul mouvement rectiligne vers l'avant
       this._computeGameCam();
       cam.position.lerpVectors(this.savedCam.pos, this.targetCamPos, e);
       cam.quaternion.slerpQuaternions(this.savedCam.quat, this.targetCamQuat, e);
       cam.fov = this.savedCam.fov + (52 - this.savedCam.fov) * e;
       cam.updateProjectionMatrix();
 
-      this.ship.visible = this.k > 0.4;
-      this.ship.position.copy(this.shipPos);
+      this.ship.visible = this.k > 0.3;
+      this.ship.position.set(this.shipX, SHIP_ALT, 0);
 
       if (this.state === "entering" && this.k >= 1) this.state = "playing";
       if (this.state === "exiting" && this.k <= 0) {
@@ -627,15 +617,13 @@ export class OrbFlightMode {
         this.active = false;
         this.terrain.visible = false;
         this.ship.visible = false;
-        group.rotation.set(this.savedRot.x, this.savedRot.y, this.spinPos);
-        group.position.z = this.savedOrbZ;
+        this.orb.group.scale.setScalar(1);
         this.orb.setFade(1);
         cam.position.copy(this.savedCam.pos);
         cam.quaternion.copy(this.savedCam.quat);
         cam.fov = this.savedCam.fov;
         cam.up.set(0, 1, 0);
         cam.updateProjectionMatrix();
-        this.orb.setTerrain(0);
         this.orb.resumeAfterFlight();
         this.onExited?.(this.spinPos);
       }
@@ -644,45 +632,35 @@ export class OrbFlightMode {
 
     // --- pilotage ------------------------------------------------------------
     if (this.state === "playing") {
-      // avance TOUT DROIT : le monde défile, les pics se recyclent à l'horizon
-      this.speed = Math.min(10, this.speed + dt * 0.14);
-      this.scroll += this.speed * dt;
+      // ↑ = turbo, ↓ = frein léger (lissés)
+      this.boost += ((this.keys.up ? 1 : 0) - this.boost) * Math.min(1, dt * 5);
+      this.brake += ((this.keys.down ? 1 : 0) - this.brake) * Math.min(1, dt * 5);
+
+      // avance TOUT DROIT : croisière qui monte doucement + turbo
+      this.speed = Math.min(9, this.speed + dt * 0.12);
+      const effSpeed = this.speed * (1 + this.boost * 0.8) * (1 - this.brake * 0.35);
+      this.scroll += effSpeed * dt;
       this.tUniforms.uScroll.value = this.scroll;
-      this.dist += this.speed * dt;
+      this.dist += effSpeed * dt;
       this._recyclePeaks();
 
-      // la base (le disque) défile derrière nous avec le monde, puis
-      // s'estompe une fois hors champ
-      group.position.z += this.speed * dt;
-      this.orb.setFade(1 - sstep(3.5, 10, group.position.z - this.savedOrbZ));
-
-      // consignes : autopilote ou flèches du clavier
+      // consigne latérale : autopilote ou ← →
       if (this.auto) {
         this._autopilot(dt);
       } else {
-        const RX = 3.4; // vitesse latérale (unités/s)
-        const RA = 1.3; // vitesse verticale
+        const RX = 3.6; // vitesse latérale (unités/s)
         if (this.keys.left) this.ctrlX -= RX * dt;
         if (this.keys.right) this.ctrlX += RX * dt;
-        if (this.keys.up) this.ctrlAlt += RA * dt;
-        if (this.keys.down) this.ctrlAlt -= RA * dt;
         this.ctrlX = clampN(this.ctrlX, -LANE_X, LANE_X);
-        this.ctrlAlt = clampN(this.ctrlAlt, ALT_MIN, ALT_MAX);
       }
-      const nx = this.shipPos.x + (this.ctrlX - this.shipPos.x) * Math.min(1, dt * 6);
-      const nAlt = this.shipPos.y + (this.ctrlAlt - this.shipPos.y) * Math.min(1, dt * 5);
-      this.shipVel.set(
-        (nx - this.shipPos.x) / Math.max(dt, 1e-4),
-        (nAlt - this.shipPos.y) / Math.max(dt, 1e-4)
-      );
-      this.shipPos.x = clampN(nx, -LANE_X, LANE_X);
-      this.shipPos.y = nAlt;
-      this.shipPos.z = 0;
+      const nx = this.shipX + (this.ctrlX - this.shipX) * Math.min(1, dt * 6);
+      this.shipVelX = (nx - this.shipX) / Math.max(dt, 1e-4);
+      this.shipX = clampN(nx, -LANE_X, LANE_X);
 
       // collision : hauteur EXACTE du terrain sous le vaisseau
       this.grace = Math.max(0, this.grace - dt);
-      const h = this._flightH(this.shipPos.x, -this.scroll);
-      if (this.grace <= 0 && this.shipPos.y < h - 0.05) {
+      const h = this._flightH(this.shipX, -this.scroll);
+      if (this.grace <= 0 && SHIP_ALT < h - 0.05) {
         this._crash();
       }
 
@@ -691,18 +669,19 @@ export class OrbFlightMode {
 
     // --- rendu vaisseau + caméra (playing et crashed) ------------------------
     const k = Math.min(1, dt * 6);
-    this.bank += (clampN(-this.shipVel.x * 0.4, -0.7, 0.7) - this.bank) * k;
-    this.pitch += (clampN(-this.shipVel.y * 0.35, -0.5, 0.5) - this.pitch) * k;
-    this.ship.position.copy(this.shipPos);
+    this.bank += (clampN(-this.shipVelX * 0.4, -0.7, 0.7) - this.bank) * k;
+    this.pitch += (-this.boost * 0.14 - this.pitch) * k;
+    this.ship.position.set(this.shipX, SHIP_ALT, 0);
     this.ship.rotation.set(this.pitch, 0, this.bank);
-    // micro-tremblement qui monte avec la vitesse
-    const shake = this.state === "playing" ? this.speed * 0.0012 : 0;
+    // micro-tremblement qui monte avec la vitesse et le turbo
+    const shake = this.state === "playing" ? (this.speed + this.boost * 6) * 0.0012 : 0;
     this._computeGameCam();
     cam.position.copy(this.targetCamPos);
     cam.position.x += Math.sin(t * 31) * shake;
     cam.position.y += Math.cos(t * 27) * shake;
     cam.quaternion.copy(this.targetCamQuat);
-    cam.fov += (52 + this.speed * 1.1 - cam.fov) * Math.min(1, dt * 4);
+    // turbo : le champ de vision s'ouvre (effet warp)
+    cam.fov += (52 + this.speed * 0.9 + this.boost * 9 - cam.fov) * Math.min(1, dt * 4);
     cam.updateProjectionMatrix();
   }
 }
