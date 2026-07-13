@@ -229,26 +229,33 @@ export class OrbFlightMode {
           }
         }
       }
-      this.terrain.add(new THREE.LineSegments(this._tGeo(pos), this._tLineMat(true)));
+      this.terrain.add(new THREE.LineSegments(this._tGeo(pos), this._tLineMat()));
     }
-    // lignes longitudinales (sensation d'avancer tout droit)
+    // lignes longitudinales : elles doivent AVANCER avec le monde elles
+    // aussi, sinon le relief "coule" le long de la ligne. Chaque segment
+    // est ancré sur son sommet le plus proche (position.z) et l'autre
+    // extrémité est un simple décalage (aDz) : les deux sommets wrappent
+    // ensemble, pas d'étirement au recyclage.
     {
       const verts = LON_LINES * LON_SEGS * 2;
       const pos = new Float32Array(verts * 3);
+      const dz = new Float32Array(verts);
       let w = 0;
       for (let i = 0; i < LON_LINES; i++) {
         const x = -T_HALF_W + (i / (LON_LINES - 1)) * 2 * T_HALF_W;
         for (let s = 0; s < LON_SEGS; s++) {
+          const z0 = 4 - ((s / LON_SEGS) * (T_LEN - 1));
           for (let e = 0; e < 2; e++) {
             const z = 4 - (((s + e) / LON_SEGS) * (T_LEN - 1));
             pos[w * 3] = x;
             pos[w * 3 + 1] = 0;
-            pos[w * 3 + 2] = z;
+            pos[w * 3 + 2] = z0;
+            dz[w] = z - z0;
             w++;
           }
         }
       }
-      this.terrain.add(new THREE.LineSegments(this._tGeo(pos), this._tLineMat(false)));
+      this.terrain.add(new THREE.LineSegments(this._tGeo(pos, dz), this._tLineMat()));
     }
     // poussière posée sur le relief
     {
@@ -262,17 +269,20 @@ export class OrbFlightMode {
     }
   }
 
-  private _tGeo(pos: Float32Array) {
+  private _tGeo(pos: Float32Array, dz?: Float32Array) {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute(
+      "aDz",
+      new THREE.BufferAttribute(dz ?? new Float32Array(pos.length / 3), 1)
+    );
     geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, -T_LEN / 2), T_LEN);
     return geo;
   }
 
-  // wrap = true : la ligne avance avec le monde (transversales) ;
-  // false : géométrie fixe, seul le relief y défile (longitudinales, dont
-  // le mouvement le long de leur propre axe est invisible).
-  private _tLineMat(wrap: boolean) {
+  // Tout wrappe : position.z est l'ancre du segment, aDz le décalage de
+  // l'extrémité — les deux sommets d'un segment se recyclent ensemble.
+  private _tLineMat() {
     return new THREE.ShaderMaterial({
       uniforms: this.tUniforms,
       transparent: true,
@@ -280,8 +290,9 @@ export class OrbFlightMode {
       depthWrite: false,
       vertexShader: /* glsl */ `
         ${TERRAIN_GLSL}
+        attribute float aDz;
         void main() {
-          float z = ${wrap ? "wrapZ(position.z)" : "position.z"};
+          float z = wrapZ(position.z) + aDz;
           vec2 q = vec2(position.x, z - uScroll);
           float h = terrainH(q);
           vH = h;
