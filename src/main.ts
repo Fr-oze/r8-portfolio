@@ -8,6 +8,7 @@ import { UI } from "./components/UI";
 import { Projects } from "./components/Projects";
 import { About } from "./components/About";
 import { Contact } from "./components/Contact";
+import { OrbDiveMode } from "./components/OrbDiveMode";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -134,6 +135,13 @@ window.addEventListener("keydown", (e) => {
 
 const orb = new OrbScene(stage);
 const lighting = new Lighting(stage, orb.group);
+const dive = new OrbDiveMode(stage, orb);
+
+document.getElementById("dive-start")?.addEventListener("click", () => dive.enter());
+document.getElementById("dive-exit")?.addEventListener("click", () => dive.exit());
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && dive.active) dive.exit();
+});
 
 let rotationSpeed = 0.1;
 let spin = 0; // angle d'auto-rotation continu
@@ -191,7 +199,7 @@ stage.onResize((w, h) => {
   composer.setSize(w, h);
   bloom.resolution.set(w, h);
   grain.uniforms.uResolution.value = [w, h];
-  if (orb.ready) frameOrb();
+  if (orb.ready && !dive.active) frameOrb();
 });
 // Un panneau plein écran (projets/about) est opaque devant la scène → inutile de
 // rendre la sphère dessous (et ça évite tout flash qui transparaîtrait au scroll).
@@ -218,6 +226,7 @@ const DRAG_SENS = 0.006; // radians par pixel
 
 sceneEl.style.cursor = "grab";
 sceneEl.addEventListener("pointerdown", (e) => {
+  if (dive.active) return;
   dragging = true;
   dragStartX = e.clientX;
   yawAtGrab = userYaw;
@@ -252,18 +261,20 @@ function onPreloaderDone() {
 }
 
 stage.start((t, dt) => {
-  // Scène figée tant qu'un panneau opaque est ouvert (rien à animer derrière).
   if (overlayOpen()) return;
 
-  const mouseWorld = lighting.update(pointer, dt);
-  orb.setMouseWorld(mouseWorld);
-  orb.update(t, dt);
+  if (dive.active) {
+    dive.update(t, dt, pointer);
+    orb.update(t, dt);
+  } else {
+    const mouseWorld = lighting.update(pointer, dt);
+    orb.setMouseWorld(mouseWorld);
+    orb.update(t, dt);
 
-  // Pendant le drag : pas d'auto-rotation, on ne suit que le geste (yaw).
-  // Sinon : auto-rotation continue + léger tilt vertical vers le curseur.
-  if (!dragging) spin += rotationSpeed * dt * 0.4;
-  orb.group.rotation.y = spin + userYaw + (dragging ? 0 : lighting.tiltY);
-  orb.group.rotation.x = dragging ? orb.group.rotation.x * 0.9 : lighting.tiltX;
+    if (!dragging) spin += rotationSpeed * dt * 0.4;
+    orb.group.rotation.y = spin + userYaw + (dragging ? 0 : lighting.tiltY);
+    orb.group.rotation.x = dragging ? orb.group.rotation.x * 0.9 : -0.06 + lighting.tiltX * 0.5;
+  }
 
   grain.uniforms.uTime.value = t;
   ui.tickFps(dt);

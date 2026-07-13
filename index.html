@@ -62,7 +62,7 @@
 
       <!-- COIN BAS-DROITE : labels techniques -->
       <div class="ui__corner ui__corner--br">
-        <span class="ui__stat">RENDER · <b id="stat-mode">WIREFRAME + PARTICLES</b></span>
+        <span class="ui__stat">RENDER · <b id="stat-mode">CONCENTRIC CORE</b></span>
         <span class="ui__stat">PARTICLES · <b id="stat-particles">0</b></span>
         <span class="ui__stat">FPS · <b id="stat-fps">0</b></span>
       </div>
@@ -78,10 +78,48 @@
       <!-- Sliders discrets -->
       <div id="controls" class="ui__controls"></div>
 
-      <!-- Bouton VOIR LES PROJETS (bas centre) -->
+      <!-- Bouton PLONGER (bas centre, desktop) -->
+      <button id="dive-start" class="ui__drive">
+        <span class="ui__drive-ic">◎</span> PLONGER DANS L'ORBE
+      </button>
+
+      <!-- Bouton VOIR LES PROJETS (bas centre, tactile/mobile) -->
       <button id="open-projects-cta" class="ui__drive ui__cta-projects">
         <span class="ui__drive-ic">▦</span> VOIR LES PROJETS
       </button>
+    </div>
+
+    <!-- ============ HUD PLONGÉE ============ -->
+    <div id="dive-hud" class="dive-hud dive-hud--hidden">
+      <div class="dive-hud__panel">
+        <div class="dive-hud__row">
+          <span>MODE</span>
+          <button id="dive-auto" class="dive-hud__auto dive-hud__auto--on">● AUTOPILOT</button>
+        </div>
+        <div class="dive-hud__row"><span>DEPTH</span><b><span id="dive-depth">000</span>%</b></div>
+        <div class="dive-hud__row"><span>STAB</span><b id="dive-stability">100%</b></div>
+        <div class="dive-hud__row"><span>FLUX</span><b><span id="dive-speed">0.0</span></b></div>
+      </div>
+      <div class="dive-hud__keys">
+        <span class="dive-hud__keycap">↑</span>
+        <span class="dive-hud__keycap">↓</span>
+        <span class="dive-hud__keycap">←</span>
+        <span class="dive-hud__keycap">→</span>
+        <span class="dive-hud__hint">OU SOURIS POUR VISER LE NOYAU</span>
+      </div>
+      <button id="dive-exit" class="dive-hud__exit">EXIT ✕</button>
+      <div class="dive-hud__radar">
+        <canvas id="dive-radar" width="160" height="160"></canvas>
+        <span class="dive-hud__radar-lbl">ALIGN</span>
+      </div>
+      <div class="dive-touch dive-touch--steer">
+        <button class="dive-touch__btn" data-k="left" aria-label="Gauche">◀</button>
+        <button class="dive-touch__btn" data-k="right" aria-label="Droite">▶</button>
+      </div>
+      <div class="dive-touch dive-touch--gas">
+        <button class="dive-touch__btn" data-k="up" aria-label="Haut">▲</button>
+        <button class="dive-touch__btn" data-k="down" aria-label="Bas">▼</button>
+      </div>
     </div>
 
     <!-- Espace hero (100vh) — le scroll commence en dessous -->

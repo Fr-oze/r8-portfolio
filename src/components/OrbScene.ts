@@ -2,17 +2,19 @@ import * as THREE from "three";
 import type { Stage } from "../core/Stage";
 
 // =====================================================================
-// ORB SCENE — sphère organique : voiles de lignes de flux + particules,
-// déformés par un bruit simplex animé (mouvement de tissu), répulsion
-// souris, révélation par scan vertical (même langage que l'ancien hero).
+// ORB SCENE — disque organique (réf. image) : trou central + anneaux
+// concentriques en perspective + voiles de flux. Plat mais pas 2D :
+// léger relief Z, parallaxe souris, tilt discret.
 // =====================================================================
 
-const RADIUS = 2.1;
-const RING_COUNT = 150;
-const RING_SEGMENTS = 200;
-const POINT_COUNT = 26000;
+const R_VOID = 0.14;
+const R_MAX = 2.45;
+const CONCENTRIC = 58;
+const RING_SEGS = 128;
+const FLOW_LINES = 72;
+const FLOW_SEGS = 96;
+const POINT_COUNT = 22000;
 
-// Bruit simplex 3D (Ashima / Ian McEwan, domaine public).
 const NOISE_GLSL = /* glsl */ `
   vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
   vec4 mod289(vec4 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
@@ -62,32 +64,44 @@ const NOISE_GLSL = /* glsl */ `
   }
 `;
 
-// Uniforms + varyings partagés lignes/points (vertex ET fragment).
 const SHARED_GLSL = /* glsl */ `
   uniform float uTime;
-  uniform float uScan;    // hauteur du front de révélation (Y local)
-  uniform float uBand;    // épaisseur de la ligne du front
-  uniform vec3  uMouse;   // souris en coordonnées monde
+  uniform float uScan;
+  uniform float uBand;
+  uniform vec3  uMouse;
   uniform float uGlow;
+  uniform float uDive;      // 0 = normal, 1 = mode plongée
+  uniform float uDiveDepth; // profondeur 0..1 en plongée
   varying float vReveal;
   varying float vFront;
   varying float vMouse;
+  varying float vR;
 `;
 
-// Déformation "voile" (vertex uniquement, dépend de snoise) : deux octaves de
-// bruit déplacent le rayon + un léger glissement tangentiel. C'est ce qui donne
-// le froissé organique de la sphère.
 const DISPLACE_GLSL = /* glsl */ `
-  vec3 displace(vec3 p, float seed) {
-    vec3 n = normalize(p);
-    float t = uTime * 0.13;
-    float d1 = snoise(n * 1.1 + vec3(t, t * 0.7, seed * 3.1));
-    float d2 = snoise(n * 2.6 - vec3(t * 1.4, seed, t * 0.9));
-    float r = length(p) + d1 * 0.40 + d2 * 0.13;
-    vec3 q = n * r;
-    q += vec3(-n.z, 0.0, n.x) * d2 * 0.18;
-    return q;
+  vec3 displace(vec3 p, float seed, float kind) {
+    float r = length(p.xy);
+    float a = atan(p.y, p.x);
+    float t = uTime * 0.11;
+    float outer = smoothstep(R_VOID, R_MAX * 0.55, r);
+    float wob = snoise(vec3(a * 2.4 + seed, r * 1.8, t)) * 0.09 * outer;
+    wob += snoise(vec3(a * 5.0 - seed * 2.0, r * 3.2, t * 1.3)) * 0.04 * outer;
+    float nr = r * (1.0 + wob);
+    float nz = p.z;
+    nz += snoise(vec3(a * 1.6, r * 2.0 + seed, t * 0.9)) * 0.06 * outer;
+    if (uDive > 0.5) {
+      float rush = uDiveDepth * 2.5;
+      nz -= rush * (1.0 - r / R_MAX) * 0.35;
+      nr *= 1.0 + rush * 0.08 * (1.0 - r / R_MAX);
+    }
+    return vec3(cos(a) * nr, sin(a) * nr, nz);
   }
+`;
+
+// injecté dans le shader (constantes GLSL)
+const CONST_GLSL = /* glsl */ `
+  const float R_VOID = ${R_VOID.toFixed(3)};
+  const float R_MAX = ${R_MAX.toFixed(3)};
 `;
 
 type Uniform = { value: number };
@@ -95,7 +109,7 @@ type Uniform = { value: number };
 export class OrbScene {
   stage: Stage;
   group: THREE.Group;
-  radius = RADIUS;
+  radius = R_MAX;
   ready = false;
   onReady: (() => void) | null = null;
   onScanComplete: (() => void) | null = null;
@@ -104,14 +118,12 @@ export class OrbScene {
 
   uniforms: Record<string, { value: any }>;
   private lineOpacity: Uniform = { value: 1 };
-  private pointOpacity: Uniform = { value: 0.3 };
-
-  // Modes cyclés (cibles d'opacité lignes/points) pour garder le HUD vivant.
+  private pointOpacity: Uniform = { value: 0.45 };
   private modes = [
-    { label: "FLOW WEAVE", lines: 1.0, points: 0.3 },
-    { label: "FULL FIELD", lines: 0.8, points: 1.0 },
-    { label: "PARTICLE CLOUD", lines: 0.1, points: 1.0 },
-    { label: "THIN LINES", lines: 0.55, points: 0.12 },
+    { label: "CONCENTRIC CORE", lines: 1.0, points: 0.35 },
+    { label: "FLOW FIELD", lines: 0.85, points: 0.9 },
+    { label: "PARTICLE MESH", lines: 0.25, points: 1.0 },
+    { label: "THIN RINGS", lines: 0.7, points: 0.15 },
   ];
   private modeIndex = 0;
   private modeTimer = 0;
@@ -122,136 +134,195 @@ export class OrbScene {
   constructor(stage: Stage) {
     this.stage = stage;
     this.group = new THREE.Group();
+    // léger tilt : pas totalement face caméra
+    this.group.rotation.x = -0.06;
     stage.add(this.group);
 
     this.uniforms = {
       uTime: { value: 0 },
-      uScan: { value: -RADIUS * 1.6 },
+      uScan: { value: -R_MAX * 1.2 },
       uScanOn: { value: 1 },
-      uBand: { value: 0.09 },
+      uBand: { value: 0.08 },
       uMouse: { value: new THREE.Vector3(999, 999, 999) },
       uGlow: { value: 0.3 },
       uDpr: { value: stage.dpr },
-      uPointSize: { value: 1.4 },
-      uLineFraction: { value: 0.5 },
+      uPointSize: { value: 1.2 },
+      uLineFraction: { value: 0.55 },
       uPointFraction: { value: 0.5 },
+      uDive: { value: 0 },
+      uDiveDepth: { value: 0 },
     };
   }
 
   load() {
-    this._buildLines();
+    this._buildConcentric();
+    this._buildFlow();
     this._buildPoints();
     this.setDetail(0.35);
     this.ready = true;
     this.onReady?.();
   }
 
-  // --- VOILES DE LIGNES ------------------------------------------------------
-  // Grands cercles orientés aléatoirement sur la sphère, concaténés en un seul
-  // LineSegments (un draw call). Le vertex shader les froisse avec le bruit.
-  private _buildLines() {
-    const verts = RING_COUNT * RING_SEGMENTS * 2;
+  // Anneaux concentriques : tunnel vers le trou central (z plus profond au centre).
+  private _buildConcentric() {
+    const rings = CONCENTRIC;
+    const verts = rings * RING_SEGS * 2;
     const pos = new Float32Array(verts * 3);
     const seeds = new Float32Array(verts);
+    const kinds = new Float32Array(verts);
     const rands = new Float32Array(verts);
-
-    const q = new THREE.Quaternion();
-    const v = new THREE.Vector3();
-    const axis = new THREE.Vector3();
     let w = 0;
 
-    for (let r = 0; r < RING_COUNT; r++) {
-      const seed = Math.random() * 10;
-      const rand = Math.random();
-      const rr = RADIUS * (0.86 + Math.random() * 0.22);
-      // orientation uniforme du plan de l'anneau
-      axis.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1).normalize();
-      q.setFromAxisAngle(axis, Math.random() * Math.PI * 2);
+    for (let i = 0; i < rings; i++) {
+      const t = (i + 1) / rings;
+      const r = R_VOID + (R_MAX - R_VOID) * Math.pow(t, 0.82);
+      const z = -0.55 * Math.pow(1 - t, 1.6); // perspective tunnel
+      const seed = i * 0.37;
+      const rand = i / rings;
 
-      for (let s = 0; s < RING_SEGMENTS; s++) {
+      for (let s = 0; s < RING_SEGS; s++) {
         for (let e = 0; e < 2; e++) {
-          const a = ((s + e) / RING_SEGMENTS) * Math.PI * 2;
-          v.set(Math.cos(a) * rr, Math.sin(a) * rr, 0).applyQuaternion(q);
-          pos[w * 3] = v.x;
-          pos[w * 3 + 1] = v.y;
-          pos[w * 3 + 2] = v.z;
+          const a = ((s + e) / RING_SEGS) * Math.PI * 2;
+          pos[w * 3] = Math.cos(a) * r;
+          pos[w * 3 + 1] = Math.sin(a) * r;
+          pos[w * 3 + 2] = z;
           seeds[w] = seed;
+          kinds[w] = 0;
           rands[w] = rand;
           w++;
         }
       }
     }
 
+    this.group.add(this._makeLines(pos, seeds, kinds, rands, this.lineOpacity));
+  }
+
+  // Voiles de flux : courbes radiales + arcs tangents (drapé organique).
+  private _buildFlow() {
+    const verts = FLOW_LINES * FLOW_SEGS * 2;
+    const pos = new Float32Array(verts * 3);
+    const seeds = new Float32Array(verts);
+    const kinds = new Float32Array(verts);
+    const rands = new Float32Array(verts);
+    let w = 0;
+
+    for (let l = 0; l < FLOW_LINES; l++) {
+      const seed = l * 1.73;
+      const rand = Math.random();
+      const radial = l < FLOW_LINES * 0.45;
+      const baseA = (l / FLOW_LINES) * Math.PI * 2;
+
+      for (let s = 0; s < FLOW_SEGS; s++) {
+        for (let e = 0; e < 2; e++) {
+          const k = (s + e) / (FLOW_SEGS - 1);
+          let r: number, a: number, z: number;
+          if (radial) {
+            r = R_VOID + (R_MAX - R_VOID) * k;
+            a = baseA + Math.sin(k * 8 + seed) * 0.22;
+            z = -0.12 * k + Math.sin(k * 6 + seed) * 0.08;
+          } else {
+            r = R_VOID + (R_MAX - R_VOID) * (0.35 + k * 0.65);
+            a = baseA + k * 1.8 + Math.sin(k * 5 + seed) * 0.35;
+            z = Math.sin(k * 4 + seed * 0.5) * 0.14 - 0.08;
+          }
+          pos[w * 3] = Math.cos(a) * r;
+          pos[w * 3 + 1] = Math.sin(a) * r;
+          pos[w * 3 + 2] = z;
+          seeds[w] = seed;
+          kinds[w] = 1;
+          rands[w] = rand;
+          w++;
+        }
+      }
+    }
+
+    this.group.add(this._makeLines(pos, seeds, kinds, rands, this.lineOpacity));
+  }
+
+  private _makeLines(
+    pos: Float32Array,
+    seeds: Float32Array,
+    kinds: Float32Array,
+    rands: Float32Array,
+    opacity: Uniform
+  ) {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     geo.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+    geo.setAttribute("aKind", new THREE.BufferAttribute(kinds, 1));
     geo.setAttribute("aRand", new THREE.BufferAttribute(rands, 1));
 
     const mat = new THREE.ShaderMaterial({
-      uniforms: { ...this.uniforms, uLayerOpacity: this.lineOpacity },
+      uniforms: { ...this.uniforms, uLayerOpacity: opacity },
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       vertexShader: /* glsl */ `
         ${NOISE_GLSL}
+        ${CONST_GLSL}
         ${SHARED_GLSL}
         ${DISPLACE_GLSL}
         attribute float aSeed;
+        attribute float aKind;
         attribute float aRand;
         uniform float uLineFraction;
         void main() {
           if (aRand > uLineFraction) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
-          vec3 p = displace(position, aSeed);
+          vec3 p = displace(position, aSeed, aKind);
+          vR = length(p.xy);
           vReveal = step(p.y, uScan);
           vFront = 1.0 - smoothstep(0.0, uBand, abs(p.y - uScan));
           vec4 wp = modelMatrix * vec4(p, 1.0);
-          float md = distance(wp.xyz, uMouse);
-          float push = 1.0 - smoothstep(0.0, 2.1, md);
+          float md = distance(wp.xy, uMouse.xy);
+          float push = 1.0 - smoothstep(0.0, 2.4, md);
           vMouse = push;
-          wp.xyz += normalize(wp.xyz - uMouse + vec3(0.0001)) * push * push * 0.5;
+          wp.xy += normalize(wp.xy - uMouse.xy + vec2(0.0001)) * push * push * 0.35;
           gl_Position = projectionMatrix * viewMatrix * wp;
         }
       `,
       fragmentShader: /* glsl */ `
         precision highp float;
+        ${CONST_GLSL}
         ${SHARED_GLSL}
         uniform float uLayerOpacity;
         void main() {
           if (uLayerOpacity < 0.005) discard;
           float reveal = max(vReveal, vFront);
           if (reveal < 0.02) discard;
-          float b = (0.55 + 0.5 * vMouse + 0.8 * vFront) * (0.75 + 0.5 * uGlow);
-          float a = reveal * uLayerOpacity * (0.11 + 0.16 * vMouse + 0.4 * vFront);
+          float core = 1.0 - smoothstep(R_VOID * 0.9, R_VOID * 2.2, vR);
+          float b = (0.38 + 0.45 * vMouse + 0.7 * vFront + core * 0.15) * (0.8 + 0.45 * uGlow);
+          float a = reveal * uLayerOpacity * (0.08 + 0.14 * vMouse + 0.32 * vFront);
+          if (vR < R_VOID * 0.85) a *= 0.15;
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
     });
-
-    this.group.add(new THREE.LineSegments(geo, mat));
+    return new THREE.LineSegments(geo, mat);
   }
 
-  // --- PARTICULES --------------------------------------------------------------
   private _buildPoints() {
     const pos = new Float32Array(POINT_COUNT * 3);
     const seeds = new Float32Array(POINT_COUNT);
+    const kinds = new Float32Array(POINT_COUNT);
     const rands = new Float32Array(POINT_COUNT);
-    const v = new THREE.Vector3();
 
     for (let i = 0; i < POINT_COUNT; i++) {
-      // point uniforme sur la sphère, rayon légèrement dispersé
-      v.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
-      if (v.lengthSq() < 0.0001) v.set(0, 1, 0);
-      v.normalize().multiplyScalar(RADIUS * (0.88 + Math.random() * 0.2));
-      pos[i * 3] = v.x;
-      pos[i * 3 + 1] = v.y;
-      pos[i * 3 + 2] = v.z;
+      const t = Math.random();
+      const r = R_VOID + (R_MAX - R_VOID) * Math.pow(t, 0.75);
+      const a = Math.random() * Math.PI * 2;
+      const z = -0.2 * (1 - t) + (Math.random() - 0.5) * 0.12;
+      pos[i * 3] = Math.cos(a) * r;
+      pos[i * 3 + 1] = Math.sin(a) * r;
+      pos[i * 3 + 2] = z;
       seeds[i] = Math.random() * 10;
+      kinds[i] = 1;
       rands[i] = Math.random();
     }
 
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     geo.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+    geo.setAttribute("aKind", new THREE.BufferAttribute(kinds, 1));
     geo.setAttribute("aRand", new THREE.BufferAttribute(rands, 1));
 
     const mat = new THREE.ShaderMaterial({
@@ -261,32 +332,35 @@ export class OrbScene {
       depthWrite: false,
       vertexShader: /* glsl */ `
         ${NOISE_GLSL}
+        ${CONST_GLSL}
         ${SHARED_GLSL}
         ${DISPLACE_GLSL}
         attribute float aSeed;
+        attribute float aKind;
         attribute float aRand;
         uniform float uPointFraction;
         uniform float uPointSize;
         uniform float uDpr;
         void main() {
           if (aRand > uPointFraction) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
-          vec3 p = displace(position, aSeed);
-          // dérive lente propre à chaque particule (vie dans le nuage)
-          p.x += sin(uTime * 0.5 + aSeed * 6.0) * 0.02;
-          p.y += cos(uTime * 0.45 + aSeed * 4.0) * 0.02;
+          vec3 p = displace(position, aSeed, aKind);
+          p.x += sin(uTime * 0.4 + aSeed * 5.0) * 0.012;
+          p.y += cos(uTime * 0.35 + aSeed * 4.0) * 0.012;
+          vR = length(p.xy);
           vReveal = step(p.y, uScan);
           vFront = 1.0 - smoothstep(0.0, uBand, abs(p.y - uScan));
           vec4 wp = modelMatrix * vec4(p, 1.0);
-          float md = distance(wp.xyz, uMouse);
-          float push = 1.0 - smoothstep(0.0, 2.1, md);
+          float md = distance(wp.xy, uMouse.xy);
+          float push = 1.0 - smoothstep(0.0, 2.2, md);
           vMouse = push;
-          wp.xyz += normalize(wp.xyz - uMouse + vec3(0.0001)) * push * push * 0.6;
-          gl_PointSize = (uPointSize + vFront * 1.0 + push * 1.6) * uDpr;
+          wp.xy += normalize(wp.xy - uMouse.xy + vec2(0.0001)) * push * push * 0.4;
+          gl_PointSize = (uPointSize + vFront * 0.8 + push * 1.2) * uDpr;
           gl_Position = projectionMatrix * viewMatrix * wp;
         }
       `,
       fragmentShader: /* glsl */ `
         precision highp float;
+        ${CONST_GLSL}
         ${SHARED_GLSL}
         uniform float uLayerOpacity;
         void main() {
@@ -296,26 +370,43 @@ export class OrbScene {
           if (r > 0.5) discard;
           float reveal = max(vReveal, vFront);
           if (reveal < 0.02) discard;
-          float core = smoothstep(0.5, 0.3, r);
-          float b = (0.55 + 0.45 * vMouse + 0.5 * vFront) * (0.75 + 0.5 * uGlow);
-          float a = reveal * core * uLayerOpacity * (0.35 + 0.4 * vMouse);
+          float core = smoothstep(0.5, 0.32, r);
+          float b = (0.5 + 0.4 * vMouse) * (0.8 + 0.4 * uGlow);
+          float a = reveal * core * uLayerOpacity * (0.28 + 0.35 * vMouse);
+          if (vR < R_VOID) a *= 0.2;
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
     });
-
     this.group.add(new THREE.Points(geo, mat));
   }
 
-  // Slider densité (0..1) : fraction de lignes et de particules affichées.
   setDetail(v: number) {
-    this.uniforms.uLineFraction.value = 0.35 + 0.65 * v;
-    this.uniforms.uPointFraction.value = 0.15 + 0.85 * v;
+    this.uniforms.uLineFraction.value = 0.4 + 0.6 * v;
+    this.uniforms.uPointFraction.value = 0.18 + 0.82 * v;
     this.particleCount = Math.round(POINT_COUNT * this.uniforms.uPointFraction.value);
   }
 
   setMouseWorld(v: THREE.Vector3) {
     this.uniforms.uMouse.value.copy(v);
+  }
+
+  setDive(active: boolean, depth = 0) {
+    this.uniforms.uDive.value = active ? 1 : 0;
+    this.uniforms.uDiveDepth.value = depth;
+  }
+
+  freezeForDive() {
+    this.cycling = false;
+    this.lineOpacity.value = 1;
+    this.pointOpacity.value = 0.85;
+    this.onModeChange?.("DIVE MODE", -1);
+  }
+
+  resumeAfterDive() {
+    this.cycling = true;
+    this.modeTimer = 0;
+    this._applyMode(this.modeIndex);
   }
 
   private _applyMode(i: number) {
@@ -328,11 +419,10 @@ export class OrbScene {
     this.uniforms.uDpr.value = this.stage.dpr;
     if (!this.ready) return;
 
-    // Révélation par scan (bas → haut) sur ~2.4 s.
     if (this.uniforms.uScanOn.value > 0.5) {
-      const span = RADIUS * 3.2;
+      const span = R_MAX * 2.8;
       this.uniforms.uScan.value += (span / 2.4) * dt;
-      if (this.uniforms.uScan.value >= RADIUS * 1.6) {
+      if (this.uniforms.uScan.value >= R_MAX * 1.3) {
         this.uniforms.uScanOn.value = 0;
         if (!this.scanComplete) {
           this.scanComplete = true;
@@ -343,7 +433,6 @@ export class OrbScene {
       }
     }
 
-    // Cycle des modes + fondu doux vers les cibles d'opacité.
     if (this.cycling) {
       this.modeTimer += dt;
       if (this.modeTimer >= this.MODE_INTERVAL) {
