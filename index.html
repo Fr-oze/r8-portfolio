@@ -78,9 +78,9 @@
       <!-- Sliders discrets -->
       <div id="controls" class="ui__controls"></div>
 
-      <!-- Bouton PLONGER (bas centre, desktop) -->
+      <!-- Bouton SURVOLER (bas centre, desktop) -->
       <button id="dive-start" class="ui__drive">
-        <span class="ui__drive-ic">◎</span> PLONGER DANS L'ORBE
+        <span class="ui__drive-ic">▲</span> SURVOLER L'ORBE
       </button>
 
       <!-- Bouton VOIR LES PROJETS (bas centre, tactile/mobile) -->
@@ -89,22 +89,30 @@
       </button>
     </div>
 
-    <!-- ============ HUD DÉRIVE (tunnel infini) ============ -->
+    <!-- ============ HUD VOL (survol de l'orbe, esquive des montagnes) ===== -->
     <div id="dive-hud" class="dive-hud dive-hud--hidden">
       <!-- Consigne, affichée à l'entrée puis fondue -->
       <p id="dive-intro" class="dive-hud__intro">
-        TRAVERSE LES NOYAUX LUMINEUX.<br />
-        LA SOURIS GUIDE · LE CLIC MAINTENU ACCÉLÈRE.<br />
-        ENCHAÎNE LES CAPTURES POUR MONTER LE COMBO.
+        ESQUIVE LES MONTAGNES.<br />
+        SOURIS GAUCHE / DROITE · CHANGER DE COULOIR<br />
+        SOURIS HAUT / BAS · ALTITUDE
       </p>
       <div class="dive-hud__panel">
-        <div class="dive-hud__row"><span>NOYAUX</span><b id="dive-score">0</b></div>
-        <div class="dive-hud__row"><span>COMBO</span><b id="dive-combo">x0</b></div>
-        <div class="dive-hud__row"><span>SPEED</span><b><span id="dive-speed">0</span> U/S</b></div>
         <div class="dive-hud__row"><span>DIST</span><b><span id="dive-dist">0</span> U</b></div>
+        <div class="dive-hud__row"><span>BEST</span><b><span id="dive-best">0</span> U</b></div>
+        <div class="dive-hud__row"><span>SPEED</span><b id="dive-speed">0</b></div>
       </div>
+      <!-- Écran de crash -->
+      <div id="dive-over" class="dive-over">
+        <p class="dive-over__title">CRASH</p>
+        <p class="dive-over__stats">
+          DISTANCE <b id="dive-over-dist">0</b> U — RECORD <b id="dive-over-best">0</b> U
+        </p>
+        <p class="dive-over__hint">CLIQUE POUR REJOUER · ÉCHAP POUR SORTIR</p>
+      </div>
+      <div id="dive-flash" class="dive-flash"></div>
       <div class="dive-hud__keys">
-        <span class="dive-hud__hint">SOURIS · VISER — CLIC MAINTENU · ACCÉLÉRER — ÉCHAP · SORTIR</span>
+        <span class="dive-hud__hint">SOURIS · PILOTER — ÉCHAP · SORTIR</span>
       </div>
       <button id="dive-exit" class="dive-hud__exit">EXIT ✕</button>
     </div>

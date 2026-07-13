@@ -8,7 +8,7 @@ import { UI } from "./components/UI";
 import { Projects } from "./components/Projects";
 import { About } from "./components/About";
 import { Contact } from "./components/Contact";
-import { OrbDiveMode } from "./components/OrbDiveMode";
+import { OrbFlightMode } from "./components/OrbFlightMode";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -135,7 +135,7 @@ window.addEventListener("keydown", (e) => {
 
 const orb = new OrbScene(stage);
 const lighting = new Lighting(stage, orb.group);
-const dive = new OrbDiveMode(stage, orb);
+const dive = new OrbFlightMode(stage, orb);
 
 document.getElementById("dive-start")?.addEventListener("click", () => dive.enter());
 document.getElementById("dive-exit")?.addEventListener("click", () => dive.exit());
@@ -145,6 +145,11 @@ window.addEventListener("keydown", (e) => {
 
 let spin = 0; // rotation lente du disque dans son plan (z)
 let density = 0.35; // valeur courante du slider de densité
+
+// Le disque a tourné pendant le vol : on resynchronise pour éviter tout saut.
+dive.onExited = (finalSpin) => {
+  spin = finalSpin - userSpin;
+};
 
 const clampN = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 

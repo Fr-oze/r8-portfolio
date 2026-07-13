@@ -749,6 +749,69 @@ body.diving .ui__quip {
   border-color: var(--ink);
 }
 
+/* Écran de crash */
+.dive-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 34px 54px;
+  background: radial-gradient(ellipse at center, rgba(5, 6, 8, 0.92) 0%, rgba(5, 6, 8, 0.55) 62%, transparent 100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-out;
+  pointer-events: none;
+}
+.dive-over--show {
+  opacity: 1;
+  visibility: visible;
+}
+.dive-over__title {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--ink);
+  margin: 0 0 14px;
+  text-shadow: 0 0 40px rgba(242, 244, 246, 0.35);
+}
+.dive-over__stats {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  margin: 0 0 10px;
+}
+.dive-over__stats b {
+  color: var(--ink);
+  font-weight: 700;
+}
+.dive-over__hint {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--dim);
+  margin: 0;
+  animation: dive-over-blink 1.6s ease-in-out infinite;
+}
+@keyframes dive-over-blink {
+  50% { opacity: 0.35; }
+}
+
+/* Flash blanc au crash */
+.dive-flash {
+  position: absolute;
+  inset: 0;
+  background: #f2f4f6;
+  opacity: 0;
+  pointer-events: none;
+}
+.dive-flash--go {
+  animation: dive-flash-anim 0.5s ease-out;
+}
+@keyframes dive-flash-anim {
+  0% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
 @media (max-width: 720px) {
   .dive-hud__hint {
     display: none;

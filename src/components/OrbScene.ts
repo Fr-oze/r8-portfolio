@@ -7,8 +7,9 @@ import type { Stage } from "../core/Stage";
 // léger relief Z, parallaxe souris, tilt discret.
 // =====================================================================
 
-const R_VOID = 0.14;
-const R_MAX = 2.45;
+export const R_VOID = 0.14;
+export const R_MAX = 2.45;
+export const PEAK_N = 22; // pics de terrain (mode vaisseau)
 const CONCENTRIC = 58;
 const RING_SEGS = 128;
 const FLOW_LINES = 72;
@@ -70,35 +71,46 @@ const SHARED_GLSL = /* glsl */ `
   uniform float uBand;
   uniform vec3  uMouse;
   uniform float uGlow;
-  uniform float uDive;      // 0 = normal, 1 = mode plongée
-  uniform float uDiveDepth; // profondeur 0..1 en plongée
+  uniform float uTerrain;          // 0 = disque plat, 1 = montagnes levées
+  uniform vec4  uPeaks[PEAK_N];    // xy = centre local, z = hauteur, w = largeur
   varying float vReveal;
   varying float vFront;
   varying float vMouse;
   varying float vR;
-  varying float vRush;      // 0..1 : phase du défilement tunnel en plongée
+  varying float vPeak;             // 0..1 : altitude terrain (éclaire les sommets)
 `;
 
 const DISPLACE_GLSL = /* glsl */ `
+  // Relief "montagnes" : somme de bosses gaussiennes. La même formule est
+  // recalculée en JS (OrbFlightMode) pour les collisions du vaisseau.
+  float terrainH(vec2 q) {
+    float h = 0.0;
+    for (int i = 0; i < PEAK_N; i++) {
+      vec2 d = q - uPeaks[i].xy;
+      float w = uPeaks[i].w;
+      h += uPeaks[i].z * exp(-dot(d, d) / (w * w + 0.0001));
+    }
+    // les pics qui se chevauchent s'additionnent : plafond pour éviter
+    // les murs infranchissables (même clamp côté JS pour les collisions)
+    return min(h, 1.15);
+  }
+
   vec3 displace(vec3 p, float seed, float kind) {
     float r = length(p.xy);
     float a = atan(p.y, p.x);
     float t = uTime * 0.11;
     float outer = smoothstep(R_VOID, R_MAX * 0.55, r);
-    float wob = snoise(vec3(a * 2.4 + seed, r * 1.8, t)) * 0.09 * outer;
-    wob += snoise(vec3(a * 5.0 - seed * 2.0, r * 3.2, t * 1.3)) * 0.04 * outer;
+    float wobK = 1.0 - 0.8 * uTerrain; // terrain levé => disque plus stable
+    float wob = snoise(vec3(a * 2.4 + seed, r * 1.8, t)) * 0.09 * outer * wobK;
+    wob += snoise(vec3(a * 5.0 - seed * 2.0, r * 3.2, t * 1.3)) * 0.04 * outer * wobK;
     float nr = r * (1.0 + wob);
     float nz = p.z;
-    nz += snoise(vec3(a * 1.6, r * 2.0 + seed, t * 0.9)) * 0.06 * outer;
-    vRush = 0.0;
-    if (uDive > 0.5) {
-      // TUNNEL : chaque anneau défile vers la caméra en boucle — les anneaux
-      // gonflent et foncent vers l'écran, effet "on fonce dans le noyau".
-      float speed = 0.25 + uDiveDepth * 0.55;
-      float cycle = fract(uTime * speed + (1.0 - r / R_MAX));
-      vRush = cycle;
-      nr *= 1.0 + cycle * cycle * 1.6;
-      nz += cycle * cycle * 2.6;
+    nz += snoise(vec3(a * 1.6, r * 2.0 + seed, t * 0.9)) * 0.06 * outer * wobK;
+    vPeak = 0.0;
+    if (uTerrain > 0.001) {
+      float h = terrainH(vec2(cos(a), sin(a)) * nr);
+      nz += h * uTerrain;
+      vPeak = clamp(h * 1.4, 0.0, 1.0) * uTerrain;
     }
     return vec3(cos(a) * nr, sin(a) * nr, nz);
   }
@@ -106,6 +118,7 @@ const DISPLACE_GLSL = /* glsl */ `
 
 // injecté dans le shader (constantes GLSL)
 const CONST_GLSL = /* glsl */ `
+  #define PEAK_N ${PEAK_N}
   const float R_VOID = ${R_VOID.toFixed(3)};
   const float R_MAX = ${R_MAX.toFixed(3)};
 `;
@@ -124,7 +137,9 @@ export class OrbScene {
 
   uniforms: Record<string, { value: any }>;
   private lineOpacity: Uniform = { value: 1 };
+  private flowOpacity: Uniform = { value: 1 };
   private pointOpacity: Uniform = { value: 0.45 };
+  private flight = false; // mode vol : voiles de flux atténués (terrain lisible)
   private modes = [
     { label: "CONCENTRIC CORE", lines: 1.0, points: 0.35 },
     { label: "FLOW FIELD", lines: 0.85, points: 0.9 },
@@ -155,8 +170,10 @@ export class OrbScene {
       uPointSize: { value: 1.2 },
       uLineFraction: { value: 0.55 },
       uPointFraction: { value: 0.5 },
-      uDive: { value: 0 },
-      uDiveDepth: { value: 0 },
+      uTerrain: { value: 0 },
+      uPeaks: {
+        value: Array.from({ length: PEAK_N }, () => new THREE.Vector4(0, 0, 0, 0.3)),
+      },
     };
   }
 
@@ -244,7 +261,7 @@ export class OrbScene {
       }
     }
 
-    this.group.add(this._makeLines(pos, seeds, kinds, rands, this.lineOpacity));
+    this.group.add(this._makeLines(pos, seeds, kinds, rands, this.flowOpacity));
   }
 
   private _makeLines(
@@ -301,8 +318,9 @@ export class OrbScene {
           float b = (0.5 + 0.45 * vMouse + 0.7 * vFront + core * 0.15) * (0.7 + 0.6 * uGlow);
           float a = reveal * uLayerOpacity * (0.13 + 0.16 * vMouse + 0.34 * vFront) * (0.75 + 0.5 * uGlow);
           if (vR < R_VOID * 0.85) a *= 0.15;
-          // en plongée : l'anneau s'éteint juste avant de "passer" la caméra
-          if (uDive > 0.5) a *= 1.0 - smoothstep(0.75, 1.0, vRush);
+          // sommets des montagnes éclairés (mode vaisseau)
+          b += vPeak * 0.6;
+          a += vPeak * 0.14 * uLayerOpacity;
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
@@ -382,10 +400,9 @@ export class OrbScene {
           float reveal = max(vReveal, vFront);
           if (reveal < 0.02) discard;
           float core = smoothstep(0.5, 0.32, r);
-          float b = (0.6 + 0.4 * vMouse) * (0.7 + 0.55 * uGlow);
-          float a = reveal * core * uLayerOpacity * (0.34 + 0.35 * vMouse) * (0.75 + 0.5 * uGlow);
+          float b = (0.6 + 0.4 * vMouse + vPeak * 0.5) * (0.7 + 0.55 * uGlow);
+          float a = reveal * core * uLayerOpacity * (0.34 + 0.35 * vMouse + vPeak * 0.2) * (0.75 + 0.5 * uGlow);
           if (vR < R_VOID) a *= 0.2;
-          if (uDive > 0.5) a *= 1.0 - smoothstep(0.75, 1.0, vRush);
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
@@ -403,20 +420,39 @@ export class OrbScene {
     this.uniforms.uMouse.value.copy(v);
   }
 
-  setDive(active: boolean, depth = 0) {
-    this.uniforms.uDive.value = active ? 1 : 0;
-    this.uniforms.uDiveDepth.value = depth;
+  // 0 = disque plat, 1 = montagnes complètement levées (mode vaisseau).
+  setTerrain(k: number) {
+    this.uniforms.uTerrain.value = k;
   }
 
-  freezeForDive() {
+  // Nouvelle carte de montagnes : pics gaussiens répartis sur le disque en
+  // laissant un couloir libre autour du trou central. Renvoie la liste pour
+  // que le mode vol calcule les collisions côté JS.
+  regeneratePeaks(): THREE.Vector4[] {
+    const peaks: THREE.Vector4[] = this.uniforms.uPeaks.value;
+    for (const p of peaks) {
+      const a = Math.random() * Math.PI * 2;
+      const r = R_MAX * (0.3 + Math.random() * 0.62);
+      // certains pics dépassent l'altitude max du vaisseau : impossible de
+      // tout survoler, il faut aussi esquiver latéralement.
+      const height = 0.35 + Math.random() * 0.75;
+      const width = 0.18 + Math.random() * 0.3;
+      p.set(Math.cos(a) * r, Math.sin(a) * r, height, width);
+    }
+    return peaks;
+  }
+
+  freezeForFlight() {
     this.cycling = false;
-    this.lineOpacity.value = 1;
-    this.pointOpacity.value = 0.85;
-    this.onModeChange?.("DIVE MODE", -1);
+    this.flight = true;
+    // CONCENTRIC CORE : le mode le plus lisible pour jouer.
+    this.modeIndex = 0;
+    this.onModeChange?.("FLIGHT MODE", -1);
   }
 
-  resumeAfterDive() {
+  resumeAfterFlight() {
     this.cycling = true;
+    this.flight = false;
     this.modeTimer = 0;
     this._applyMode(this.modeIndex);
   }
@@ -462,7 +498,9 @@ export class OrbScene {
     }
     const m = this.modes[this.modeIndex];
     const k = Math.min(1, dt * 1.6);
+    const flowTarget = this.flight ? 0.12 : m.lines;
     this.lineOpacity.value += (m.lines - this.lineOpacity.value) * k;
+    this.flowOpacity.value += (flowTarget - this.flowOpacity.value) * k;
     this.pointOpacity.value += (m.points - this.pointOpacity.value) * k;
   }
 }
