@@ -71,6 +71,7 @@ const SHARED_GLSL = /* glsl */ `
   uniform float uBand;
   uniform vec3  uMouse;
   uniform float uGlow;
+  uniform float uMaster;           // fondu global de l'orbe
   uniform float uTerrain;          // 0 = disque plat, 1 = montagnes levées
   uniform vec4  uPeaks[PEAK_N];    // xy = centre local, z = hauteur, w = largeur
   varying float vReveal;
@@ -171,6 +172,7 @@ export class OrbScene {
       uLineFraction: { value: 0.55 },
       uPointFraction: { value: 0.5 },
       uTerrain: { value: 0 },
+      uMaster: { value: 1 }, // fondu global (transition mode vol)
       uPeaks: {
         value: Array.from({ length: PEAK_N }, () => new THREE.Vector4(0, 0, 0, 0.3)),
       },
@@ -321,6 +323,7 @@ export class OrbScene {
           // sommets des montagnes éclairés (mode vaisseau)
           b += vPeak * 0.6;
           a += vPeak * 0.14 * uLayerOpacity;
+          a *= uMaster;
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
@@ -403,6 +406,7 @@ export class OrbScene {
           float b = (0.6 + 0.4 * vMouse + vPeak * 0.5) * (0.7 + 0.55 * uGlow);
           float a = reveal * core * uLayerOpacity * (0.34 + 0.35 * vMouse + vPeak * 0.2) * (0.75 + 0.5 * uGlow);
           if (vR < R_VOID) a *= 0.2;
+          a *= uMaster;
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
@@ -423,6 +427,12 @@ export class OrbScene {
   // 0 = disque plat, 1 = montagnes complètement levées (mode vaisseau).
   setTerrain(k: number) {
     this.uniforms.uTerrain.value = k;
+  }
+
+  // Fondu global (0 = invisible) — utilisé pendant la bascule vers le vol.
+  setFade(v: number) {
+    this.uniforms.uMaster.value = v;
+    this.group.visible = v > 0.01;
   }
 
   // Nouvelle carte de montagnes : pics gaussiens répartis sur le disque en
