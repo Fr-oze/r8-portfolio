@@ -3,10 +3,10 @@ import type { Stage } from "../core/Stage";
 import { OrbScene } from "./OrbScene";
 
 // =====================================================================
-// ORB FLIGHT — mode vaisseau : l'orbe bascule à l'horizontale (ses
-// montagnes se lèvent) puis se fond dans un TERRAIN INFINI généré
-// procéduralement. On avance TOUT DROIT : le monde défile vers la
-// caméra et les montagnes se génèrent au fur et à mesure.
+// ORB FLIGHT — mode vaisseau : l'orbe bascule à l'horizontale et sert
+// de BASE de décollage. On avance TOUT DROIT : le disque défile
+// derrière nous avec le monde (pas de fondu croisé), le terrain proche
+// est plat et les montagnes se génèrent procéduralement à l'horizon.
 // Les pics sont une liste unique (uniform) partagée entre le shader
 // (visuel) et le JS (collision) → la hitbox est exactement le visuel.
 // Pilote automatique engagé à l'entrée ; FLÈCHES pour prendre la main
@@ -24,6 +24,7 @@ const BEST_KEY = "orb-flight-best";
 const T_LEN = 60; // profondeur visible (unités monde)
 const T_HALF_W = 7; // demi-largeur du maillage
 const FPEAK_N = 26; // pics simultanés (fenêtre glissante)
+const FIRST_PEAK = 26; // distance du premier relief : le départ est plat
 const CROSS_LINES = 72;
 const CROSS_SEGS = 110;
 const LON_LINES = 34;
@@ -113,6 +114,9 @@ export class OrbFlightMode {
     fov: 42,
   };
   private savedRot = new THREE.Euler();
+  private savedOrbZ = 0;
+  private orbZAtExit = 0; // position du disque au moment de la sortie
+  private fadeAtExit = 1;
   private spinPos = 0;
   private targetCamPos = new THREE.Vector3();
   private targetCamQuat = new THREE.Quaternion();
@@ -340,8 +344,9 @@ export class OrbFlightMode {
   private _initFPeaks() {
     this.fpeaks = [];
     for (let i = 0; i < FPEAK_N; i++) {
-      // répartis devant le vaisseau (z monde négatif), jamais sous le spawn
-      const Z = -7 - (i / FPEAK_N) * (T_LEN - 9) + (Math.random() - 0.5) * 1.6;
+      // le départ est PLAT (la base) : le premier relief n'apparaît qu'à
+      // l'horizon et le monde se génère ensuite en continu
+      const Z = -FIRST_PEAK - (i / FPEAK_N) * T_LEN + (Math.random() - 0.5) * 1.6;
       this.fpeaks.push(this._makePeak(Z));
     }
     this._pushPeaks();
@@ -465,11 +470,11 @@ export class OrbFlightMode {
     this.savedCam.quat.copy(this.stage.camera.quaternion);
     this.savedCam.fov = this.stage.camera.fov;
     this.savedRot.copy(this.orb.group.rotation);
+    this.savedOrbZ = this.orb.group.position.z;
     this.spinPos = this.orb.group.rotation.z;
 
-    // les montagnes se lèvent sur le disque pendant la bascule (décor de
-    // transition), puis le terrain infini prend le relais
-    this.orb.regeneratePeaks();
+    // le disque reste PLAT : c'est la base de décollage, le relief ne vient
+    // que du terrain infini généré devant
     this.orb.freezeForFlight();
     this.orb.uniforms.uMouse.value.set(999, 999, 999);
 
@@ -500,6 +505,9 @@ export class OrbFlightMode {
   exit() {
     if (!this.active || this.state === "exiting") return;
     this.state = "exiting";
+    // le disque revient de là où il était parti (derrière nous) vers le hero
+    this.orbZAtExit = this.orb.group.position.z;
+    this.fadeAtExit = this.orb.uniforms.uMaster.value;
     this.overEl?.classList.remove("dive-over--show");
     document.body.classList.remove("diving");
     this.hud?.classList.add("dive-hud--hidden");
@@ -569,14 +577,22 @@ export class OrbFlightMode {
       this.k = Math.max(0, Math.min(1, this.k + (dir * dt) / dur));
       const e = ease(this.k);
 
-      // 1) bascule du disque + montée des montagnes sur l'orbe
+      // bascule du disque : de la pose hero à l'horizontale (il reste PLAT,
+      // c'est la base de décollage — aucun fondu croisé)
       group.rotation.x = this.savedRot.x + (-Math.PI / 2 - this.savedRot.x) * e;
       group.rotation.y = this.savedRot.y * (1 - e);
       group.rotation.z = this.spinPos;
-      this.orb.setTerrain(e);
-      // 2) fondu croisé : l'orbe s'efface, le terrain infini apparaît
-      this.orb.setFade(1 - sstep(0.45, 0.92, e));
-      this.tUniforms.uOpacity.value = sstep(0.4, 1, e) * 0.95;
+      if (this.state === "entering") {
+        this.orb.setFade(1);
+        group.position.z = this.savedOrbZ;
+      } else {
+        // sortie : le disque revient de là où il était (derrière nous) et
+        // retrouve son opacité en se redressant
+        this.orb.setFade(1 - (1 - this.fadeAtExit) * e);
+        group.position.z = this.savedOrbZ + (this.orbZAtExit - this.savedOrbZ) * e;
+      }
+      // le maillage plat apparaît discrètement sous la base pendant la bascule
+      this.tUniforms.uOpacity.value = sstep(0.25, 0.9, e) * 0.95;
 
       this._computeGameCam();
       cam.position.lerpVectors(this.savedCam.pos, this.targetCamPos, e);
@@ -594,6 +610,7 @@ export class OrbFlightMode {
         this.terrain.visible = false;
         this.ship.visible = false;
         group.rotation.set(this.savedRot.x, this.savedRot.y, this.spinPos);
+        group.position.z = this.savedOrbZ;
         this.orb.setFade(1);
         cam.position.copy(this.savedCam.pos);
         cam.quaternion.copy(this.savedCam.quat);
@@ -615,6 +632,11 @@ export class OrbFlightMode {
       this.tUniforms.uScroll.value = this.scroll;
       this.dist += this.speed * dt;
       this._recyclePeaks();
+
+      // la base (le disque) défile derrière nous avec le monde, puis
+      // s'estompe une fois hors champ
+      group.position.z += this.speed * dt;
+      this.orb.setFade(1 - sstep(3.5, 10, group.position.z - this.savedOrbZ));
 
       // consignes : autopilote ou flèches du clavier
       if (this.auto) {
