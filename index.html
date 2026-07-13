@@ -91,6 +91,17 @@
 
     <!-- ============ HUD PLONGÉE ============ -->
     <div id="dive-hud" class="dive-hud dive-hud--hidden">
+      <!-- Consigne du jeu, affichée à l'entrée -->
+      <p id="dive-intro" class="dive-hud__intro">
+        VISE LE NOYAU AVEC LA SOURIS.<br />
+        CENTRÉ = TU FONCES · DÉSALIGNÉ = TU RALENTIS.<br />
+        ATTEINS 100% DE PROFONDEUR.
+      </p>
+      <!-- Barre de progression vers le noyau -->
+      <div class="dive-hud__progress">
+        <span class="dive-hud__progress-lbl">NOYAU</span>
+        <div class="dive-hud__progress-track"><div id="dive-bar" class="dive-hud__progress-bar"></div></div>
+      </div>
       <div class="dive-hud__panel">
         <div class="dive-hud__row">
           <span>MODE</span>
@@ -105,7 +116,7 @@
         <span class="dive-hud__keycap">↓</span>
         <span class="dive-hud__keycap">←</span>
         <span class="dive-hud__keycap">→</span>
-        <span class="dive-hud__hint">OU SOURIS POUR VISER LE NOYAU</span>
+        <span class="dive-hud__hint">OU LA SOURIS · VISE LE CENTRE</span>
       </div>
       <button id="dive-exit" class="dive-hud__exit">EXIT ✕</button>
       <div class="dive-hud__radar">

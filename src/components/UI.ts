@@ -1,4 +1,4 @@
-import { addSlider } from "../core/ui";
+import { addSlider, addCycleButton } from "../core/ui";
 
 // =====================================================================
 // UI — overlay style instrument : nav, horloge, stats, sliders
@@ -63,14 +63,16 @@ export class UI {
     }
   }
 
+  private _setModeVal: ((text: string) => void) | null = null;
+
   buildControls({
     onDensity,
     onGlow,
-    onRotation,
+    onModeCycle,
   }: {
     onDensity: (v: number) => void;
     onGlow: (v: number) => void;
-    onRotation: (v: number) => void;
+    onModeCycle: () => string;
   }) {
     addSlider({
       label: "densité",
@@ -80,13 +82,18 @@ export class UI {
     });
     addSlider({
       label: "glow",
-      min: 0, max: 1.2, value: 0.3, step: 0.05,
+      min: 0, max: 1.6, value: 0.75, step: 0.05,
       onInput: onGlow,
     });
-    addSlider({
-      label: "rotation",
-      min: 0, max: 1, value: 0.1, step: 0.05,
-      onInput: onRotation,
+    this._setModeVal = addCycleButton({
+      label: "mode",
+      value: "CONCENTRIC CORE",
+      onCycle: onModeCycle,
     });
+  }
+
+  // Garde le bouton mode synchronisé quand le mode change tout seul.
+  setModeControl(label: string) {
+    this._setModeVal?.(label);
   }
 }

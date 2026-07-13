@@ -51,3 +51,38 @@ export function addSlider({
   onInput(value);
   return () => parseFloat(input.value);
 }
+
+// Bouton cycleur : un clic → valeur suivante (ex. mode de rendu).
+export function addCycleButton({
+  label,
+  value,
+  onCycle,
+}: {
+  label: string;
+  value: string;
+  onCycle: () => string;
+}) {
+  const p = panel()!;
+  const row = document.createElement("div");
+  row.className = "ctrl__row";
+
+  const lab = document.createElement("label");
+  lab.className = "ctrl__label";
+  const name = document.createElement("span");
+  name.textContent = label;
+  lab.append(name);
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "ctrl__cycle";
+  btn.textContent = value;
+  btn.addEventListener("click", () => {
+    btn.textContent = onCycle();
+  });
+
+  row.append(lab, btn);
+  p.appendChild(row);
+  return (text: string) => {
+    btn.textContent = text;
+  };
+}

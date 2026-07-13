@@ -171,10 +171,11 @@ export class Preloader {
         this.exiting = true;
       }
     } else {
-      this.exitK = Math.min(1, this.exitK + 0.028);
-      const grow = 1 + this.exitK * 1.8;
+      // Sortie : simple fondu (baisse d'opacité), l'orbe reste en place —
+      // il "devient" celui du hero derrière.
+      this.exitK = Math.min(1, this.exitK + 0.03);
       const fade = 1 - this.exitK;
-      this.drawOrb(cx, cy, maxR * grow, 1, t, fade);
+      this.drawOrb(cx, cy, maxR, 1, t, fade);
       if (this.exitK >= 1) {
         this.finish();
         return;

@@ -139,12 +139,13 @@ const dive = new OrbDiveMode(stage, orb);
 
 document.getElementById("dive-start")?.addEventListener("click", () => dive.enter());
 document.getElementById("dive-exit")?.addEventListener("click", () => dive.exit());
+// Noyau atteint → récompense : on ouvre les projets.
+dive.onComplete = () => projects.show();
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && dive.active) dive.exit();
 });
 
-let rotationSpeed = 0.1;
-let spin = 0; // angle d'auto-rotation continu
+let spin = 0; // rotation lente du disque dans son plan (z)
 let density = 0.35; // valeur courante du slider de densité
 
 const clampN = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
@@ -178,7 +179,10 @@ orb.onScanComplete = () => {
     document.querySelector(".ui__quip")?.classList.add("ui__quip--show");
   }, 15000);
 };
-orb.onModeChange = (label) => ui.setMode(label);
+orb.onModeChange = (label) => {
+  ui.setMode(label);
+  ui.setModeControl(label);
+};
 
 orb.load();
 
@@ -188,7 +192,7 @@ composer.setPixelRatio(stage.dpr);
 composer.addPass(new RenderPass(stage.scene, stage.camera));
 const bloom = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.3, 0.5, 0.1
+  0.75, 0.5, 0.1
 );
 composer.addPass(bloom);
 const grain = new ShaderPass(CinematicShader);
@@ -216,12 +220,12 @@ window.addEventListener("pointermove", (e) => {
   pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
 });
 
-// --- Drag : attraper la sphère pour la faire pivoter gauche/droite (yaw) ----
+// --- Drag : faire tourner le disque dans son plan (rotation z) --------------
 const sceneEl = document.getElementById("scene");
 let dragging = false;
 let dragStartX = 0;
-let userYaw = 0;       // rotation manuelle cumulée
-let yawAtGrab = 0;
+let userSpin = 0;      // rotation manuelle cumulée (plan du disque)
+let spinAtGrab = 0;
 const DRAG_SENS = 0.006; // radians par pixel
 
 sceneEl.style.cursor = "grab";
@@ -229,7 +233,7 @@ sceneEl.addEventListener("pointerdown", (e) => {
   if (dive.active) return;
   dragging = true;
   dragStartX = e.clientX;
-  yawAtGrab = userYaw;
+  spinAtGrab = userSpin;
   sceneEl.style.cursor = "grabbing";
 });
 window.addEventListener("pointerup", () => {
@@ -237,10 +241,10 @@ window.addEventListener("pointerup", () => {
   sceneEl.style.cursor = "grab";
 });
 window.addEventListener("pointermove", (e) => {
-  if (dragging) userYaw = yawAtGrab + (e.clientX - dragStartX) * DRAG_SENS;
+  if (dragging) userSpin = spinAtGrab + (e.clientX - dragStartX) * DRAG_SENS;
 });
 
-// --- Sliders (construits une fois le DOM prêt) -----------------------------
+// --- Contrôles (construits une fois le DOM prêt) ----------------------------
 ui.buildControls({
   onDensity: (v) => {
     density = v;
@@ -252,7 +256,7 @@ ui.buildControls({
     orb.uniforms.uGlow.value = v;
     lighting.setIntensity(0.4 + v);
   },
-  onRotation: (v) => (rotationSpeed = v),
+  onModeCycle: () => orb.cycleMode(),
 });
 
 // --- Boucle ----------------------------------------------------------------
@@ -271,9 +275,12 @@ stage.start((t, dt) => {
     orb.setMouseWorld(mouseWorld);
     orb.update(t, dt);
 
-    if (!dragging) spin += rotationSpeed * dt * 0.4;
-    orb.group.rotation.y = spin + userYaw + (dragging ? 0 : lighting.tiltY);
-    orb.group.rotation.x = dragging ? orb.group.rotation.x * 0.9 : -0.06 + lighting.tiltX * 0.5;
+    // Rotation lente DANS le plan du disque (pas de bascule 3D) + parallaxe
+    // discrète vers le curseur.
+    if (!dragging) spin += dt * 0.02;
+    orb.group.rotation.z = spin + userSpin;
+    orb.group.rotation.y = dragging ? 0 : lighting.tiltY * 0.35;
+    orb.group.rotation.x = -0.06 + (dragging ? 0 : lighting.tiltX * 0.35);
   }
 
   grain.uniforms.uTime.value = t;

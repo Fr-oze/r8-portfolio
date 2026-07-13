@@ -76,6 +76,7 @@ const SHARED_GLSL = /* glsl */ `
   varying float vFront;
   varying float vMouse;
   varying float vR;
+  varying float vRush;      // 0..1 : phase du défilement tunnel en plongée
 `;
 
 const DISPLACE_GLSL = /* glsl */ `
@@ -89,10 +90,15 @@ const DISPLACE_GLSL = /* glsl */ `
     float nr = r * (1.0 + wob);
     float nz = p.z;
     nz += snoise(vec3(a * 1.6, r * 2.0 + seed, t * 0.9)) * 0.06 * outer;
+    vRush = 0.0;
     if (uDive > 0.5) {
-      float rush = uDiveDepth * 2.5;
-      nz -= rush * (1.0 - r / R_MAX) * 0.35;
-      nr *= 1.0 + rush * 0.08 * (1.0 - r / R_MAX);
+      // TUNNEL : chaque anneau défile vers la caméra en boucle — les anneaux
+      // gonflent et foncent vers l'écran, effet "on fonce dans le noyau".
+      float speed = 0.25 + uDiveDepth * 0.55;
+      float cycle = fract(uTime * speed + (1.0 - r / R_MAX));
+      vRush = cycle;
+      nr *= 1.0 + cycle * cycle * 1.6;
+      nz += cycle * cycle * 2.6;
     }
     return vec3(cos(a) * nr, sin(a) * nr, nz);
   }
@@ -144,7 +150,7 @@ export class OrbScene {
       uScanOn: { value: 1 },
       uBand: { value: 0.08 },
       uMouse: { value: new THREE.Vector3(999, 999, 999) },
-      uGlow: { value: 0.3 },
+      uGlow: { value: 0.75 },
       uDpr: { value: stage.dpr },
       uPointSize: { value: 1.2 },
       uLineFraction: { value: 0.55 },
@@ -290,9 +296,11 @@ export class OrbScene {
           float reveal = max(vReveal, vFront);
           if (reveal < 0.02) discard;
           float core = 1.0 - smoothstep(R_VOID * 0.9, R_VOID * 2.2, vR);
-          float b = (0.38 + 0.45 * vMouse + 0.7 * vFront + core * 0.15) * (0.8 + 0.45 * uGlow);
-          float a = reveal * uLayerOpacity * (0.08 + 0.14 * vMouse + 0.32 * vFront);
+          float b = (0.5 + 0.45 * vMouse + 0.7 * vFront + core * 0.15) * (0.7 + 0.6 * uGlow);
+          float a = reveal * uLayerOpacity * (0.13 + 0.16 * vMouse + 0.34 * vFront) * (0.75 + 0.5 * uGlow);
           if (vR < R_VOID * 0.85) a *= 0.15;
+          // en plongée : l'anneau s'éteint juste avant de "passer" la caméra
+          if (uDive > 0.5) a *= 1.0 - smoothstep(0.75, 1.0, vRush);
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
@@ -371,9 +379,10 @@ export class OrbScene {
           float reveal = max(vReveal, vFront);
           if (reveal < 0.02) discard;
           float core = smoothstep(0.5, 0.32, r);
-          float b = (0.5 + 0.4 * vMouse) * (0.8 + 0.4 * uGlow);
-          float a = reveal * core * uLayerOpacity * (0.28 + 0.35 * vMouse);
+          float b = (0.6 + 0.4 * vMouse) * (0.7 + 0.55 * uGlow);
+          float a = reveal * core * uLayerOpacity * (0.34 + 0.35 * vMouse) * (0.75 + 0.5 * uGlow);
           if (vR < R_VOID) a *= 0.2;
+          if (uDive > 0.5) a *= 1.0 - smoothstep(0.75, 1.0, vRush);
           gl_FragColor = vec4(vec3(b), a);
         }
       `,
@@ -412,6 +421,14 @@ export class OrbScene {
   private _applyMode(i: number) {
     this.modeIndex = (i + this.modes.length) % this.modes.length;
     this.onModeChange?.(this.modes[this.modeIndex].label, this.modeIndex);
+  }
+
+  // Contrôle manuel (bouton MODE) : passe au mode suivant et coupe le cyclage
+  // auto — l'utilisateur a pris la main.
+  cycleMode(): string {
+    this.cycling = false;
+    this._applyMode(this.modeIndex + 1);
+    return this.modes[this.modeIndex].label;
   }
 
   update(t: number, dt: number) {

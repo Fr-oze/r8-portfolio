@@ -3,9 +3,10 @@ import type { Stage } from "../core/Stage";
 import type { OrbScene } from "./OrbScene";
 
 // =====================================================================
-// ORB DIVE — mini-jeu : plonger dans le noyau de l'orbe. On pilote
-// l'alignement (souris / flèches) pour rester centré dans le tunnel ;
-// autopilote optionnel. Profondeur + stabilité affichées dans le HUD.
+// ORB DIVE — mini-jeu : plonger dans le noyau de l'orbe. Le tunnel défile
+// (les anneaux foncent vers la caméra) ; on vise le centre à la souris ou
+// aux flèches. Bien aligné = on descend vite, désaligné = on ralentit.
+// À 100 % : noyau atteint → ouverture des projets.
 // =====================================================================
 
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
@@ -18,6 +19,7 @@ export class OrbDiveMode {
   depth = 0;       // 0..1
   stability = 1;   // 0..1
   speed = 0;
+  onComplete: (() => void) | null = null;
   private offset = new THREE.Vector2(0, 0);
   private target = new THREE.Vector2(0, 0);
   private keys: Record<string, boolean> = {};
@@ -29,6 +31,8 @@ export class OrbDiveMode {
   private depthEl: HTMLElement | null;
   private stabEl: HTMLElement | null;
   private speedEl: HTMLElement | null;
+  private barEl: HTMLElement | null;
+  private introEl: HTMLElement | null;
   private radarCanvas: HTMLCanvasElement | null;
   private radarCtx: CanvasRenderingContext2D | null;
 
@@ -43,6 +47,8 @@ export class OrbDiveMode {
     this.depthEl = document.getElementById("dive-depth");
     this.stabEl = document.getElementById("dive-stability");
     this.speedEl = document.getElementById("dive-speed");
+    this.barEl = document.getElementById("dive-bar");
+    this.introEl = document.getElementById("dive-intro");
     this.radarCanvas = document.getElementById("dive-radar") as HTMLCanvasElement | null;
     this.radarCtx = this.radarCanvas?.getContext("2d") ?? null;
 
@@ -113,6 +119,10 @@ export class OrbDiveMode {
     this.hud?.classList.remove("dive-hud--hidden");
     this.autoBtn?.classList.add("dive-hud__auto--on");
     this.orb.freezeForDive();
+
+    // Consigne affichée quelques secondes à l'entrée.
+    this.introEl?.classList.add("dive-hud__intro--show");
+    setTimeout(() => this.introEl?.classList.remove("dive-hud__intro--show"), 4500);
   }
 
   exit() {
@@ -148,37 +158,43 @@ export class OrbDiveMode {
     }
     this.offset.lerp(this.target, this.autopilot ? 0.12 : 0.18);
 
+    // Stabilité = à quel point on vise le centre. Bien centré → on fonce,
+    // désaligné → on ralentit presque à l'arrêt (c'est ça, le jeu).
     const misalign = this.offset.length();
     this.stability += (clamp(1 - misalign * 1.35, 0, 1) - this.stability) * 0.12;
 
-    const baseRate = 0.045 + this.stability * 0.09;
+    const baseRate = 0.006 + Math.pow(this.stability, 2.2) * 0.062;
     this.speed += (baseRate * 60 - this.speed) * 0.08;
     this.depth = clamp(this.depth + this.speed * dt * 0.018, 0, 1);
 
-    // caméra : zoom + léger décalage selon l'offset (on « rate » le tunnel)
-    const camZ = THREE.MathUtils.lerp(this.savedCam.pos.z, 2.1, intro * 0.72 - this.depth * 0.35);
+    // caméra : zoom vers le noyau + décalage selon l'offset. Quand on est
+    // désaligné, léger tremblement pour signaler qu'on frotte la paroi.
+    const shake = (1 - this.stability) * 0.05;
+    const camZ = THREE.MathUtils.lerp(this.savedCam.pos.z, 2.4, intro * 0.7);
     this.stage.camera.position.set(
-      this.offset.x * 0.55,
-      this.offset.y * 0.4 + 0.1,
+      this.offset.x * 0.55 + (Math.random() - 0.5) * shake,
+      this.offset.y * 0.4 + 0.1 + (Math.random() - 0.5) * shake,
       camZ
     );
     this.stage.camera.lookAt(this.offset.x * 0.3, this.offset.y * 0.25, 0);
 
-    // l'orbe grossit et pulse avec la profondeur
-    const scale = 1 + this.depth * 0.85 + Math.sin(t * 3) * 0.02 * this.depth;
-    this.orb.group.scale.setScalar(scale);
-    this.orb.group.rotation.z = this.offset.x * 0.08;
-    this.orb.group.rotation.y = this.savedGroup.rot.y + this.offset.x * 0.15;
+    // Le disque reste face caméra ; le tunnel défile dans le shader (uDive).
+    this.orb.group.scale.setScalar(1);
+    this.orb.group.rotation.set(0, this.offset.x * 0.1, this.offset.x * 0.06);
     this.orb.setDive(true, this.depth);
 
     this._updateHud();
-    if (this.depth >= 0.995) this.exit();
+    if (this.depth >= 0.995) {
+      this.exit();
+      this.onComplete?.();
+    }
   }
 
   private _updateHud() {
     if (this.depthEl) this.depthEl.textContent = String(Math.round(this.depth * 100)).padStart(3, "0");
     if (this.stabEl) this.stabEl.textContent = `${Math.round(this.stability * 100)}%`;
     if (this.speedEl) this.speedEl.textContent = this.speed.toFixed(1);
+    if (this.barEl) this.barEl.style.width = `${this.depth * 100}%`;
     if (!this.radarCtx || !this.radarCanvas) return;
     const ctx = this.radarCtx;
     const w = this.radarCanvas.width;
