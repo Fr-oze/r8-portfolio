@@ -80,7 +80,7 @@ export class Preloader {
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = `rgba(232, 237, 242, ${alpha})`;
+    ctx.strokeStyle = `rgba(18, 20, 26, ${alpha})`;
     ctx.lineWidth = 1;
     ctx.stroke();
   }
@@ -105,7 +105,7 @@ export class Preloader {
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = `rgba(210, 220, 230, ${alpha * 0.55})`;
+    ctx.strokeStyle = `rgba(58, 66, 76, ${alpha * 0.55})`;
     ctx.lineWidth = 0.8;
     ctx.stroke();
   }
@@ -114,8 +114,8 @@ export class Preloader {
     const ctx = this.ctx;
     const voidR = maxR * 0.06;
 
-    // trou central
-    ctx.fillStyle = `rgba(0, 0, 0, ${0.95 * fade})`;
+    // trou central (voile couleur fond)
+    ctx.fillStyle = `rgba(244, 245, 247, ${0.95 * fade})`;
     ctx.beginPath();
     ctx.arc(cx, cy, voidR, 0, Math.PI * 2);
     ctx.fill();
@@ -142,7 +142,7 @@ export class Preloader {
       const x = cx + Math.cos(a) * r;
       const y = cy + Math.sin(a) * r;
       const alpha = (0.15 + 0.35 * (1 - p.r)) * fade;
-      ctx.fillStyle = `rgba(232, 237, 242, ${alpha})`;
+      ctx.fillStyle = `rgba(18, 20, 26, ${alpha})`;
       ctx.fillRect(x, y, 1.2, 1.2);
     }
   }
@@ -151,7 +151,7 @@ export class Preloader {
     const ctx = this.ctx;
     const t = (performance.now() - this.t0) / 1000;
     ctx.clearRect(0, 0, this.w, this.h);
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = "#f4f5f7";
     ctx.fillRect(0, 0, this.w, this.h);
 
     this.shown += (this.progress - this.shown) * 0.08;

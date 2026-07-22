@@ -36,9 +36,9 @@ export const CinematicShader = {
       float g = hash(vUv * uResolution + uTime * 60.0) - 0.5;
       col += g * uGrain;
 
-      // vignettage
+      // vignettage (adouci pour le fond clair : 0.6 faisait des coins gris)
       float d = distance(vUv, vec2(0.5));
-      col *= mix(0.6, 1.0, smoothstep(0.9, 0.2, d));
+      col *= mix(0.88, 1.0, smoothstep(0.9, 0.2, d));
 
       gl_FragColor = vec4(col, 1.0);
     }

@@ -193,9 +193,12 @@ orb.load();
 const composer = new EffectComposer(stage.renderer);
 composer.setPixelRatio(stage.dpr);
 composer.addPass(new RenderPass(stage.scene, stage.camera));
+// Thème clair : seuil à 1 = bloom neutralisé. Avec l'ancien seuil (0.1) le
+// fond clair (#f4f5f7) passait le seuil et tout l'écran serait lavé de blanc.
+// Le slider "glow" continue de piloter uGlow (intensité de l'encre).
 const bloom = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.75, 0.5, 0.1
+  0.75, 0.5, 1.0
 );
 composer.addPass(bloom);
 const grain = new ShaderPass(CinematicShader);

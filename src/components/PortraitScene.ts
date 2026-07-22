@@ -132,7 +132,9 @@ export class PortraitScene {
       alpha: true,
       powerPreference: "high-performance",
     });
-    this.renderer.setClearColor(0x000000, 0);
+    // Fond transparent : base blanche pour éviter les franges sombres au
+    // blending sur le panneau clair.
+    this.renderer.setClearColor(0xffffff, 0);
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
     this.renderer.setPixelRatio(this.dpr);
 
@@ -176,7 +178,9 @@ export class PortraitScene {
     this.composer = new EffectComposer(this.renderer);
     this.composer.setPixelRatio(this.dpr);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.54, 0.4, 0.7);
+    // Thème clair : seuil à 1 = bloom neutralisé (le glow blanc n'a plus de
+    // sens sur encre sombre, et il laverait le fond clair).
+    this.bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.54, 0.4, 1.0);
     this.composer.addPass(this.bloom);
 
     this.resize();
@@ -289,7 +293,7 @@ export class PortraitScene {
       uniforms: { ...this.uniforms },
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       vertexShader: vertex,
       fragmentShader: fragment,
     });
@@ -327,14 +331,18 @@ export class PortraitScene {
         varying vec3 vN;
         varying vec3 vV;
         void main() {
-          // trou noir : la coque disparaît là où la présence est faible.
+          // trou : la coque disparaît là où la présence est faible.
           if (vPres < 0.04) discard;
           float ndv = abs(dot(normalize(vN), normalize(vV)));
           float fres = pow(1.0 - ndv, 3.0);
           float df = depthFade(vDepth);
-          float b = (0.04 + 0.6 * fres + 0.3 * vMouse) * df;
+          // Thème clair : coque "papier" pâle, liseré d'encre au fresnel
+          // (les lignes d'encre restent lisibles par-dessus).
+          vec3 ink = vec3(0.07, 0.078, 0.10);
+          vec3 paper = vec3(0.955, 0.96, 0.968);
+          float t = clamp((0.7 * fres + 0.3 * vMouse) * df, 0.0, 1.0);
           float a = (0.42 + 0.5 * fres) * uReveal * df * vPres;
-          gl_FragColor = vec4(vec3(b), a);
+          gl_FragColor = vec4(mix(paper, ink, t), a);
         }
       `,
     });
@@ -372,7 +380,9 @@ export class PortraitScene {
           float df = depthFade(vDepth);
           float b = (0.78 + 0.5 * vMouse) * df;
           float a = (0.55 + 0.3 * vMouse) * uReveal * df;
-          gl_FragColor = vec4(vec3(b), clamp(a, 0.0, 1.0));
+          // Thème clair : encre sombre, b module l'alpha.
+          vec3 ink = vec3(0.07, 0.078, 0.10);
+          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4 * 1.3, 0.0, 1.0));
         }
       `
     );
@@ -409,7 +419,9 @@ export class PortraitScene {
           float df = depthFade(vDepth);
           float b = (0.66 + 0.4 * vMouse) * df;
           float a = (0.3 + 0.22 * vMouse) * uReveal * df;
-          gl_FragColor = vec4(vec3(b), clamp(a, 0.0, 1.0));
+          // Thème clair : encre sombre, b module l'alpha.
+          vec3 ink = vec3(0.07, 0.078, 0.10);
+          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4 * 1.3, 0.0, 1.0));
         }
       `
     );
@@ -439,7 +451,7 @@ export class PortraitScene {
       uniforms: { ...this.uniforms },
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       vertexShader: /* glsl */ `
         ${DIV_GLSL}
         uniform float uPointSize;
@@ -471,7 +483,9 @@ export class PortraitScene {
           float df = depthFade(vDepth);
           float b = (0.85 + 0.25 * vMouse) * df;
           float a = core * (0.6 + 0.2 * vMouse) * uReveal * df;
-          gl_FragColor = vec4(vec3(b), clamp(a, 0.0, 1.0));
+          // Thème clair : encre sombre, b module l'alpha.
+          vec3 ink = vec3(0.07, 0.078, 0.10);
+          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4 * 1.3, 0.0, 1.0));
         }
       `,
     });

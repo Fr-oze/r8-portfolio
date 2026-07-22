@@ -282,7 +282,7 @@ export class OrbScene {
     const mat = new THREE.ShaderMaterial({
       uniforms: { ...this.uniforms, uLayerOpacity: opacity },
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       vertexShader: /* glsl */ `
         ${NOISE_GLSL}
@@ -320,11 +320,14 @@ export class OrbScene {
           float b = (0.5 + 0.45 * vMouse + 0.7 * vFront + core * 0.15) * (0.7 + 0.6 * uGlow);
           float a = reveal * uLayerOpacity * (0.13 + 0.16 * vMouse + 0.34 * vFront) * (0.75 + 0.5 * uGlow);
           if (vR < R_VOID * 0.85) a *= 0.15;
-          // sommets des montagnes éclairés (mode vaisseau)
+          // sommets des montagnes accentués (mode vaisseau)
           b += vPeak * 0.6;
           a += vPeak * 0.14 * uLayerOpacity;
           a *= uMaster;
-          gl_FragColor = vec4(vec3(b), a);
+          // Thème clair : encre sombre, la brightness b module l'alpha
+          // (l'additif blanc serait invisible sur fond clair).
+          vec3 ink = vec3(0.07, 0.078, 0.10);
+          gl_FragColor = vec4(ink, a * clamp(b, 0.0, 1.4) / 1.4 * 1.3);
         }
       `,
     });
@@ -360,7 +363,7 @@ export class OrbScene {
     const mat = new THREE.ShaderMaterial({
       uniforms: { ...this.uniforms, uLayerOpacity: this.pointOpacity },
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       vertexShader: /* glsl */ `
         ${NOISE_GLSL}
@@ -407,7 +410,9 @@ export class OrbScene {
           float a = reveal * core * uLayerOpacity * (0.34 + 0.35 * vMouse + vPeak * 0.2) * (0.75 + 0.5 * uGlow);
           if (vR < R_VOID) a *= 0.2;
           a *= uMaster;
-          gl_FragColor = vec4(vec3(b), a);
+          // Thème clair : encre sombre, b module l'alpha (voir _makeLines).
+          vec3 ink = vec3(0.07, 0.078, 0.10);
+          gl_FragColor = vec4(ink, a * clamp(b, 0.0, 1.4) / 1.4 * 1.3);
         }
       `,
     });

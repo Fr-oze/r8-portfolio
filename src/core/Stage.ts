@@ -19,7 +19,7 @@ export class Stage {
   private _raf: number;
   private _onResize: () => void;
 
-  constructor(container: HTMLElement, { bg = 0x060606, fov = 42 } = {}) {
+  constructor(container: HTMLElement, { bg = 0xf4f5f7, fov = 42 } = {}) {
     this.container = container;
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });

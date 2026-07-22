@@ -286,7 +286,7 @@ export class OrbFlightMode {
     return new THREE.ShaderMaterial({
       uniforms: this.tUniforms,
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       vertexShader: /* glsl */ `
         ${TERRAIN_GLSL}
@@ -308,7 +308,9 @@ export class OrbFlightMode {
           float fadeFar = smoothstep(${(-T_LEN + 6).toFixed(1)}, ${(-T_LEN * 0.5).toFixed(1)}, vZ);
           float b = 0.45 + vH * 0.55;
           float a = uOpacity * fadeFar * (0.13 + vH * 0.3);
-          gl_FragColor = vec4(vec3(b), a);
+          // Thème clair : encre sombre, b module l'alpha.
+          vec3 ink = vec3(0.07, 0.078, 0.10);
+          gl_FragColor = vec4(ink, a * clamp(b, 0.0, 1.0) * 1.3);
         }
       `,
     });
@@ -318,7 +320,7 @@ export class OrbFlightMode {
     return new THREE.ShaderMaterial({
       uniforms: this.tUniforms,
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       vertexShader: /* glsl */ `
         ${TERRAIN_GLSL}
@@ -342,7 +344,8 @@ export class OrbFlightMode {
           if (length(uv) > 0.5) discard;
           float fadeFar = smoothstep(${(-T_LEN + 6).toFixed(1)}, ${(-T_LEN * 0.5).toFixed(1)}, vZ);
           float a = uOpacity * fadeFar * (0.1 + vH * 0.3);
-          gl_FragColor = vec4(vec3(0.8), a);
+          // Thème clair : poussière en encre sombre.
+          gl_FragColor = vec4(vec3(0.07, 0.078, 0.10), a * 1.3);
         }
       `,
     });
@@ -416,7 +419,7 @@ export class OrbFlightMode {
 
   // --- VAISSEAU ---------------------------------------------------------------
 
-  // Petit vaisseau wireframe : dard + ailes, tout en lignes additives.
+  // Petit vaisseau wireframe : dard + ailes, lignes d'encre sombre.
   private _buildShip() {
     const g = new THREE.Group();
     const nose: [number, number, number] = [0, 0.02, -0.24];
@@ -435,10 +438,10 @@ export class OrbFlightMode {
       new THREE.LineSegments(
         geo,
         new THREE.LineBasicMaterial({
-          color: 0xffffff,
+          color: 0x12141a,
           transparent: true,
           opacity: 0.95,
-          blending: THREE.AdditiveBlending,
+          blending: THREE.NormalBlending,
           depthWrite: false,
         })
       )
@@ -450,12 +453,12 @@ export class OrbFlightMode {
       new THREE.Points(
         glowGeo,
         new THREE.PointsMaterial({
-          color: 0xffffff,
+          color: 0x12141a,
           size: 4,
           sizeAttenuation: false,
           transparent: true,
           opacity: 0.9,
-          blending: THREE.AdditiveBlending,
+          blending: THREE.NormalBlending,
           depthWrite: false,
         })
       )
