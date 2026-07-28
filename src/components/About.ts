@@ -53,9 +53,9 @@ export class About {
             <div class="about__col">
               <span class="about__h">POUR QUI</span>
               <ul>
-                <li>Fondateurs d'agence à 30–50k€/mois, experts (SEO, web, dev, branding, contenu)</li>
-                <li>Ceux qui ont déjà du flux entrant et qui en gâchent les deux tiers</li>
-                <li>Jamais media buying, acquisition ou growth : chez eux, le commercial est déjà le métier</li>
+                <li>Tu as du flux entrant, mais la moitié pourrit dans ta boîte mail</li>
+                <li>Tu es sous l'eau sur la delivery, le commercial attend « quand tu as le temps »</li>
+                <li>Tu veux que chaque lead soit traité sans que tu sois dessus</li>
               </ul>
             </div>
             <div class="about__col">
@@ -75,7 +75,7 @@ export class About {
           </div>
 
           <p class="about__quip">
-            Réservé aux agences qui savent qu'elles gâchent leurs demandes. Si ton problème c'est d'en trouver, je ne suis pas le bon interlocuteur.
+            Tu ne vas pas faire plus de marketing. Tu vas juste arrêter de jeter la moitié de ce que ton marketing te ramène.
           </p>
 
           <div class="about__cta">
