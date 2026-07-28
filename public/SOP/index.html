@@ -852,13 +852,13 @@
         <h1>SOP<br />ZÉRO LEAD MORT</h1>
         <p class="hero__lead">
           Radar commercial + tunnel d'engagement.
-          Opt-in scorés, mail vers groupe WhatsApp, dashboard, alertes FUP.
+          Opt-in scorés, groupe WhatsApp créé par API à chaque lead, dashboard, alertes FUP.
           Le commercial garde la relation. Le système empêche les leads de pourrir.
         </p>
         <div class="hero__meta">
-          <span class="chip">VERSION <b>1.0</b></span>
+          <span class="chip">VERSION <b>1.1</b></span>
           <span class="chip">INSTALL <b>7 JOURS</b></span>
-          <span class="chip">PUBLIC <b>À PARTIR DE 5K</b></span>
+          <span class="chip">SETUP <b>À PARTIR DE 5K</b></span>
           <span class="chip">STATUT <b>OPÉRATIONNEL</b></span>
         </div>
       </div>
@@ -898,8 +898,9 @@
               <div class="panel__body">
                 <p class="lede" style="margin:0;max-width:none">
                   Ads ramènent des opt-ins. Chaque entrée est nivelée.
-                  Un mail pousse vers un groupe WhatsApp (ressource).
-                  S'il ne rejoint pas, on relance. S'il rejoint, le commercial est notifié.
+                  Un groupe WhatsApp est créé via l'API (prospect + commercial).
+                  Le mail porte le lien d'invitation. S'il ne rejoint pas, on relance.
+                  S'il rejoint : notif, accueil auto, commercial prend le relais.
                   Le dashboard garde la vérité du pipe et les FUP.
                 </p>
               </div>
@@ -952,9 +953,10 @@
       <section id="tunnel">
         <div class="wrap">
           <p class="sec-tag">02 · Tunnel</p>
-          <h2>Opt-in → mail → groupe → humain</h2>
+          <h2>Opt-in → groupe API → mail → humain</h2>
           <p class="lede">
-            Le mail porte l'invitation WhatsApp. WhatsApp ne commence qu'après le clic join.
+            À chaque opt-in, création du groupe via WhatsApp Cloud API.
+            Le mail livre l'invite. WhatsApp commence après le clic join.
           </p>
 
           <div class="pipe" aria-label="Tunnel visuel">
@@ -970,18 +972,18 @@
             </article>
             <article class="pipe__step pipe__step--hot">
               <div class="pipe__n">03</div>
-              <div class="pipe__title">Mail + lien WA</div>
-              <p class="pipe__desc">Ressource gratuite dans le groupe.</p>
+              <div class="pipe__title">Groupe WA · API</div>
+              <p class="pipe__desc">Création auto. Prospect + commercial.</p>
             </article>
             <article class="pipe__step">
               <div class="pipe__n">04</div>
-              <div class="pipe__title">Join ou pas</div>
-              <p class="pipe__desc">Deux branches. Dashboard suit l'état.</p>
+              <div class="pipe__title">Mail d'invite</div>
+              <p class="pipe__desc">Lien du groupe. Relances si no-join.</p>
             </article>
             <article class="pipe__step">
               <div class="pipe__n">05</div>
               <div class="pipe__title">Notif téléphone</div>
-              <p class="pipe__desc">Gérant / commercial alerté.</p>
+              <p class="pipe__desc">Join → alerte gérant / commercial.</p>
             </article>
             <article class="pipe__step">
               <div class="pipe__n">06</div>
@@ -1149,10 +1151,10 @@
       <section id="whatsapp">
         <div class="wrap">
           <p class="sec-tag">04 · WhatsApp</p>
-          <h2>Terrain relationnel, pas stack froide</h2>
+          <h2>Groupes WhatsApp livrés par API</h2>
           <p class="lede">
-            L'API officielle crée un groupe et envoie un lien. Elle n'ajoute personne de force.
-            D'où le mail comme porte d'entrée.
+            Livrable standard : un groupe par lead via Cloud API (compte OBA).
+            Invite-only : le mail porte le lien. Message d'accueil après join.
           </p>
 
           <div class="compare">
@@ -1163,19 +1165,24 @@
                 <div>Horizon</div>
               </div>
               <div class="compare__row">
-                <div><b>Créer un groupe</b></div>
+                <div><b>Créer un groupe / lead</b></div>
                 <div class="ok">Oui (OBA)</div>
-                <div>Oui / SOP</div>
+                <div class="ok">Inclus</div>
+              </div>
+              <div class="compare__row">
+                <div><b>Prospect + commercial</b></div>
+                <div>Via invite link</div>
+                <div>Mail d'invitation</div>
               </div>
               <div class="compare__row">
                 <div><b>Ajouter de force</b></div>
                 <div class="no">Non</div>
-                <div>Lien dans le mail</div>
+                <div>Pas promis</div>
               </div>
               <div class="compare__row">
                 <div><b>Message auto</b></div>
                 <div class="ok">Après join</div>
-                <div>Accueil + humain</div>
+                <div class="ok">Accueil + humain</div>
               </div>
               <div class="compare__row">
                 <div><b>Usurper le perso</b></div>
@@ -1185,19 +1192,20 @@
             </div>
             <div class="compare__side">
               <article class="opt">
-                <h3>Option A · Groupe ressource</h3>
-                <p>Un groupe avec la ressource. Join = engagé. Commercial prend ensuite.</p>
+                <h3>Prérequis client</h3>
+                <p>WhatsApp Business éligible Groups API (Official Business Account).</p>
                 <ul>
-                  <li>Simple à livrer en 7 jours</li>
-                  <li>Parfait en v1</li>
+                  <li>Onboarding Meta pendant l'install</li>
+                  <li>Numéro business dédié au process</li>
+                  <li>Templates d'invite validés</li>
                 </ul>
               </article>
               <article class="opt">
-                <h3>Option B · Groupe par lead</h3>
-                <p>Prospect + commercial (+ bot). Plus setter. OBA ou SOP manuel.</p>
+                <h3>Ce qui part à chaque opt-in</h3>
+                <p>Création groupe → lien → mail #1 → wait join → accueil → notif.</p>
                 <ul>
-                  <li>Phase 2 / clients matures</li>
-                  <li>Plus lourd Meta</li>
+                  <li>Commercial déjà prévu dans le groupe</li>
+                  <li>Dashboard suit joined / not_joined</li>
                 </ul>
               </article>
             </div>
@@ -1298,15 +1306,15 @@
             <div class="tl">
               <div class="tl__day">J3</div>
               <div class="tl__card">
-                <h3>Mail</h3>
-                <p>Template #1 + séquence no-join. SPF / DKIM.</p>
+                <h3>WhatsApp API</h3>
+                <p>OBA / Groups API. Templates d'invite. Test création groupe + webhook join.</p>
               </div>
             </div>
             <div class="tl">
               <div class="tl__day">J4</div>
               <div class="tl__card">
-                <h3>WhatsApp</h3>
-                <p>Groupe ressource + lien, ou Groups API si OBA. SOP commercial.</p>
+                <h3>Mail + tunnel</h3>
+                <p>Mail #1 (lien groupe) + séquence no-join. SPF / DKIM.</p>
               </div>
             </div>
             <div class="tl">
@@ -1320,14 +1328,14 @@
               <div class="tl__day">J6</div>
               <div class="tl__card">
                 <h3>FUP engine</h3>
-                <p>Seuils silence. Liste « à faire aujourd'hui ».</p>
+                <p>Seuils silence. Liste « à faire aujourd'hui ». Accueil auto post-join.</p>
               </div>
             </div>
             <div class="tl">
               <div class="tl__day">J7</div>
               <div class="tl__card">
                 <h3>Go-live</h3>
-                <p>Test bout-en-bout. Gate humain 14 jours si messages auto groupe.</p>
+                <p>Test bout-en-bout : opt-in → groupe API → mail → join → notif → humain.</p>
               </div>
             </div>
           </div>
@@ -1338,19 +1346,19 @@
         <div class="wrap">
           <p class="sec-tag">07 · Pricing</p>
           <h2>Ancrage</h2>
-          <p class="lede">Public : à partir de 5k. Interne : setup 7k.</p>
+          <p class="lede">Setup à partir de 5k. Retainer dès J+7. Pas d'audit porte.</p>
           <div class="price">
-            <article>
-              <div class="price__phase">Porte</div>
-              <h3>Audit de fuite</h3>
-              <p>Chiffrage à emporter. Mapping opt-in → niveaux.</p>
-              <div class="price__eur">1 000 €</div>
-            </article>
             <article>
               <div class="price__phase">Install</div>
               <h3>Système complet</h3>
-              <p>Tunnel + dashboard + notifs + FUP + SOP WA.</p>
-              <div class="price__eur">7 000 €</div>
+              <p>Tunnel + groupes WA API + dashboard + notifs + FUP.</p>
+              <div class="price__eur">À partir de 5 000 €</div>
+            </article>
+            <article>
+              <div class="price__phase">Ancre interne</div>
+              <h3>Setup type</h3>
+              <p>Référence de chiffrage. Ajusté selon volume / stack client.</p>
+              <div class="price__eur">~7 000 €</div>
             </article>
             <article>
               <div class="price__phase">Socle</div>
@@ -1360,8 +1368,8 @@
             </article>
             <article>
               <div class="price__phase">Expand</div>
-              <h3>Phase 2</h3>
-              <p>Groups API par lead, process suivant qui saigne.</p>
+              <h3>Process suivant</h3>
+              <p>Autre process qui saigne une fois le pipe sous contrôle.</p>
               <div class="price__eur">5–8 000 €</div>
             </article>
           </div>

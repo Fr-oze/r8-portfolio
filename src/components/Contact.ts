@@ -30,10 +30,11 @@ export class Contact {
 
         <div class="contact__inner">
           <div class="contact__intro">
-            <span class="contact__tag">AUDIT FUITE · 1 000 €</span>
-            <h2 class="contact__lead">On chiffre ce que<br /><span>ta boîte mail te coûte</span>&nbsp;?</h2>
+            <span class="contact__tag">INSTALL · 7 JOURS</span>
+            <h2 class="contact__lead">On installe le process<br /><span>sur ton acquisition</span>&nbsp;?</h2>
             <p class="contact__sub">
-              Une heure de call. Je vais chercher les données dans tes canaux. Si le chiffre ne justifie pas le système, on s'arrête là.
+              Opt-ins scorés, groupes WhatsApp par API, dashboard, FUP.
+              Une heure de call pour démarrer. Le reste, on livre.
             </p>
           </div>
 
