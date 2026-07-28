@@ -132,9 +132,8 @@ export class PortraitScene {
       alpha: true,
       powerPreference: "high-performance",
     });
-    // Fond transparent : base blanche pour éviter les franges sombres au
-    // blending sur le panneau clair.
-    this.renderer.setClearColor(0xffffff, 0);
+    // Fond blanc opaque : points / arêtes noirs sur papier.
+    this.renderer.setClearColor(0xffffff, 1);
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
     this.renderer.setPixelRatio(this.dpr);
 
@@ -178,9 +177,8 @@ export class PortraitScene {
     this.composer = new EffectComposer(this.renderer);
     this.composer.setPixelRatio(this.dpr);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
-    // Thème clair : seuil à 1 = bloom neutralisé (le glow blanc n'a plus de
-    // sens sur encre sombre, et il laverait le fond clair).
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.54, 0.4, 1.0);
+    // Pas de bloom : sur fond blanc, il laverait l'encre noire.
+    this.bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0, 0.4, 1.0);
     this.composer.addPass(this.bloom);
 
     this.resize();
@@ -336,12 +334,11 @@ export class PortraitScene {
           float ndv = abs(dot(normalize(vN), normalize(vV)));
           float fres = pow(1.0 - ndv, 3.0);
           float df = depthFade(vDepth);
-          // Thème clair : coque "papier" pâle, liseré d'encre au fresnel
-          // (les lignes d'encre restent lisibles par-dessus).
-          vec3 ink = vec3(0.07, 0.078, 0.10);
-          vec3 paper = vec3(0.955, 0.96, 0.968);
+          // Fond blanc + encre noire : coque papier, liseré noir au fresnel.
+          vec3 ink = vec3(0.0);
+          vec3 paper = vec3(1.0);
           float t = clamp((0.7 * fres + 0.3 * vMouse) * df, 0.0, 1.0);
-          float a = (0.42 + 0.5 * fres) * uReveal * df * vPres;
+          float a = (0.55 + 0.4 * fres) * uReveal * df * vPres;
           gl_FragColor = vec4(mix(paper, ink, t), a);
         }
       `,
@@ -379,10 +376,9 @@ export class PortraitScene {
         void main() {
           float df = depthFade(vDepth);
           float b = (0.78 + 0.5 * vMouse) * df;
-          float a = (0.55 + 0.3 * vMouse) * uReveal * df;
-          // Thème clair : encre sombre, b module l'alpha.
-          vec3 ink = vec3(0.07, 0.078, 0.10);
-          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4 * 1.3, 0.0, 1.0));
+          float a = (0.72 + 0.28 * vMouse) * uReveal * df;
+          vec3 ink = vec3(0.0);
+          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4, 0.0, 1.0));
         }
       `
     );
@@ -418,10 +414,9 @@ export class PortraitScene {
         void main() {
           float df = depthFade(vDepth);
           float b = (0.66 + 0.4 * vMouse) * df;
-          float a = (0.3 + 0.22 * vMouse) * uReveal * df;
-          // Thème clair : encre sombre, b module l'alpha.
-          vec3 ink = vec3(0.07, 0.078, 0.10);
-          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4 * 1.3, 0.0, 1.0));
+          float a = (0.42 + 0.22 * vMouse) * uReveal * df;
+          vec3 ink = vec3(0.0);
+          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4, 0.0, 1.0));
         }
       `
     );
@@ -482,10 +477,9 @@ export class PortraitScene {
           float core = smoothstep(0.5, 0.18, r);
           float df = depthFade(vDepth);
           float b = (0.85 + 0.25 * vMouse) * df;
-          float a = core * (0.6 + 0.2 * vMouse) * uReveal * df;
-          // Thème clair : encre sombre, b module l'alpha.
-          vec3 ink = vec3(0.07, 0.078, 0.10);
-          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4 * 1.3, 0.0, 1.0));
+          float a = core * (0.85 + 0.15 * vMouse) * uReveal * df;
+          vec3 ink = vec3(0.0);
+          gl_FragColor = vec4(ink, clamp(a * clamp(b, 0.0, 1.4) / 1.4, 0.0, 1.0));
         }
       `,
     });

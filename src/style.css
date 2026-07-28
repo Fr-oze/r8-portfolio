@@ -1580,9 +1580,7 @@ body.diving .ui__quip {
   width: 100%;
   aspect-ratio: 1 / 1;
   border: 1px solid var(--line);
-  background:
-    radial-gradient(circle at 50% 45%, rgba(18, 20, 26, 0.04), transparent 60%),
-    var(--panel);
+  background: #ffffff;
 }
 .about__loader {
   position: absolute;
@@ -1595,7 +1593,7 @@ body.diving .ui__quip {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  background: var(--panel);
+  background: #ffffff;
   border: 1px solid var(--line);
   transition: opacity 0.6s ease;
   pointer-events: none;
