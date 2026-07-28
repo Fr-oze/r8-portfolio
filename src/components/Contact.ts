@@ -31,10 +31,10 @@ export class Contact {
         <div class="contact__inner">
           <div class="contact__intro">
             <span class="contact__tag">INSTALL · 7 JOURS</span>
-            <h2 class="contact__lead">On installe le process<br /><span>sur ton acquisition</span>&nbsp;?</h2>
+            <h2 class="contact__lead">On arrête de laisser<br /><span>pourrir tes demandes</span>&nbsp;?</h2>
             <p class="contact__sub">
-              Opt-ins scorés, groupes WhatsApp par API, dashboard, FUP.
-              Une heure de call pour démarrer. Le reste, on livre.
+              Formulaire, WhatsApp, suivi. Installé en 7 jours.
+              Un call d'une heure pour démarrer.
             </p>
           </div>
 

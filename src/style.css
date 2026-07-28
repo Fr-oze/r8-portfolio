@@ -2204,70 +2204,52 @@ body.past-hero .ui__cta-projects {
 .leak-calc__hint b {
   color: var(--ink);
 }
-.leak-calc__result {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
+.leak-calc__compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }
-.leak-table {
-  width: 100%;
-  border-collapse: collapse;
+.leak-pane {
+  padding: 22px 18px 18px;
   border: 1px solid var(--line);
   background: var(--panel);
-  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-.leak-table th,
-.leak-table td {
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--line);
-  text-align: right;
-  vertical-align: middle;
+.leak-pane--hot {
+  border-color: rgba(18, 20, 26, 0.35);
+  background: linear-gradient(160deg, rgba(18, 20, 26, 0.04), transparent 55%);
 }
-.leak-table thead th {
+.leak-pane__tag {
   font-size: 10px;
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+}
+.leak-pane__big {
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-top: 8px;
+}
+.leak-pane__sub {
+  font-size: 10px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--dim);
-  font-weight: 700;
-  background: rgba(18, 20, 26, 0.03);
 }
-.leak-table thead th:first-child {
-  text-align: left;
-}
-.leak-table tbody th {
-  text-align: left;
-  font-weight: 500;
-  color: #4a525c;
+.leak-pane__meta {
+  margin-top: 12px;
   font-size: 12px;
-  letter-spacing: 0.01em;
-}
-.leak-table tbody td {
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  font-weight: 600;
-  width: 22%;
-}
-.leak-table__muted {
-  color: var(--dim) !important;
-  font-weight: 500 !important;
-}
-.leak-table__total th,
-.leak-table__total td {
-  border-bottom: none;
-  background: rgba(18, 20, 26, 0.04);
-  font-weight: 700;
-  color: var(--ink);
-  padding-top: 14px;
-  padding-bottom: 14px;
-}
-.leak-calc__footnote {
-  font-size: 11px;
-  line-height: 1.5;
   color: #4a525c;
-  margin: 0;
+}
+.leak-pane__meta b {
+  color: var(--ink);
 }
 .leak-delta {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -2707,13 +2689,8 @@ body.past-hero .ui__cta-projects {
   .leak-calc {
     grid-template-columns: 1fr;
   }
-  .leak-table th,
-  .leak-table td {
-    padding: 10px 10px;
-    font-size: 12px;
-  }
-  .leak-table tbody th {
-    font-size: 11px;
+  .leak-calc__compare {
+    grid-template-columns: 1fr;
   }
   .leak-delta span:last-child {
     margin-left: 0;

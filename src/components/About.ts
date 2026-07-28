@@ -61,9 +61,9 @@ export class About {
             <div class="about__col">
               <span class="about__h">CE QUE JE LIVRE</span>
               <ul>
-                <li>Tunnel opt-in → mail → groupe WA (API)</li>
-                <li>Dashboard : pipeline, récaps IA, alertes FUP</li>
-                <li>Notifs téléphone. Toi tu closes dans le groupe.</li>
+                <li>Chaque demande devient un groupe WhatsApp</li>
+                <li>Tu vois qui est chaud et qui traîne</li>
+                <li>Toi tu closes. Le système n'oublie personne.</li>
               </ul>
             </div>
           </div>

@@ -138,11 +138,11 @@
     <main class="page-scroll">
       <section id="calc" class="scroll-section scroll-section--calc">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.015 / CALCULATEUR</span>
-          <h2 class="scroll-section__title">CHIFFRE TA FUITE</h2>
+          <span class="scroll-section__label">NO.015 / FUITE</span>
+          <h2 class="scroll-section__title">CE QUE TU LAISSES PASSER</h2>
           <p class="scroll-section__lede">
-            Même volume de demandes. Même panier. La seule variable : combien tu contactes à temps,
-            et combien tu closes encore une fois qu'ils ont refroidi.
+            Règle les curseurs. Tu vois ce que tu encaisse aujourd'hui, et ce que tu pourrais encaisser
+            si chaque demande était traitée à temps.
           </p>
         </header>
 
@@ -150,7 +150,7 @@
           <div class="leak-calc__controls">
             <label class="leak-slider">
               <span class="leak-slider__top">
-                <span class="leak-slider__label">Demandes entrantes / mois</span>
+                <span class="leak-slider__label">Demandes / mois</span>
                 <b id="calc-leads-val">30</b>
               </span>
               <input id="calc-leads" type="range" min="10" max="80" step="1" value="30" />
@@ -164,90 +164,28 @@
             </label>
             <label class="leak-slider">
               <span class="leak-slider__top">
-                <span class="leak-slider__label">Contactées en &lt; 1h (aujourd'hui)</span>
+                <span class="leak-slider__label">Répondues assez vite</span>
                 <b id="calc-fast-val">33 %</b>
               </span>
               <input id="calc-fast" type="range" min="10" max="70" step="1" value="33" />
             </label>
-            <label class="leak-slider">
-              <span class="leak-slider__top">
-                <span class="leak-slider__label">Close sur lead chaud</span>
-                <b id="calc-close-hot-val">20 %</b>
-              </span>
-              <input id="calc-close-hot" type="range" min="8" max="40" step="1" value="20" />
-            </label>
-            <label class="leak-slider">
-              <span class="leak-slider__top">
-                <span class="leak-slider__label">Close sur lead refroidi</span>
-                <b id="calc-close-cool-val">5 %</b>
-              </span>
-              <input id="calc-close-cool" type="range" min="1" max="15" step="1" value="5" />
-            </label>
-            <p class="leak-calc__hint">
-              Avec le système, le close est volontairement baissé à
-              <b id="calc-close-sys">15 %</b>
-              (traiter 100&nbsp;% fait entrer des leads moins qualifiés),
-              tout en restant au-dessus de ton taux mixte actuel.
-            </p>
           </div>
 
-          <div class="leak-calc__result">
-            <table class="leak-table">
-              <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Aujourd'hui</th>
-                  <th scope="col">Avec système</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Demandes entrantes / mois</th>
-                  <td id="calc-row-leads-now">30</td>
-                  <td id="calc-row-leads-sys">30</td>
-                </tr>
-                <tr>
-                  <th scope="row">Contactées en &lt; 1h</th>
-                  <td id="calc-row-fast-now">10</td>
-                  <td id="calc-row-fast-sys">30</td>
-                </tr>
-                <tr>
-                  <th scope="row">Contactées en &gt; 48h ou jamais</th>
-                  <td id="calc-row-late-now">20</td>
-                  <td id="calc-row-late-sys">0</td>
-                </tr>
-                <tr>
-                  <th scope="row">Close sur lead chaud</th>
-                  <td id="calc-row-hot-now">20 %</td>
-                  <td id="calc-row-hot-sys">15 %*</td>
-                </tr>
-                <tr>
-                  <th scope="row">Close sur lead refroidi</th>
-                  <td id="calc-row-cool-now">5 %</td>
-                  <td class="leak-table__muted">n/a</td>
-                </tr>
-                <tr>
-                  <th scope="row">Clients signés / mois</th>
-                  <td id="calc-row-clients-now">3,0</td>
-                  <td id="calc-row-clients-sys">4,5</td>
-                </tr>
-                <tr>
-                  <th scope="row">Panier moyen</th>
-                  <td id="calc-row-basket-now">4 000 €</td>
-                  <td id="calc-row-basket-sys">4 000 €</td>
-                </tr>
-                <tr class="leak-table__total">
-                  <th scope="row">CA généré</th>
-                  <td id="calc-row-ca-now">12 000 €</td>
-                  <td id="calc-row-ca-sys">18 000 €</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="leak-calc__footnote">
-              * Taux baissé volontairement, mais jamais sous ton mix actuel : sinon le tableau dirait que tu gagnes plus tout seul.
-            </p>
+          <div class="leak-calc__compare">
+            <article class="leak-pane">
+              <span class="leak-pane__tag">AUJOURD'HUI</span>
+              <div class="leak-pane__big" id="calc-ca-now">12 000 €</div>
+              <span class="leak-pane__sub">CA / mois</span>
+              <p class="leak-pane__meta"><b id="calc-clients-now">3,0</b> clients signés</p>
+            </article>
+            <article class="leak-pane leak-pane--hot">
+              <span class="leak-pane__tag">AVEC LE SYSTÈME</span>
+              <div class="leak-pane__big" id="calc-ca-sys">18 000 €</div>
+              <span class="leak-pane__sub">CA / mois</span>
+              <p class="leak-pane__meta"><b id="calc-clients-sys">4,5</b> clients signés</p>
+            </article>
             <div class="leak-delta">
-              <span class="leak-delta__label">DELTA RÉCUPÉRABLE</span>
+              <span class="leak-delta__label">EN PLUS</span>
               <strong id="calc-delta">+ 6 000 € / mois</strong>
               <span id="calc-delta-year">+ 72 000 € / an</span>
             </div>
@@ -257,11 +195,10 @@
 
       <section id="process" class="scroll-section scroll-section--process">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.016 / SYSTÈME</span>
-          <h2 class="scroll-section__title">COMMENT ÇA SE PASSE</h2>
+          <span class="scroll-section__label">NO.016 / COMMENT</span>
+          <h2 class="scroll-section__title">CE QUI SE PASSE</h2>
           <p class="scroll-section__lede">
-            Ads → opt-in scorés → groupe WhatsApp créé par API → mail d'invitation →
-            relances si pas de join → notif commercial → dashboard + FUP.
+            Quelqu'un remplit ton formulaire. Ensuite, plus rien ne tombe dans le vide.
           </p>
         </header>
         <ol class="process-timeline">
@@ -271,9 +208,9 @@
               <span class="process-step__no">01</span>
             </div>
             <article class="process-step__card">
-              <span class="process-step__phase">OPT-IN · NIVEAUX</span>
-              <h3 class="process-step__title">Chaque entrée est scorée</h3>
-              <p>Selon les réponses du form et la source ads, le lead tombe en niveau A / B / C et dans une case pipeline.</p>
+              <span class="process-step__phase">ENTRÉE</span>
+              <h3 class="process-step__title">La demande arrive</h3>
+              <p>On sait tout de suite si c'est chaud ou non. Tu n'as rien à trier à la main.</p>
             </article>
           </li>
           <li class="process-step">
@@ -282,9 +219,9 @@
               <span class="process-step__no">02</span>
             </div>
             <article class="process-step__card">
-              <span class="process-step__phase">GROUPE WA · API</span>
-              <h3 class="process-step__title">Un groupe par lead</h3>
-              <p>À chaque opt-in, un groupe WhatsApp est créé via l'API (prospect + commercial). Le mail porte le lien d'invitation.</p>
+              <span class="process-step__phase">WHATSAPP</span>
+              <h3 class="process-step__title">Un groupe se crée</h3>
+              <p>Le prospect reçoit un mail pour rejoindre. Toi (ou ton commercial) êtes déjà dedans.</p>
             </article>
           </li>
           <li class="process-step">
@@ -293,9 +230,9 @@
               <span class="process-step__no">03</span>
             </div>
             <article class="process-step__card">
-              <span class="process-step__phase">RELANCE NO-JOIN</span>
-              <h3 class="process-step__title">S'il ne clique pas, on relance</h3>
-              <p>Séquence mail tant qu'il n'a pas rejoint. Le dashboard suit l'état : invite envoyée, no-join, dans le groupe.</p>
+              <span class="process-step__phase">RELANCE</span>
+              <h3 class="process-step__title">S'il ne vient pas, on insiste</h3>
+              <p>Des mails partent tout seuls jusqu'à ce qu'il rejoigne, ou que tu décides d'arrêter.</p>
             </article>
           </li>
           <li class="process-step">
@@ -304,20 +241,9 @@
               <span class="process-step__no">04</span>
             </div>
             <article class="process-step__card">
-              <span class="process-step__phase">NOTIF TÉLÉPHONE</span>
-              <h3 class="process-step__title">Le commercial est alerté</h3>
-              <p>Opt-in chaud ou join groupe : notification sur le téléphone du gérant / commercial. SOP d'accueil prêt.</p>
-            </article>
-          </li>
-          <li class="process-step">
-            <div class="process-step__marker">
-              <span class="process-step__dot" aria-hidden="true"></span>
-              <span class="process-step__no">05</span>
-            </div>
-            <article class="process-step__card">
-              <span class="process-step__phase">DASHBOARD + FUP</span>
-              <h3 class="process-step__title">Qui relancer, dans quel ordre</h3>
-              <p>Pipeline modifiable, fiches avec récap IA, alertes si un contact n'a pas été touché depuis trop longtemps.</p>
+              <span class="process-step__phase">TOI</span>
+              <h3 class="process-step__title">Tu prends le relais</h3>
+              <p>Tu es prévenu sur ton téléphone. Tu discutes. Tu closes. Le système te dit aussi qui traîne trop longtemps.</p>
             </article>
           </li>
         </ol>
@@ -325,130 +251,82 @@
 
       <section id="craft" class="scroll-section scroll-section--craft">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.017 / EXÉCUTION</span>
-          <h2 class="scroll-section__title">EN PRATIQUE</h2>
-          <p class="scroll-section__lede">
-            Délais, validation, propriété du système, et qui est en face.
-            Le reste est dans le process.
-          </p>
+          <span class="scroll-section__label">NO.017 / CONCRET</span>
+          <h2 class="scroll-section__title">EN CLAIR</h2>
+          <p class="scroll-section__lede">Quatre points. Le reste, on s'en occupe.</p>
         </header>
         <div class="craft-grid">
           <article class="craft-card">
             <span class="craft-card__no">01</span>
-            <h3 class="craft-card__title">Délai</h3>
-            <p>Système opérationnel en 7 jours. Ton temps total : une heure de call.</p>
+            <h3 class="craft-card__title">7 jours</h3>
+            <p>Installé. Ton temps : un call d'une heure.</p>
           </article>
           <article class="craft-card">
             <span class="craft-card__no">02</span>
-            <h3 class="craft-card__title">Contrôle</h3>
-            <p>Validation humaine les 14 premiers jours. Tu ouvres les vannes quand tu es à l'aise, pas avant.</p>
+            <h3 class="craft-card__title">Tu gardes la main</h3>
+            <p>Les 14 premiers jours, rien de sensible ne part sans toi.</p>
           </article>
           <article class="craft-card">
             <span class="craft-card__no">03</span>
-            <h3 class="craft-card__title">Propriété</h3>
-            <p>Accès, code, doc : tout est à toi. Retainer pour rester, pas pour te prendre en otage.</p>
+            <h3 class="craft-card__title">C'est à toi</h3>
+            <p>Accès et doc. Le retainer, c'est pour rester utile, pas pour t'enfermer.</p>
           </article>
           <article class="craft-card">
             <span class="craft-card__no">04</span>
-            <h3 class="craft-card__title">Terrain</h3>
-            <p>Je dirige une agence. Je connais le pipe, le lundi cassé, et la honte de la boîte mail.</p>
+            <h3 class="craft-card__title">Je connais le bordel</h3>
+            <p>Je dirige une agence. La boîte mail qui pourrit le lundi, je l'ai déjà vécue.</p>
           </article>
         </div>
       </section>
 
       <section id="stack-detail" class="scroll-section scroll-section--stack-detail">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.018 / STACK</span>
-          <h2 class="scroll-section__title">SOUS LE CAPOT</h2>
+          <span class="scroll-section__label">NO.018 / OUTIL</span>
+          <h2 class="scroll-section__title">CE QUE TU VOIS AU QUOTIDIEN</h2>
           <p class="scroll-section__lede">
-            Tu n'achètes pas une techno. Tu achètes un radar commercial :
-            opt-ins, pipeline, récaps, alertes. Voici ce qui tourne derrière.
+            Un écran simple. Qui est rentré. Où ça en est. Qui relancer.
           </p>
         </header>
-        <ul class="stack-logos">
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/nextdotjs.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Next.js</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/typescript.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>TypeScript</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/postgresql.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Postgres</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/supabase.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Supabase</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/neon.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Neon</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/n8n.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>n8n</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/make.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Make</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/anthropic.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Claude</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/openai.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>GPT</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/vercel.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Vercel</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/github.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>GitHub</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/googlecalendar.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Agenda</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/hubspot.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>CRM</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/resend.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Resend</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/slack.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Slack</span>
-          </li>
-          <li>
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/notion.svg" alt="" width="28" height="28" loading="lazy" />
-            <span>Notion</span>
-          </li>
-        </ul>
+        <div class="craft-grid">
+          <article class="craft-card">
+            <span class="craft-card__no">01</span>
+            <h3 class="craft-card__title">Les entrées</h3>
+            <p>Toutes tes demandes au même endroit, classées du plus chaud au plus froid.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">02</span>
+            <h3 class="craft-card__title">Le suivi</h3>
+            <p>Tu déplaces les gens à la main. Tu vois où chacun en est.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">03</span>
+            <h3 class="craft-card__title">Le résumé</h3>
+            <p>Pour chaque lead : qui c'est, ce qu'il veut, ce qui s'est dit.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">04</span>
+            <h3 class="craft-card__title">Les rappels</h3>
+            <p>Si quelqu'un n'a pas été touché depuis trop longtemps, on te le dit.</p>
+          </article>
+        </div>
       </section>
 
       <section id="ia" class="scroll-section scroll-section--ia">
         <header class="scroll-section__head">
           <span class="scroll-section__label">NO.019 / IA</span>
-          <h2 class="scroll-section__title">LE CERVEAU, PAS LE CLOSER</h2>
+          <h2 class="scroll-section__title">L'IA TRIE. TOI TU VENDS.</h2>
         </header>
         <div class="ia-row">
           <p class="ia-copy">
-            L'IA lit l'opt-in et les conversations, score la chaleur, propose une case,
-            résume le lead, et te dit qui relancer. Toi (ou ton commercial) gardes WhatsApp.
-            Le système empêche les leads de pourrir dans le flou.
+            Elle lit ce que le prospect a rempli, résume la conversation, et te dit
+            si c'est chaud. Elle ne remplace pas ton close. Elle t'empêche juste
+            d'oublier des gens.
           </p>
           <ul class="ia-points">
-            <li><b>Score</b> A / B / C sur tes critères</li>
-            <li><b>Récap</b> de chaque conversation</li>
-            <li><b>Pipeline</b> suggéré, modifiable à la main</li>
-            <li><b>FUP</b> si silence trop long</li>
+            <li><b>Chaud ou pas</b> en une seconde</li>
+            <li><b>Résumé</b> de chaque échange</li>
+            <li><b>Rappel</b> si ça traîne</li>
+            <li><b>Toi</b> sur WhatsApp pour closer</li>
           </ul>
         </div>
       </section>
@@ -465,10 +343,10 @@
 
       <section id="stack" class="scroll-section scroll-section--stack">
         <div class="stack-band">
-          <span>OPT-IN SCORÉ</span><i>·</i>
-          <span>GROUPES WA · API</span><i>·</i>
-          <span>DASHBOARD + FUP</span><i>·</i>
-          <span>INSTALLÉ EN 7 JOURS</span><i>·</i>
+          <span>DEMANDE</span><i>·</i>
+          <span>GROUPE WHATSAPP</span><i>·</i>
+          <span>TU CLOSES</span><i>·</i>
+          <span>7 JOURS</span><i>·</i>
           <span>À PARTIR DE 5K</span>
         </div>
       </section>
