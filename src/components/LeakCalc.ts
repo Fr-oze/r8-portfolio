@@ -1,7 +1,8 @@
 /**
- * Calculateur de fuite — modèle conservateur (offre Claude).
+ * Calculateur de fuite — modèle conservateur.
  * Aujourd'hui : mix leads chauds / refroidis.
- * Avec système : 100 % contactés, close volontairement baissé.
+ * Avec système : 100 % contactés, close volontairement baissé,
+ * mais jamais sous le taux mixte actuel (sinon delta négatif = perte de crédibilité).
  */
 export function bindLeakCalc(root: HTMLElement | null) {
   if (!root) return;
@@ -39,7 +40,12 @@ export function bindLeakCalc(root: HTMLElement | null) {
     deltaYear: root.querySelector("#calc-delta-year"),
   };
 
-  const SYSTEM_CLOSE_RATIO = 0.75; // 20 % → 15 %
+  /** 20 % → 15 % au défaut Claude */
+  const SYSTEM_CLOSE_RATIO = 0.75;
+  /** Refroidi plafonné vs chaud (réaliste + évite les absurdes) */
+  const COOL_VS_HOT_MAX = 0.4;
+  /** Plancher : système au moins +5 % vs mix actuel */
+  const MIN_UPLIFT_VS_BLEND = 1.05;
 
   const fmtEuro = (n: number) =>
     new Intl.NumberFormat("fr-FR", {
@@ -56,24 +62,43 @@ export function bindLeakCalc(root: HTMLElement | null) {
 
   const fmtPct = (n: number) => {
     const p = n * 100;
-    return `${fmtNum(p, p >= 10 || Number.isInteger(p) ? 0 : 1)} %`;
+    const digits = Math.abs(p - Math.round(p)) < 0.05 ? 0 : 1;
+    return `${fmtNum(p, digits)} %`;
+  };
+
+  const syncCoolCeiling = () => {
+    const hotPct = Number(closeHotEl.value);
+    const maxCool = Math.max(1, Math.floor(hotPct * COOL_VS_HOT_MAX));
+    closeCoolEl.max = String(maxCool);
+    if (Number(closeCoolEl.value) > maxCool) {
+      closeCoolEl.value = String(maxCool);
+    }
   };
 
   const render = () => {
+    syncCoolCeiling();
+
     const leads = Number(leadsEl.value);
     const basket = Number(basketEl.value);
     const fastPct = Number(fastEl.value) / 100;
     const closeHot = Number(closeHotEl.value) / 100;
     const closeCool = Number(closeCoolEl.value) / 100;
-    const closeSys = closeHot * SYSTEM_CLOSE_RATIO;
 
     const fastNow = Math.round(leads * fastPct);
     const lateNow = leads - fastNow;
     const clientsNow = fastNow * closeHot + lateNow * closeCool;
+    const blended = leads > 0 ? clientsNow / leads : 0;
+
+    // Baisse volontaire, mais jamais sous le mix actuel (crédibilité).
+    const closeSys = Math.min(
+      closeHot,
+      Math.max(closeHot * SYSTEM_CLOSE_RATIO, blended * MIN_UPLIFT_VS_BLEND),
+    );
+
     const clientsSys = leads * closeSys;
     const caNow = clientsNow * basket;
     const caSys = clientsSys * basket;
-    const delta = caSys - caNow;
+    const delta = Math.max(0, caSys - caNow);
 
     if (out.leads) out.leads.textContent = String(leads);
     if (out.basket) out.basket.textContent = fmtEuro(basket);
