@@ -136,6 +136,7 @@
 
     <!-- ============ SECTIONS DE SCROLL (sous le hero) ============ -->
     <main class="page-scroll">
+      <!-- 1. Douleur chiffrée -->
       <section id="calc" class="scroll-section scroll-section--calc">
         <header class="scroll-section__head">
           <span class="scroll-section__label">NO.015 / FUITE</span>
@@ -257,6 +258,7 @@
         </div>
       </section>
 
+      <!-- 2. Solution -->
       <section id="process" class="scroll-section scroll-section--process">
         <header class="scroll-section__head">
           <span class="scroll-section__label">NO.016 / COMMENT</span>
@@ -313,39 +315,10 @@
         </ol>
       </section>
 
-      <section id="craft" class="scroll-section scroll-section--craft">
-        <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.017 / CONCRET</span>
-          <h2 class="scroll-section__title">EN CLAIR</h2>
-          <p class="scroll-section__lede">Quatre points. Le reste, on s'en occupe.</p>
-        </header>
-        <div class="craft-grid">
-          <article class="craft-card">
-            <span class="craft-card__no">01</span>
-            <h3 class="craft-card__title">7 jours</h3>
-            <p>Installé. Ton temps : un call d'une heure.</p>
-          </article>
-          <article class="craft-card">
-            <span class="craft-card__no">02</span>
-            <h3 class="craft-card__title">Tu gardes la main</h3>
-            <p>Les 14 premiers jours, rien de sensible ne part sans toi.</p>
-          </article>
-          <article class="craft-card">
-            <span class="craft-card__no">03</span>
-            <h3 class="craft-card__title">C'est à toi</h3>
-            <p>Accès et doc. Le retainer, c'est pour rester utile, pas pour t'enfermer.</p>
-          </article>
-          <article class="craft-card">
-            <span class="craft-card__no">04</span>
-            <h3 class="craft-card__title">Je connais le bordel</h3>
-            <p>Je dirige une agence. La boîte mail qui pourrit le lundi, je l'ai déjà vécue.</p>
-          </article>
-        </div>
-      </section>
-
+      <!-- 3. Produit au quotidien -->
       <section id="stack-detail" class="scroll-section scroll-section--stack-detail">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.018 / OUTIL</span>
+          <span class="scroll-section__label">NO.017 / OUTIL</span>
           <h2 class="scroll-section__title">CE QUE TU VOIS AU QUOTIDIEN</h2>
           <p class="scroll-section__lede">
             Un écran simple. Qui est rentré. Où ça en est. Qui relancer.
@@ -375,9 +348,10 @@
         </div>
       </section>
 
+      <!-- 4. Clarifier le rôle de l'IA -->
       <section id="ia" class="scroll-section scroll-section--ia">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.019 / IA</span>
+          <span class="scroll-section__label">NO.018 / IA</span>
           <h2 class="scroll-section__title">L'IA TRIE. TOI TU VENDS.</h2>
         </header>
         <div class="ia-row">
@@ -395,35 +369,111 @@
         </div>
       </section>
 
+      <!-- 5. Preuve visuelle -->
       <section id="preuve" class="scroll-section scroll-section--preuve">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.020 / PREUVE</span>
-          <h2 class="scroll-section__title">VK STUDIO</h2>
+          <span class="scroll-section__label">NO.019 / PREUVE</span>
+          <h2 class="scroll-section__title">DÉJÀ EN PROD</h2>
           <p class="scroll-section__lede">
-            Formation montage vidéo. Je suis derrière tout le DEV des tunnels de vente :
-            du formulaire jusqu'à la réservation d'appel. Pas du conseil. Du code en prod.
+            Pas une théorie. Des tunnels en ligne, chez un client réel.
           </p>
         </header>
-        <div class="preuve-stats">
-          <div class="preuve-stat">
-            <b>2,6 M€</b>
-            <span>CA en 2025</span>
+
+        <article class="vk-case">
+          <div class="vk-case__hero">
+            <img
+              class="vk-case__shot"
+              src="/projects/vkstudio/landing.png"
+              alt="Site VK Studio"
+              width="1200"
+              height="750"
+              loading="lazy"
+            />
+            <div class="vk-case__overlay">
+              <img
+                class="vk-case__logo"
+                src="/brand/vkstudio-white.png"
+                alt="VK Studio"
+                width="180"
+                height="48"
+                loading="lazy"
+              />
+              <p class="vk-case__role">
+                Je suis derrière tout le DEV des tunnels de vente :
+                formulaire, quiz, opt-in, réservation d'appel.
+              </p>
+            </div>
           </div>
-          <div class="preuve-stat">
-            <b>4 088</b>
-            <span>membres actifs</span>
+
+          <div class="preuve-stats">
+            <div class="preuve-stat">
+              <b>2,6 M€</b>
+              <span>CA en 2025</span>
+            </div>
+            <div class="preuve-stat">
+              <b>4 088</b>
+              <span>membres actifs</span>
+            </div>
+            <div class="preuve-stat">
+              <b>+500 k€</b>
+              <span>sur un webinaire</span>
+            </div>
           </div>
-          <div class="preuve-stat">
-            <b>+500 k€</b>
-            <span>sur un webinaire</span>
+
+          <div class="vk-case__grid">
+            <figure class="vk-case__fig">
+              <img src="/projects/vkstudio/tracking.png" alt="Tunnels et tracking VK Studio" loading="lazy" />
+              <figcaption>Tunnels de vente</figcaption>
+            </figure>
+            <figure class="vk-case__fig">
+              <img src="/projects/vkstudio/polaris-galaxy.png" alt="Plateforme Polaris" loading="lazy" />
+              <figcaption>Plateforme élève</figcaption>
+            </figure>
+            <figure class="vk-case__fig">
+              <img src="/projects/vkstudio/crm.png" alt="CRM élève VK Studio" loading="lazy" />
+              <figcaption>Outils métier</figcaption>
+            </figure>
           </div>
-        </div>
-        <p class="preuve-note">
-          Site, tunnels quiz → opt-in → call, tracking, dashboard.
-          La machine qui fait rentrer les élèves, c'est moi qui l'ai construite.
-        </p>
+
+          <p class="preuve-note">
+            Formation montage vidéo · vkstudio.fr
+            La machine qui fait rentrer les élèves, c'est moi qui l'ai construite.
+          </p>
+        </article>
       </section>
 
+      <!-- 6. Réassurance avant close -->
+      <section id="craft" class="scroll-section scroll-section--craft">
+        <header class="scroll-section__head">
+          <span class="scroll-section__label">NO.020 / CONCRET</span>
+          <h2 class="scroll-section__title">EN CLAIR</h2>
+          <p class="scroll-section__lede">Quatre points. Le reste, on s'en occupe.</p>
+        </header>
+        <div class="craft-grid">
+          <article class="craft-card">
+            <span class="craft-card__no">01</span>
+            <h3 class="craft-card__title">7 jours</h3>
+            <p>Installé. Ton temps : un call d'une heure.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">02</span>
+            <h3 class="craft-card__title">Tu gardes la main</h3>
+            <p>Les 14 premiers jours, rien de sensible ne part sans toi.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">03</span>
+            <h3 class="craft-card__title">C'est à toi</h3>
+            <p>Accès et doc. Le retainer, c'est pour rester utile, pas pour t'enfermer.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">04</span>
+            <h3 class="craft-card__title">Je connais le bordel</h3>
+            <p>Je dirige une agence. La boîte mail qui pourrit le lundi, je l'ai déjà vécue.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 7. Close -->
       <section id="approche" class="scroll-section scroll-section--approche">
         <header class="scroll-section__head scroll-section__head--center">
           <span class="scroll-section__label">NO.021 / PROMESSE</span>

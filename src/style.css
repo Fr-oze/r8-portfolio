@@ -2524,26 +2524,69 @@ body.past-hero .ui__cta-projects {
 .scroll-section--preuve {
   border-top: 1px solid var(--line);
 }
+.vk-case {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.vk-case__hero {
+  position: relative;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: #0b0c10;
+  min-height: clamp(280px, 42vw, 460px);
+}
+.vk-case__shot {
+  width: 100%;
+  height: 100%;
+  min-height: clamp(280px, 42vw, 460px);
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  opacity: 0.88;
+}
+.vk-case__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 28px 28px 32px;
+  background:
+    linear-gradient(180deg, rgba(11, 12, 16, 0.15) 0%, rgba(11, 12, 16, 0.25) 40%, rgba(11, 12, 16, 0.88) 100%);
+}
+.vk-case__logo {
+  width: min(200px, 46vw);
+  height: auto;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.35));
+}
+.vk-case__role {
+  max-width: 36rem;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(244, 245, 247, 0.88);
+}
 .preuve-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
-  max-width: 880px;
-  margin: 0 auto;
 }
 .preuve-stat {
   background: var(--panel);
-  padding: 36px 22px;
+  padding: 28px 18px;
   text-align: center;
 }
 .preuve-stat b {
   display: block;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
   letter-spacing: -0.03em;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .preuve-stat span {
   font-size: 11px;
@@ -2551,11 +2594,40 @@ body.past-hero .ui__cta-projects {
   text-transform: uppercase;
   color: var(--dim);
 }
+.vk-case__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.vk-case__fig {
+  margin: 0;
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+}
+.vk-case__fig img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  background: #eef0f3;
+}
+.vk-case__fig figcaption {
+  padding: 12px 14px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border-top: 1px solid var(--line);
+}
 .preuve-note {
   max-width: 640px;
-  margin: 28px auto 0;
+  margin: 8px auto 0;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.65;
   color: #4a525c;
 }
@@ -2765,7 +2837,16 @@ body.past-hero .ui__cta-projects {
     grid-template-columns: 1fr;
   }
   .preuve-stat {
-    padding: 28px 18px;
+    padding: 24px 18px;
+  }
+  .vk-case__grid {
+    grid-template-columns: 1fr;
+  }
+  .vk-case__overlay {
+    padding: 20px 18px 24px;
+  }
+  .vk-case__role {
+    font-size: 13px;
   }
   .stack-logos {
     grid-template-columns: repeat(4, minmax(0, 1fr));
