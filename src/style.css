@@ -1417,6 +1417,8 @@ body.diving .ui__quip {
   }
   .hero-headline__line--overlap {
     padding-left: 8px;
+    white-space: normal;
+    max-width: calc(100vw - 40px);
   }
 
   /* --- Déclutter : on retire sliders, bouton projets redondant et stats --- */
