@@ -22,6 +22,7 @@
         --line: #d5dae0;
         --panel: #ffffff;
         --soft: #3a424c;
+        --wash: #eef0f3;
       }
       * { margin: 0; box-sizing: border-box; }
       html { scroll-behavior: smooth; }
@@ -30,7 +31,7 @@
         color: var(--ink);
         font-family: "Space Mono", ui-monospace, Menlo, monospace;
         letter-spacing: 0.04em;
-        line-height: 1.7;
+        line-height: 1.65;
         -webkit-font-smoothing: antialiased;
       }
       body::after {
@@ -38,304 +39,782 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle at 50% 40%, transparent 55%, rgba(18, 20, 24, 0.06) 100%);
+        background: radial-gradient(circle at 50% 30%, transparent 50%, rgba(18, 20, 24, 0.05) 100%);
         z-index: 100;
       }
       ::selection { background: var(--ink); color: var(--bg); }
-      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+      a { color: inherit; text-decoration: none; }
+      img { display: block; }
 
-      header {
-        border-bottom: 1px solid var(--line);
-        padding: 96px 0 64px;
+      .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+      /* HERO */
+      .hero {
         position: relative;
         overflow: hidden;
+        border-bottom: 1px solid var(--line);
+        min-height: 78vh;
+        display: flex;
+        align-items: flex-end;
+        padding: 120px 0 72px;
       }
+      .hero__grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, #000 0%, transparent 70%);
+        -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, #000 0%, transparent 70%);
+        opacity: 0.7;
+      }
+      .hero__orb {
+        position: absolute;
+        right: -8%;
+        top: 8%;
+        width: min(520px, 55vw);
+        height: min(520px, 55vw);
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 40% 35%, rgba(18,20,26,0.06), transparent 55%),
+          repeating-radial-gradient(circle at 50% 50%, transparent 0 14px, rgba(18,20,26,0.04) 14px 15px);
+        pointer-events: none;
+      }
+      .hero__orb::before,
+      .hero__orb::after {
+        content: "";
+        position: absolute;
+        inset: 18%;
+        border-radius: 50%;
+        border: 1px dashed rgba(18, 20, 26, 0.18);
+      }
+      .hero__orb::after { inset: 34%; border-style: solid; opacity: 0.5; }
       .eyebrow {
         font-size: 10px;
         letter-spacing: 0.34em;
         color: var(--dim);
         text-transform: uppercase;
       }
-      h1 {
-        font-size: clamp(2rem, 7vw, 4.2rem);
+      .hero h1 {
+        font-size: clamp(2.6rem, 9vw, 5.6rem);
         font-weight: 700;
-        line-height: 1.02;
-        margin: 18px 0 22px;
-        letter-spacing: 0.01em;
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+        margin: 20px 0 24px;
+        max-width: 12ch;
       }
-      .lead {
-        max-width: 720px;
-        color: var(--soft);
+      .hero__lead {
+        max-width: 34rem;
         font-size: 15px;
+        color: var(--soft);
       }
-      .meta-row {
+      .hero__meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px 18px;
-        margin-top: 28px;
+        gap: 10px;
+        margin-top: 36px;
+      }
+      .chip {
         font-size: 10px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 10px 14px;
         color: var(--dim);
       }
-      .meta-row b { color: var(--ink); font-weight: 700; }
-      .hero-grid {
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background-image:
-          linear-gradient(var(--line) 1px, transparent 1px),
-          linear-gradient(90deg, var(--line) 1px, transparent 1px);
-        background-size: 44px 44px;
-        mask-image: radial-gradient(circle at 80% 30%, #000 0%, transparent 60%);
-        -webkit-mask-image: radial-gradient(circle at 80% 30%, #000 0%, transparent 60%);
-        opacity: 0.6;
-      }
+      .chip b { color: var(--ink); }
 
-      section { padding: 64px 0; border-bottom: 1px solid var(--line); }
+      /* NAV STRIP */
+      .navstrip {
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .navstrip__inner {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .navstrip__inner::-webkit-scrollbar { display: none; }
+      .navstrip a {
+        flex: 0 0 auto;
+        padding: 16px 18px;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--dim);
+        border-right: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .navstrip a:hover { color: var(--ink); background: var(--wash); }
+
+      /* SECTIONS */
+      section { padding: 88px 0; border-bottom: 1px solid var(--line); }
       .sec-tag {
         font-size: 10px;
         letter-spacing: 0.28em;
         color: var(--dim);
         text-transform: uppercase;
-        margin-bottom: 26px;
+        margin-bottom: 18px;
         display: flex;
         align-items: center;
         gap: 12px;
       }
       .sec-tag::before {
         content: "";
-        width: 22px;
+        width: 24px;
         height: 1px;
         background: var(--ink);
       }
       h2 {
-        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        font-size: clamp(1.7rem, 4vw, 2.6rem);
         font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
         margin-bottom: 14px;
+        max-width: 18ch;
       }
-      h3 {
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.12em;
+      .lede {
+        font-size: 15px;
+        color: var(--soft);
+        max-width: 40rem;
+        margin-bottom: 40px;
+      }
+
+      /* SPLIT INTRO */
+      .split {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 28px;
+        align-items: stretch;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+      .panel__head {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+        font-size: 10px;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
+        color: var(--dim);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .panel__body { padding: 22px 20px 26px; }
+      .statgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .stat {
+        background: var(--panel);
+        padding: 22px 18px;
+      }
+      .stat b {
+        display: block;
+        font-size: clamp(1.4rem, 3vw, 1.9rem);
+        letter-spacing: -0.03em;
         margin-bottom: 8px;
       }
-      p.body { color: var(--soft); font-size: 14px; max-width: 720px; }
-      .muted { color: var(--dim); font-size: 13px; }
-      .note {
-        margin-top: 18px;
-        padding: 14px 16px;
-        border: 1px solid var(--line);
-        background: var(--panel);
-        font-size: 12px;
-        color: var(--soft);
-        max-width: 720px;
+      .stat span {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+        line-height: 1.4;
       }
-      .note b { color: var(--ink); }
 
-      /* TOC */
-      .toc {
+      /* THREE COL */
+      .tri {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 1px;
         background: var(--line);
         border: 1px solid var(--line);
         margin-top: 28px;
       }
-      .toc a {
+      .tri article {
         background: var(--panel);
-        padding: 16px 18px;
-        text-decoration: none;
-        color: inherit;
-        display: block;
+        padding: 26px 22px 28px;
+        min-height: 220px;
       }
-      .toc a span {
-        display: block;
+      .tri__n {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--dim);
+        margin-bottom: 28px;
+      }
+      .tri h3 {
+        font-size: 15px;
+        letter-spacing: 0.04em;
+        margin-bottom: 14px;
+      }
+      .tri ul { list-style: none; }
+      .tri li {
+        font-size: 13px;
+        color: var(--soft);
+        padding: 7px 0 7px 14px;
+        position: relative;
+        border-top: 1px solid transparent;
+      }
+      .tri li + li { border-top-color: var(--line); }
+      .tri li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 15px;
+        width: 5px;
+        height: 1px;
+        background: var(--ink);
+      }
+      .tri--mute li { color: var(--dim); }
+
+      /* PIPELINE VISUAL */
+      .pipe {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-top: 8px;
+      }
+      .pipe__step {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 18px 14px 20px;
+        min-height: 150px;
+      }
+      .pipe__step::after {
+        content: "→";
+        position: absolute;
+        right: -11px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        width: 18px;
+        height: 18px;
+        background: var(--bg);
+        color: var(--dim);
+        font-size: 12px;
+        display: grid;
+        place-items: center;
+      }
+      .pipe__step:last-child::after { display: none; }
+      .pipe__n {
         font-size: 10px;
         letter-spacing: 0.18em;
         color: var(--dim);
-        margin-bottom: 6px;
+        margin-bottom: 16px;
       }
-      .toc a strong {
+      .pipe__title {
         font-size: 13px;
         font-weight: 700;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.02em;
+        margin-bottom: 10px;
+        line-height: 1.3;
       }
+      .pipe__desc {
+        font-size: 11px;
+        color: var(--soft);
+        line-height: 1.5;
+      }
+      .pipe__step--hot {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+      .pipe__step--hot .pipe__n,
+      .pipe__step--hot .pipe__desc { color: rgba(244, 245, 247, 0.65); }
 
-      /* FLOW DIAGRAM */
-      .flow {
+      /* BRANCH */
+      .branch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
         margin-top: 28px;
+      }
+      .branch__card {
         border: 1px solid var(--line);
         background: var(--panel);
         overflow: hidden;
       }
-      .flow__row {
-        display: grid;
-        grid-template-columns: 72px 1fr;
+      .branch__top {
+        padding: 18px 20px;
         border-bottom: 1px solid var(--line);
-      }
-      .flow__row:last-child { border-bottom: none; }
-      .flow__n {
-        display: grid;
-        place-items: center;
-        border-right: 1px solid var(--line);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        background: rgba(18, 20, 26, 0.03);
-      }
-      .flow__body { padding: 18px 20px; }
-      .flow__body h3 { margin-bottom: 6px; }
-      .flow__body p { font-size: 13px; color: var(--soft); max-width: none; }
-      .flow__tags {
+        background: var(--wash);
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 10px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
       }
-      .tag {
+      .branch__top h3 {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .branch__badge {
         font-size: 10px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--dim);
+        padding: 6px 10px;
         border: 1px solid var(--line);
-        padding: 4px 10px;
+        background: var(--panel);
+        color: var(--dim);
       }
-      .tag--ink {
-        color: var(--bg);
+      .branch__badge--ok {
         background: var(--ink);
+        color: var(--bg);
         border-color: var(--ink);
       }
-
-      /* SCHEMA ASCII / BOX */
-      .schema {
-        margin-top: 28px;
-        border: 1px solid var(--line);
-        background: #eef0f3;
-        padding: 22px 18px;
-        overflow-x: auto;
+      .branch__body { padding: 20px; }
+      .branch__body ol {
+        list-style: none;
+        counter-reset: b;
       }
-      .schema pre {
-        font-family: inherit;
-        font-size: 11px;
-        line-height: 1.45;
-        color: var(--ink);
-        white-space: pre;
-        min-width: 640px;
-      }
-
-      /* COLS */
-      .cols {
+      .branch__body li {
+        counter-increment: b;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1px;
-        background: var(--line);
-        border: 1px solid var(--line);
-        margin-top: 28px;
-      }
-      .cell { background: var(--panel); padding: 22px 22px 26px; }
-      .cell ul { list-style: none; margin-top: 10px; }
-      .cell li {
+        grid-template-columns: 36px 1fr;
+        gap: 12px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
         font-size: 13px;
-        color: #4a525c;
-        padding: 5px 0 5px 16px;
-        position: relative;
+        color: var(--soft);
       }
-      .cell li::before {
-        content: "·";
-        position: absolute;
-        left: 2px;
-        color: var(--ink);
-      }
-
-      /* TABLE */
-      .table-wrap {
-        margin-top: 28px;
-        border: 1px solid var(--line);
-        overflow-x: auto;
-        background: var(--panel);
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-        min-width: 640px;
-      }
-      th, td {
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--line);
-        text-align: left;
-        vertical-align: top;
-      }
-      th {
-        font-size: 10px;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--dim);
-        background: rgba(18, 20, 26, 0.03);
-      }
-      tr:last-child td { border-bottom: none; }
-      td.mono { font-variant-numeric: tabular-nums; color: var(--soft); }
-
-      /* STATES */
-      .states {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 1px;
-        background: var(--line);
-        border: 1px solid var(--line);
-        margin-top: 28px;
-      }
-      .state {
-        background: var(--panel);
-        padding: 18px 16px;
-        text-align: center;
-      }
-      .state b {
-        display: block;
-        font-size: 11px;
-        letter-spacing: 0.14em;
-        margin-bottom: 8px;
-      }
-      .state span {
-        font-size: 11px;
-        color: var(--dim);
-        line-height: 1.45;
-      }
-
-      /* CHECKLIST */
-      .check {
-        margin-top: 22px;
-        border: 1px solid var(--line);
-        background: var(--panel);
-      }
-      .check__row {
-        display: grid;
-        grid-template-columns: 56px 1fr;
-        border-bottom: 1px solid var(--line);
-      }
-      .check__row:last-child { border-bottom: none; }
-      .check__day {
-        display: grid;
-        place-items: center;
-        border-right: 1px solid var(--line);
+      .branch__body li:first-child { border-top: none; padding-top: 0; }
+      .branch__body li::before {
+        content: counter(b, decimal-leading-zero);
         font-size: 11px;
         font-weight: 700;
-        background: rgba(18, 20, 26, 0.03);
+        letter-spacing: 0.08em;
+        color: var(--ink);
+        padding-top: 2px;
       }
-      .check__body { padding: 14px 18px; font-size: 13px; color: var(--soft); }
-      .check__body b { color: var(--ink); }
 
-      .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
-      .rule { border: 1px solid var(--line); background: var(--panel); padding: 20px 22px; }
-      .rule h3 { display: flex; align-items: center; gap: 8px; }
+      /* DASHBOARD MOCK */
+      .dash {
+        margin-top: 8px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        overflow: hidden;
+        box-shadow: 0 24px 60px rgba(18, 20, 26, 0.06);
+      }
+      .dash__chrome {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: var(--wash);
+      }
+      .dash__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--line);
+      }
+      .dash__dot:nth-child(1) { background: #c4c8ce; }
+      .dash__url {
+        margin-left: 10px;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        color: var(--dim);
+        text-transform: uppercase;
+      }
+      .dash__layout {
+        display: grid;
+        grid-template-columns: 200px 1fr 240px;
+        min-height: 420px;
+      }
+      .dash__side {
+        border-right: 1px solid var(--line);
+        padding: 18px 14px;
+        background: #fbfbfc;
+      }
+      .dash__side h4,
+      .dash__alerts h4,
+      .dash__main h4 {
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 14px;
+      }
+      .navitem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px;
+        font-size: 12px;
+        border: 1px solid transparent;
+        margin-bottom: 4px;
+        color: var(--soft);
+      }
+      .navitem--on {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .navitem i {
+        font-style: normal;
+        font-size: 10px;
+        opacity: 0.7;
+      }
+      .dash__main { padding: 18px 16px; }
+      .kanban {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .col h5 {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 10px;
+        padding: 0 2px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        background: var(--bg);
+        padding: 12px;
+        margin-bottom: 8px;
+      }
+      .card b {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .card p {
+        font-size: 11px;
+        color: var(--dim);
+        line-height: 1.4;
+      }
+      .card__lvl {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: 1px solid var(--line);
+        padding: 3px 7px;
+        color: var(--dim);
+      }
+      .card__lvl--a {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+      .dash__alerts {
+        border-left: 1px solid var(--line);
+        padding: 18px 14px;
+        background: #fbfbfc;
+      }
+      .alert {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 12px;
+        margin-bottom: 8px;
+      }
+      .alert strong {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+      }
+      .alert span {
+        font-size: 11px;
+        color: var(--dim);
+        line-height: 1.4;
+      }
+      .alert--hot {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+      .alert--hot span { color: rgba(244,245,247,0.65); }
+
+      /* FEATURE ROW */
+      .feat {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 28px;
+      }
+      .feat article {
+        background: var(--panel);
+        padding: 24px 18px 26px;
+      }
+      .feat__ico {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        background: var(--wash);
+      }
+      .feat__ico svg { width: 16px; height: 16px; }
+      .feat h3 {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .feat p {
+        font-size: 12px;
+        color: var(--soft);
+        line-height: 1.55;
+      }
+
+      /* WA COMPARE */
+      .compare {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 14px;
+      }
+      .compare__table {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        overflow: hidden;
+      }
+      .compare__row {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+      }
+      .compare__row:last-child { border-bottom: none; }
+      .compare__row > * { padding: 14px 16px; }
+      .compare__row > *:not(:last-child) { border-right: 1px solid var(--line); }
+      .compare__row--head {
+        background: var(--wash);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .compare__row b { font-weight: 700; }
+      .ok { color: #2f855a; }
+      .no { color: #c53030; }
+      .compare__side {
+        display: grid;
+        gap: 14px;
+      }
+      .opt {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 22px 20px;
+        height: 100%;
+      }
+      .opt h3 {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .opt p { font-size: 13px; color: var(--soft); margin-bottom: 14px; }
+      .opt ul { list-style: none; }
+      .opt li {
+        font-size: 12px;
+        color: var(--soft);
+        padding: 6px 0 6px 14px;
+        position: relative;
+        border-top: 1px solid var(--line);
+      }
+      .opt li:first-of-type { border-top: none; }
+      .opt li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 14px;
+        width: 6px;
+        height: 1px;
+        background: var(--ink);
+      }
+
+      /* STACK LOGOS */
+      .logos {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .logos li {
+        list-style: none;
+        background: var(--panel);
+        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 16px 8px;
+      }
+      .logos img {
+        width: 26px;
+        height: 26px;
+        filter: brightness(0);
+        opacity: 0.88;
+      }
+      .logos span {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+
+      /* TIMELINE */
+      .timeline {
+        position: relative;
+        margin-top: 8px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 27px;
+        top: 8px;
+        bottom: 8px;
+        width: 1px;
+        background: var(--line);
+      }
+      .tl {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: 18px;
+        margin-bottom: 12px;
+      }
+      .tl__day {
+        width: 56px;
+        height: 56px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        position: relative;
+        z-index: 1;
+      }
+      .tl__card {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 18px 20px;
+      }
+      .tl__card h3 {
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+      .tl__card p {
+        font-size: 13px;
+        color: var(--soft);
+      }
+
+      /* PRICING */
+      .price {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .price article {
+        background: var(--panel);
+        padding: 26px 20px 28px;
+        min-height: 210px;
+        display: flex;
+        flex-direction: column;
+      }
+      .price article:nth-child(2) {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .price__phase {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 28px;
+      }
+      .price article:nth-child(2) .price__phase { color: rgba(244,245,247,0.55); }
+      .price h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+      .price p {
+        font-size: 12px;
+        color: var(--soft);
+        flex: 1;
+        line-height: 1.5;
+      }
+      .price article:nth-child(2) p { color: rgba(244,245,247,0.7); }
+      .price__eur {
+        margin-top: 22px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      /* DO DONT */
+      .rules {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .rule {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 26px 24px;
+        min-height: 280px;
+      }
+      .rule h3 {
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
       .rule--do h3 { color: #2f855a; }
       .rule--dont h3 { color: #c53030; }
-      .rule ul { list-style: none; margin-top: 8px; }
-      .rule li { font-size: 13px; color: #4a525c; padding: 5px 0 5px 18px; position: relative; }
-      .rule--do li::before { content: "+"; position: absolute; left: 0; color: #2f855a; }
-      .rule--dont li::before { content: "−"; position: absolute; left: 0; color: #c53030; }
+      .rule ul { list-style: none; }
+      .rule li {
+        font-size: 13px;
+        color: var(--soft);
+        padding: 10px 0 10px 22px;
+        border-top: 1px solid var(--line);
+        position: relative;
+      }
+      .rule li:first-child { border-top: none; }
+      .rule--do li::before {
+        content: "+";
+        position: absolute;
+        left: 0;
+        color: #2f855a;
+        font-weight: 700;
+      }
+      .rule--dont li::before {
+        content: "−";
+        position: absolute;
+        left: 0;
+        color: #c53030;
+        font-weight: 700;
+      }
 
       footer {
         padding: 56px 0 80px;
@@ -344,508 +823,511 @@
         letter-spacing: 0.14em;
       }
 
+      @media (max-width: 980px) {
+        .split, .compare, .dash__layout { grid-template-columns: 1fr; }
+        .dash__side, .dash__alerts { border: none; border-top: 1px solid var(--line); }
+        .pipe { grid-template-columns: repeat(3, 1fr); }
+        .pipe__step:nth-child(3)::after { display: none; }
+        .tri, .feat, .price, .logos { grid-template-columns: repeat(2, 1fr); }
+        .kanban { grid-template-columns: 1fr 1fr; }
+      }
       @media (max-width: 640px) {
-        .rules { grid-template-columns: 1fr; }
-        section { padding: 48px 0; }
-        header { padding: 72px 0 48px; }
-        .schema pre { min-width: 520px; font-size: 10px; }
+        .hero { min-height: auto; padding: 88px 0 56px; }
+        .hero__orb { opacity: 0.35; }
+        section { padding: 64px 0; }
+        .pipe, .branch, .rules, .tri, .feat, .price, .logos, .kanban { grid-template-columns: 1fr; }
+        .pipe__step::after { display: none; }
+        .statgrid { grid-template-columns: 1fr; }
+        .compare__row { grid-template-columns: 1fr; }
+        .compare__row > *:not(:last-child) { border-right: none; border-bottom: 1px solid var(--line); }
       }
     </style>
   </head>
   <body>
-    <header>
-      <div class="hero-grid" aria-hidden="true"></div>
+    <header class="hero">
+      <div class="hero__grid" aria-hidden="true"></div>
+      <div class="hero__orb" aria-hidden="true"></div>
       <div class="wrap">
-        <p class="eyebrow">HORIZON AGENCY · DOC INTERNE · NOINDEX</p>
+        <p class="eyebrow">Horizon Agency · Doc interne · Noindex</p>
         <h1>SOP<br />ZÉRO LEAD MORT</h1>
-        <p class="lead">
-          Ce document décrit le service livré : radar commercial + tunnel opt-in → mail → groupe WhatsApp,
-          dashboard client, alertes FUP. Pas un bot qui usurpe le WhatsApp perso du gérant.
+        <p class="hero__lead">
+          Radar commercial + tunnel d'engagement.
+          Opt-in scorés, mail vers groupe WhatsApp, dashboard, alertes FUP.
+          Le commercial garde la relation. Le système empêche les leads de pourrir.
         </p>
-        <div class="meta-row">
-          <span>VERSION <b>1.0</b></span>
-          <span>STATUT <b>OPÉRATIONNEL</b></span>
-          <span>INSTALL <b>7 JOURS</b></span>
-          <span>PUBLIC <b>HORIZON-AGENCY.CO</b></span>
+        <div class="hero__meta">
+          <span class="chip">VERSION <b>1.0</b></span>
+          <span class="chip">INSTALL <b>7 JOURS</b></span>
+          <span class="chip">PUBLIC <b>À PARTIR DE 5K</b></span>
+          <span class="chip">STATUT <b>OPÉRATIONNEL</b></span>
         </div>
       </div>
     </header>
 
-    <main>
-      <section id="sommaire">
-        <div class="wrap">
-          <p class="sec-tag">00 · SOMMAIRE</p>
-          <h2>Parcours du document</h2>
-          <nav class="toc" aria-label="Sommaire">
-            <a href="#produit"><span>01</span><strong>Produit</strong></a>
-            <a href="#tunnel"><span>02</span><strong>Tunnel</strong></a>
-            <a href="#dashboard"><span>03</span><strong>Dashboard client</strong></a>
-            <a href="#whatsapp"><span>04</span><strong>WhatsApp (limites)</strong></a>
-            <a href="#stack"><span>05</span><strong>Stack</strong></a>
-            <a href="#install"><span>06</span><strong>Install 7 jours</strong></a>
-            <a href="#pricing"><span>07</span><strong>Pricing &amp; scope</strong></a>
-            <a href="#regles"><span>08</span><strong>Do / Don't</strong></a>
-          </nav>
+    <nav class="navstrip" aria-label="Sections">
+      <div class="wrap">
+        <div class="navstrip__inner">
+          <a href="#produit">01 Produit</a>
+          <a href="#tunnel">02 Tunnel</a>
+          <a href="#dashboard">03 Dashboard</a>
+          <a href="#whatsapp">04 WhatsApp</a>
+          <a href="#stack">05 Stack</a>
+          <a href="#install">06 Install</a>
+          <a href="#pricing">07 Pricing</a>
+          <a href="#regles">08 Do / Don't</a>
         </div>
-      </section>
+      </div>
+    </nav>
 
+    <main>
       <section id="produit">
         <div class="wrap">
-          <p class="sec-tag">01 · PRODUIT</p>
+          <p class="sec-tag">01 · Produit</p>
           <h2>Ce qu'on livre vraiment</h2>
-          <p class="body">
-            Un système qui transforme chaque opt-in ads en lead scoré, notifié, relancé,
-            puis engagé sur WhatsApp via un lien de groupe (ressource gratuite),
-            avec un dashboard qui dit au commercial quoi faire et quand.
+          <p class="lede">
+            Pas un bot qui usurpe le WhatsApp du gérant.
+            Une machine qui score, notifie, relance, et dit au commercial quoi faire.
           </p>
-          <div class="cols">
-            <div class="cell">
-              <h3>Cœur de métier</h3>
-              <ul>
-                <li>Analyser une conv / un opt-in</li>
-                <li>Scorer chaud / tiède / froid</li>
-                <li>Ranger dans des cases (pipeline)</li>
-                <li>Détecter les silences (FUP)</li>
-                <li>Prioriser « qui contacter aujourd'hui »</li>
-              </ul>
+
+          <div class="split">
+            <div class="panel">
+              <div class="panel__head">
+                <span>Positionnement</span>
+                <span>Zéro lead mort</span>
+              </div>
+              <div class="panel__body">
+                <p class="lede" style="margin:0;max-width:none">
+                  Ads ramènent des opt-ins. Chaque entrée est nivelée.
+                  Un mail pousse vers un groupe WhatsApp (ressource).
+                  S'il ne rejoint pas, on relance. S'il rejoint, le commercial est notifié.
+                  Le dashboard garde la vérité du pipe et les FUP.
+                </p>
+              </div>
             </div>
-            <div class="cell">
-              <h3>Ce que le client voit</h3>
-              <ul>
-                <li>Opt-ins entrants + niveaux</li>
-                <li>Pipeline modifiable à la main</li>
-                <li>Fiche lead : description IA + récap</li>
-                <li>Alertes FUP / silence trop long</li>
-                <li>Notifs téléphone (gérant / commercial)</li>
-              </ul>
-            </div>
-            <div class="cell">
-              <h3>Ce qu'on ne promet pas</h3>
-              <ul>
-                <li>Prise de contrôle du WhatsApp perso</li>
-                <li>Bot indiscernable qui « est » le patron</li>
-                <li>Ajout forcé de numéros dans un groupe</li>
-                <li>Garantie publique avant 3 clients mesurés</li>
-              </ul>
+            <div class="statgrid">
+              <div class="stat"><b>7j</b><span>Installation</span></div>
+              <div class="stat"><b>~6k€</b><span>Fuite type / mois</span></div>
+              <div class="stat"><b>A/B/C</b><span>Niveaux opt-in</span></div>
+              <div class="stat"><b>FUP</b><span>Silence → alerte</span></div>
             </div>
           </div>
-          <p class="note">
-            <b>Slogan public :</b> Zéro lead mort.
-            <b>Packaging :</b> radar commercial + tunnel d'engagement.
-            WhatsApp = terrain relationnel. Mail + dashboard = machine.
-          </p>
+
+          <div class="tri">
+            <article>
+              <div class="tri__n">01 / Cœur</div>
+              <h3>Ce qu'on sait faire</h3>
+              <ul>
+                <li>Lire un opt-in / une conv</li>
+                <li>Scorer chaud / tiède / froid</li>
+                <li>Ranger dans des cases</li>
+                <li>Détecter les silences</li>
+                <li>Prioriser qui contacter</li>
+              </ul>
+            </article>
+            <article>
+              <div class="tri__n">02 / Client</div>
+              <h3>Ce qu'il ouvre</h3>
+              <ul>
+                <li>Opt-ins + niveaux</li>
+                <li>Pipeline modifiable</li>
+                <li>Fiches IA + récap</li>
+                <li>Alertes FUP</li>
+                <li>Notifs téléphone</li>
+              </ul>
+            </article>
+            <article class="tri--mute">
+              <div class="tri__n">03 / Hors scope</div>
+              <h3>Ce qu'on ne promet pas</h3>
+              <ul>
+                <li>Prise du WhatsApp perso</li>
+                <li>Bot « qui est » le patron</li>
+                <li>Ajout forcé dans un groupe</li>
+                <li>Garantie publique trop tôt</li>
+              </ul>
+            </article>
+          </div>
         </div>
       </section>
 
       <section id="tunnel">
         <div class="wrap">
-          <p class="sec-tag">02 · TUNNEL</p>
-          <h2>Opt-in → mail → groupe WA → humain</h2>
-          <p class="body">
-            Le mail livre le lien d'invitation WhatsApp (ressource dans le groupe).
-            Si le prospect ne rejoint pas, séquence de relance mail.
-            Dès qu'il rejoint : notif commercial, case pipeline, relais humain.
+          <p class="sec-tag">02 · Tunnel</p>
+          <h2>Opt-in → mail → groupe → humain</h2>
+          <p class="lede">
+            Le mail porte l'invitation WhatsApp. WhatsApp ne commence qu'après le clic join.
           </p>
 
-          <div class="flow" aria-label="Tunnel étape par étape">
-            <div class="flow__row">
-              <div class="flow__n">01</div>
-              <div class="flow__body">
-                <h3>Ads → Opt-in</h3>
-                <p>Formulaire / landing. Champs utiles au scoring (besoin, urgence, budget signal, rôle…).</p>
-                <div class="flow__tags">
-                  <span class="tag">CAPTURE</span>
-                  <span class="tag">WEBHOOK</span>
-                  <span class="tag tag--ink">LEAD CRÉÉ</span>
-                </div>
-              </div>
-            </div>
-            <div class="flow__row">
-              <div class="flow__n">02</div>
-              <div class="flow__body">
-                <h3>Niveaux automatiques</h3>
-                <p>Règles + IA sur les réponses opt-in. Ex. A (chaud) / B (tiède) / C (froid). Case pipeline initiale.</p>
-                <div class="flow__tags">
-                  <span class="tag">SCORE</span>
-                  <span class="tag">NIVEAU</span>
-                  <span class="tag">PIPELINE</span>
-                </div>
-              </div>
-            </div>
-            <div class="flow__row">
-              <div class="flow__n">03</div>
-              <div class="flow__body">
-                <h3>Mail #1 + lien groupe WhatsApp</h3>
-                <p>
-                  Promesse : ressource gratuite dans le groupe.
-                  Corps du mail = valeur + CTA unique = rejoindre le groupe.
-                </p>
-                <div class="flow__tags">
-                  <span class="tag">RESEND / SMTP</span>
-                  <span class="tag">INVITE LINK</span>
-                  <span class="tag tag--ink">INVITE_SENT</span>
-                </div>
-              </div>
-            </div>
-            <div class="flow__row">
-              <div class="flow__n">04</div>
-              <div class="flow__body">
-                <h3>Branche A : il rejoint</h3>
-                <p>
-                  Signal join (webhook WA Groups ou tracking manuel/SOP).
-                  Notif téléphone commercial. Message d'accueil groupe. Case « Dans le groupe ».
-                </p>
-                <div class="flow__tags">
-                  <span class="tag">JOINED</span>
-                  <span class="tag">PUSH / TELEGRAM</span>
-                  <span class="tag tag--ink">HUMAN_TAKE</span>
-                </div>
-              </div>
-            </div>
-            <div class="flow__row">
-              <div class="flow__n">05</div>
-              <div class="flow__body">
-                <h3>Branche B : il ne rejoint pas</h3>
-                <p>
-                  Séquence mail de relance (J+1, J+3, J+5…). Angle ressource / FOMO / dernier rappel.
-                  Si toujours silence : alerte FUP dashboard, commercial décide (appel / abandon).
-                </p>
-                <div class="flow__tags">
-                  <span class="tag">MAIL SEQ</span>
-                  <span class="tag">NOT_JOINED</span>
-                  <span class="tag">FUP</span>
-                </div>
-              </div>
-            </div>
-            <div class="flow__row">
-              <div class="flow__n">06</div>
-              <div class="flow__body">
-                <h3>Relais commercial / patron</h3>
-                <p>
-                  Dans le groupe (ou 1:1 ensuite) : qualification, RDV, close.
-                  L'IA continue de récapituler et de déplacer les cases selon la conv.
-                </p>
-                <div class="flow__tags">
-                  <span class="tag">PIPELINE LIVE</span>
-                  <span class="tag">RÉCAP IA</span>
-                  <span class="tag">ALERTES SILENCE</span>
-                </div>
-              </div>
-            </div>
+          <div class="pipe" aria-label="Tunnel visuel">
+            <article class="pipe__step">
+              <div class="pipe__n">01</div>
+              <div class="pipe__title">Ads → Opt-in</div>
+              <p class="pipe__desc">Form / LP. Payload utile au scoring.</p>
+            </article>
+            <article class="pipe__step">
+              <div class="pipe__n">02</div>
+              <div class="pipe__title">Score A / B / C</div>
+              <p class="pipe__desc">Règles + IA. Case pipeline initiale.</p>
+            </article>
+            <article class="pipe__step pipe__step--hot">
+              <div class="pipe__n">03</div>
+              <div class="pipe__title">Mail + lien WA</div>
+              <p class="pipe__desc">Ressource gratuite dans le groupe.</p>
+            </article>
+            <article class="pipe__step">
+              <div class="pipe__n">04</div>
+              <div class="pipe__title">Join ou pas</div>
+              <p class="pipe__desc">Deux branches. Dashboard suit l'état.</p>
+            </article>
+            <article class="pipe__step">
+              <div class="pipe__n">05</div>
+              <div class="pipe__title">Notif téléphone</div>
+              <p class="pipe__desc">Gérant / commercial alerté.</p>
+            </article>
+            <article class="pipe__step">
+              <div class="pipe__n">06</div>
+              <div class="pipe__title">Relais humain</div>
+              <p class="pipe__desc">Conv → cases → FUP silence.</p>
+            </article>
           </div>
 
-          <div class="schema" aria-label="Schéma tunnel">
-            <pre>
-ADS ──▶ OPT-IN ──▶ SCORE / NIVEAU ──▶ MAIL #1 (lien groupe WA)
-                                            │
-                         ┌──────────────────┴──────────────────┐
-                         ▼                                     ▼
-                   JOIN GROUPE                           NO JOIN
-                         │                                     │
-                         ▼                                     ▼
-              NOTIF COMMERCIAL                      MAIL #2 #3 #4
-              ACCUEIL GROUPE                        (relance ressource)
-              CASE: Dans le groupe                         │
-                         │                          si toujours non
-                         ▼                                     ▼
-              COMMERCIAL PREND LE RELAIS              ALERTE FUP DASHBOARD
-              (conv → cases → FUP silence)
-            </pre>
+          <div class="branch">
+            <article class="branch__card">
+              <div class="branch__top">
+                <h3>Branche A · Join</h3>
+                <span class="branch__badge branch__badge--ok">Joined</span>
+              </div>
+              <div class="branch__body">
+                <ol>
+                  <li>Signal join reçu</li>
+                  <li>Notif téléphone commercial</li>
+                  <li>Message d'accueil groupe</li>
+                  <li>Case « Dans le groupe »</li>
+                  <li>Commercial prend le relais</li>
+                </ol>
+              </div>
+            </article>
+            <article class="branch__card">
+              <div class="branch__top">
+                <h3>Branche B · No join</h3>
+                <span class="branch__badge">Relance mail</span>
+              </div>
+              <div class="branch__body">
+                <ol>
+                  <li>Mail #2 / #3 / #4 (ressource)</li>
+                  <li>État dashboard : Not joined</li>
+                  <li>Si silence : alerte FUP</li>
+                  <li>Commercial décide (appel / drop)</li>
+                </ol>
+              </div>
+            </article>
           </div>
         </div>
       </section>
 
       <section id="dashboard">
         <div class="wrap">
-          <p class="sec-tag">03 · DASHBOARD CLIENT</p>
-          <h2>Ce que le gérant ouvre tous les jours</h2>
-          <p class="body">
-            Une seule vérité commerciale. Modifiable à la main. L'IA propose, l'humain décide.
+          <p class="sec-tag">03 · Dashboard</p>
+          <h2>La vérité du pipe</h2>
+          <p class="lede">
+            Une seule interface. Modifiable à la main. L'IA propose, l'humain décide.
           </p>
 
-          <div class="cols">
-            <div class="cell">
+          <div class="dash" aria-hidden="true">
+            <div class="dash__chrome">
+              <span class="dash__dot"></span>
+              <span class="dash__dot"></span>
+              <span class="dash__dot"></span>
+              <span class="dash__url">app.horizon · pipeline · live</span>
+            </div>
+            <div class="dash__layout">
+              <aside class="dash__side">
+                <h4>Vue</h4>
+                <div class="navitem navitem--on">Pipeline <i>24</i></div>
+                <div class="navitem">Opt-ins <i>12</i></div>
+                <div class="navitem">Fiches</div>
+                <div class="navitem">FUP dus <i>5</i></div>
+              </aside>
+              <div class="dash__main">
+                <h4>Kanban</h4>
+                <div class="kanban">
+                  <div class="col">
+                    <h5>Opt-in</h5>
+                    <div class="card">
+                      <b>Léa · SEO audit</b>
+                      <p>Form ads · il y a 12 min</p>
+                      <span class="card__lvl card__lvl--a">Niveau A</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <h5>Invite sent</h5>
+                    <div class="card">
+                      <b>Marc · Site vitrine</b>
+                      <p>Mail #1 parti · J+0</p>
+                      <span class="card__lvl">Niveau B</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <h5>Dans le groupe</h5>
+                    <div class="card">
+                      <b>Nora · Branding</b>
+                      <p>Join · en attente humain</p>
+                      <span class="card__lvl card__lvl--a">Niveau A</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <h5>En cours</h5>
+                    <div class="card">
+                      <b>Yan · Refonte</b>
+                      <p>Dernier msg · hier 18h</p>
+                      <span class="card__lvl">Niveau A</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <aside class="dash__alerts">
+                <h4>Alertes</h4>
+                <div class="alert alert--hot">
+                  <strong>Join · Nora</strong>
+                  <span>Prendre le relais dans le groupe</span>
+                </div>
+                <div class="alert">
+                  <strong>FUP · 48h</strong>
+                  <span>3 leads sans contact</span>
+                </div>
+                <div class="alert">
+                  <strong>No join · Marc</strong>
+                  <span>Mail #2 programmé 09:00</span>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div class="feat">
+            <article>
+              <div class="feat__ico" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="#12141a" stroke-width="1.4">
+                  <rect x="2" y="3" width="12" height="10" />
+                  <path d="M2 6h12M6 3v10" />
+                </svg>
+              </div>
               <h3>Opt-ins</h3>
-              <ul>
-                <li>Liste temps réel</li>
-                <li>Source ads / campagne</li>
-                <li>Réponses brutes du form</li>
-                <li>Niveau A / B / C</li>
-                <li>Statut invite / join</li>
-              </ul>
-            </div>
-            <div class="cell">
+              <p>Source ads, réponses brutes, niveau, statut invite / join.</p>
+            </article>
+            <article>
+              <div class="feat__ico" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="#12141a" stroke-width="1.4">
+                  <path d="M2 4h4v8H2zM7 4h4v5H7zM12 4h2v10h-2z" />
+                </svg>
+              </div>
               <h3>Pipeline</h3>
-              <ul>
-                <li>Kanban modifiable</li>
-                <li>Cases types (ci-dessous)</li>
-                <li>Drag manuel prioritaire</li>
-                <li>Suggestion IA non bloquante</li>
-              </ul>
-            </div>
-            <div class="cell">
+              <p>Kanban drag. Suggestion IA non bloquante.</p>
+            </article>
+            <article>
+              <div class="feat__ico" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="#12141a" stroke-width="1.4">
+                  <circle cx="8" cy="5" r="2.5" />
+                  <path d="M3 14c1.5-3 8.5-3 10 0" />
+                </svg>
+              </div>
               <h3>Fiche lead</h3>
-              <ul>
-                <li>Description IA (qui / besoin / urgence)</li>
-                <li>Récap conversation</li>
-                <li>Dernier contact + prochain FUP</li>
-                <li>Historique mails / join</li>
-              </ul>
-            </div>
-            <div class="cell">
+              <p>Description IA, récap conv, dernier contact, prochain FUP.</p>
+            </article>
+            <article>
+              <div class="feat__ico" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="#12141a" stroke-width="1.4">
+                  <path d="M8 2v6l3 2" />
+                  <circle cx="8" cy="8" r="6" />
+                </svg>
+              </div>
               <h3>Alertes</h3>
-              <ul>
-                <li>Nouvel opt-in (notif tel)</li>
-                <li>Join groupe</li>
-                <li>Silence &gt; seuil</li>
-                <li>FUP dû aujourd'hui</li>
-                <li>Chaud qui stagne</li>
-              </ul>
-            </div>
-          </div>
-
-          <h3 style="margin-top: 36px;">Cases pipeline (exemple v1)</h3>
-          <div class="states">
-            <div class="state"><b>OPT-IN</b><span>Capturé, pas encore mailé</span></div>
-            <div class="state"><b>INVITE SENT</b><span>Mail #1 parti</span></div>
-            <div class="state"><b>NO JOIN</b><span>En séquence relance</span></div>
-            <div class="state"><b>DANS LE GROUPE</b><span>Engagé WA</span></div>
-            <div class="state"><b>EN COURS</b><span>Commercial actif</span></div>
-            <div class="state"><b>RDV</b><span>Créneau posé</span></div>
-            <div class="state"><b>GAGNÉ / PERDU</b><span>Clos</span></div>
-          </div>
-
-          <div class="schema" aria-label="Schéma dashboard">
-            <pre>
-┌─────────────────────────────────────────────────────────────┐
-│  DASHBOARD                                                  │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐ │
-│  │ OPT-INS  │  │ PIPELINE │  │  FICHES  │  │  ALERTES   │ │
-│  │ + niveaux│  │  kanban  │  │ IA+récap │  │ FUP / push │ │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └─────┬──────┘ │
-│       └─────────────┴─────────────┴──────────────┘         │
-│                         │                                   │
-│                         ▼                                   │
-│              NOTIF TÉLÉPHONE COMMERCIAL                     │
-└─────────────────────────────────────────────────────────────┘
-            </pre>
+              <p>Nouvel opt-in, join, silence &gt; seuil, chaud qui stagne.</p>
+            </article>
           </div>
         </div>
       </section>
 
       <section id="whatsapp">
         <div class="wrap">
-          <p class="sec-tag">04 · WHATSAPP</p>
-          <h2>Rôle du groupe et limites API</h2>
-          <p class="body">
-            WhatsApp n'est pas la stack critique d'envoi froid. C'est le lieu d'engagement
-            après clic sur le lien reçu par mail.
+          <p class="sec-tag">04 · WhatsApp</p>
+          <h2>Terrain relationnel, pas stack froide</h2>
+          <p class="lede">
+            L'API officielle crée un groupe et envoie un lien. Elle n'ajoute personne de force.
+            D'où le mail comme porte d'entrée.
           </p>
 
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Intention</th>
-                  <th>API officielle Meta</th>
-                  <th>Choix Horizon</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Créer un groupe</td>
-                  <td class="mono">Oui (Groups API, compte OBA)</td>
-                  <td>Oui si client OBA, sinon SOP manuel / groupe ressource</td>
-                </tr>
-                <tr>
-                  <td>Ajouter de force prospect + commercial</td>
-                  <td class="mono">Non (invite-only)</td>
-                  <td>Lien d'invite dans le mail</td>
-                </tr>
-                <tr>
-                  <td>Message auto d'ouverture</td>
-                  <td class="mono">Oui, après join</td>
-                  <td>Accueil post-join + relais humain</td>
-                </tr>
-                <tr>
-                  <td>Usurper le WhatsApp perso</td>
-                  <td class="mono">Hors scope / hors ToS (voie QR)</td>
-                  <td>Interdit dans l'offre</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="cols" style="margin-top: 28px;">
-            <div class="cell">
-              <h3>Option A · Groupe ressource</h3>
-              <ul>
-                <li>Un groupe (ou quelques-uns) avec la ressource</li>
-                <li>Join = engagé</li>
-                <li>Commercial DM / prend en charge ensuite</li>
-                <li>Plus simple à livrer en 7 jours</li>
-              </ul>
+          <div class="compare">
+            <div class="compare__table">
+              <div class="compare__row compare__row--head">
+                <div>Intention</div>
+                <div>API Meta</div>
+                <div>Horizon</div>
+              </div>
+              <div class="compare__row">
+                <div><b>Créer un groupe</b></div>
+                <div class="ok">Oui (OBA)</div>
+                <div>Oui / SOP</div>
+              </div>
+              <div class="compare__row">
+                <div><b>Ajouter de force</b></div>
+                <div class="no">Non</div>
+                <div>Lien dans le mail</div>
+              </div>
+              <div class="compare__row">
+                <div><b>Message auto</b></div>
+                <div class="ok">Après join</div>
+                <div>Accueil + humain</div>
+              </div>
+              <div class="compare__row">
+                <div><b>Usurper le perso</b></div>
+                <div class="no">Hors scope</div>
+                <div class="no">Interdit</div>
+              </div>
             </div>
-            <div class="cell">
-              <h3>Option B · Groupe par lead</h3>
-              <ul>
-                <li>1 groupe : prospect + commercial (+ bot)</li>
-                <li>Plus « setter »</li>
-                <li>Nécessite OBA + Groups API ou SOP manuel</li>
-                <li>Phase 2 / clients matures</li>
-              </ul>
+            <div class="compare__side">
+              <article class="opt">
+                <h3>Option A · Groupe ressource</h3>
+                <p>Un groupe avec la ressource. Join = engagé. Commercial prend ensuite.</p>
+                <ul>
+                  <li>Simple à livrer en 7 jours</li>
+                  <li>Parfait en v1</li>
+                </ul>
+              </article>
+              <article class="opt">
+                <h3>Option B · Groupe par lead</h3>
+                <p>Prospect + commercial (+ bot). Plus setter. OBA ou SOP manuel.</p>
+                <ul>
+                  <li>Phase 2 / clients matures</li>
+                  <li>Plus lourd Meta</li>
+                </ul>
+              </article>
             </div>
           </div>
-
-          <p class="note">
-            <b>Règle produit :</b> le mail porte l'invite. WhatsApp ne commence qu'après consentement (clic join).
-            Ça respecte Meta et garde la proximité relationnelle.
-          </p>
         </div>
       </section>
 
       <section id="stack">
         <div class="wrap">
-          <p class="sec-tag">05 · STACK</p>
-          <h2>Sous le capot (référence install)</h2>
-          <p class="body">
-            Stack type. On s'adapte à l'existant client (CRM, hébergeur mail, form) tant que les webhooks existent.
+          <p class="sec-tag">05 · Stack</p>
+          <h2>Sous le capot</h2>
+          <p class="lede">
+            On s'adapte à l'existant client tant que les webhooks existent.
           </p>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Brique</th>
-                  <th>Outils</th>
-                  <th>Rôle</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Capture</td>
-                  <td class="mono">Landing / Typeform / maison</td>
-                  <td>Opt-in ads → payload</td>
-                </tr>
-                <tr>
-                  <td>Orchestration</td>
-                  <td class="mono">n8n / Make</td>
-                  <td>Routing, séquences, seuils FUP</td>
-                </tr>
-                <tr>
-                  <td>Data</td>
-                  <td class="mono">Postgres (Neon / Supabase)</td>
-                  <td>Leads, événements, états</td>
-                </tr>
-                <tr>
-                  <td>App / dashboard</td>
-                  <td class="mono">Next.js · TypeScript · Vercel</td>
-                  <td>UI client</td>
-                </tr>
-                <tr>
-                  <td>Mail</td>
-                  <td class="mono">Resend / SMTP client</td>
-                  <td>Mail #1 + relances no-join</td>
-                </tr>
-                <tr>
-                  <td>IA</td>
-                  <td class="mono">Claude / GPT</td>
-                  <td>Score, description, récap conv, suggestion case</td>
-                </tr>
-                <tr>
-                  <td>Notifs</td>
-                  <td class="mono">Telegram / push / SMS</td>
-                  <td>Alerte téléphone gérant / commercial</td>
-                </tr>
-                <tr>
-                  <td>WhatsApp</td>
-                  <td class="mono">Lien groupe · Groups API (OBA) optionnel</td>
-                  <td>Engagement post-mail</td>
-                </tr>
-                <tr>
-                  <td>Agenda</td>
-                  <td class="mono">Google Calendar / Cal.com</td>
-                  <td>RDV une fois humain engagé</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="schema" aria-label="Schéma stack">
-            <pre>
-[ ADS / LP ] ──webhook──▶ [ n8n ] ──▶ [ Postgres ]
-                              │              │
-                              ├── score IA   │
-                              ├── mail #1    │
-                              ├── seq relance│
-                              └── notifs     ▼
-                                        [ Dashboard Next ]
-                              │
-                              └──▶ lien groupe WA
-                                       │
-                                       ▼
-                                 [ Join / Human ]
-            </pre>
+          <ul class="logos">
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/nextdotjs.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>Next.js</span>
+            </li>
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/typescript.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>TypeScript</span>
+            </li>
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/postgresql.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>Postgres</span>
+            </li>
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/supabase.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>Supabase</span>
+            </li>
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/n8n.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>n8n</span>
+            </li>
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/resend.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>Resend</span>
+            </li>
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/anthropic.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>Claude</span>
+            </li>
+            <li>
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/vercel.svg" alt="" width="26" height="26" loading="lazy" />
+              <span>Vercel</span>
+            </li>
+          </ul>
+          <div class="feat" style="margin-top:14px">
+            <article>
+              <h3>Capture</h3>
+              <p>Landing / form → webhook → lead créé.</p>
+            </article>
+            <article>
+              <h3>Orchestration</h3>
+              <p>n8n / Make : score, mails, seuils FUP, notifs.</p>
+            </article>
+            <article>
+              <h3>IA</h3>
+              <p>Niveau, description, récap, suggestion de case.</p>
+            </article>
+            <article>
+              <h3>Notifs</h3>
+              <p>Telegram / push / SMS sur le téléphone du commercial.</p>
+            </article>
           </div>
         </div>
       </section>
 
       <section id="install">
         <div class="wrap">
-          <p class="sec-tag">06 · INSTALL 7 JOURS</p>
-          <h2>Procédure type</h2>
-          <p class="body">Temps client cible : ~1h de call + validations ponctuelles.</p>
+          <p class="sec-tag">06 · Install</p>
+          <h2>7 jours, une heure client</h2>
+          <p class="lede">Le reste est de l'exécution de notre côté.</p>
 
-          <div class="check">
-            <div class="check__row">
-              <div class="check__day">J0</div>
-              <div class="check__body">
-                <b>Kickoff.</b> Accès ads / form / boîte mail / WhatsApp Business si existant.
-                Mapping champs opt-in → niveaux. Définition cases pipeline.
+          <div class="timeline">
+            <div class="tl">
+              <div class="tl__day">J0</div>
+              <div class="tl__card">
+                <h3>Kickoff</h3>
+                <p>Accès ads / form / mail / WA. Mapping champs → niveaux. Cases pipeline.</p>
               </div>
             </div>
-            <div class="check__row">
-              <div class="check__day">J1</div>
-              <div class="check__body">
-                <b>Capture + DB.</b> Webhook opt-in, modèle lead, événements (invite_sent, joined…).
+            <div class="tl">
+              <div class="tl__day">J1</div>
+              <div class="tl__card">
+                <h3>Capture + DB</h3>
+                <p>Webhook opt-in, modèle lead, événements (invite_sent, joined…).</p>
               </div>
             </div>
-            <div class="check__row">
-              <div class="check__day">J2</div>
-              <div class="check__body">
-                <b>Scoring.</b> Règles niveaux + prompt IA. Jeu de test sur 20 opt-ins fictifs / historiques.
+            <div class="tl">
+              <div class="tl__day">J2</div>
+              <div class="tl__card">
+                <h3>Scoring</h3>
+                <p>Règles niveaux + prompt IA. Test sur 20 opt-ins.</p>
               </div>
             </div>
-            <div class="check__row">
-              <div class="check__day">J3</div>
-              <div class="check__body">
-                <b>Mail.</b> Template #1 (ressource + lien groupe) + séquence no-join. Domaine / SPF / DKIM.
+            <div class="tl">
+              <div class="tl__day">J3</div>
+              <div class="tl__card">
+                <h3>Mail</h3>
+                <p>Template #1 + séquence no-join. SPF / DKIM.</p>
               </div>
             </div>
-            <div class="check__row">
-              <div class="check__day">J4</div>
-              <div class="check__body">
-                <b>WhatsApp.</b> Groupe ressource prêt + lien, ou Groups API si OBA.
-                SOP écrit pour le commercial (accueil, première question, escalation).
+            <div class="tl">
+              <div class="tl__day">J4</div>
+              <div class="tl__card">
+                <h3>WhatsApp</h3>
+                <p>Groupe ressource + lien, ou Groups API si OBA. SOP commercial.</p>
               </div>
             </div>
-            <div class="check__row">
-              <div class="check__day">J5</div>
-              <div class="check__body">
-                <b>Dashboard.</b> Opt-ins, kanban, fiches, alertes. Notif téléphone branchée.
+            <div class="tl">
+              <div class="tl__day">J5</div>
+              <div class="tl__card">
+                <h3>Dashboard</h3>
+                <p>Opt-ins, kanban, fiches, alertes. Notif téléphone branchée.</p>
               </div>
             </div>
-            <div class="check__row">
-              <div class="check__day">J6</div>
-              <div class="check__body">
-                <b>FUP engine.</b> Seuils silence (ex. 48h / 7j). Liste « à faire aujourd'hui ».
+            <div class="tl">
+              <div class="tl__day">J6</div>
+              <div class="tl__card">
+                <h3>FUP engine</h3>
+                <p>Seuils silence. Liste « à faire aujourd'hui ».</p>
               </div>
             </div>
-            <div class="check__row">
-              <div class="check__day">J7</div>
-              <div class="check__body">
-                <b>Go-live.</b> Test bout-en-bout ads → opt-in → mail → join → notif.
-                Gate humain 14 jours si messages auto dans le groupe.
+            <div class="tl">
+              <div class="tl__day">J7</div>
+              <div class="tl__card">
+                <h3>Go-live</h3>
+                <p>Test bout-en-bout. Gate humain 14 jours si messages auto groupe.</p>
               </div>
             </div>
           </div>
@@ -854,84 +1336,73 @@ ADS ──▶ OPT-IN ──▶ SCORE / NIVEAU ──▶ MAIL #1 (lien groupe WA)
 
       <section id="pricing">
         <div class="wrap">
-          <p class="sec-tag">07 · PRICING &amp; SCOPE</p>
-          <h2>Ancrage commercial</h2>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Phase</th>
-                  <th>Livrable</th>
-                  <th>Prix</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Porte</td>
-                  <td>Audit de fuite chiffré (à emporter)</td>
-                  <td class="mono">1 000 €</td>
-                </tr>
-                <tr>
-                  <td>Install</td>
-                  <td>Tunnel + dashboard + notifs + FUP + SOP WA</td>
-                  <td class="mono">7 000 € (public : à partir de 5 000 €)</td>
-                </tr>
-                <tr>
-                  <td>Socle</td>
-                  <td>Retainer maintenance + 1 opti / mois</td>
-                  <td class="mono">1 500 € / mois dès J+7</td>
-                </tr>
-                <tr>
-                  <td>Expand</td>
-                  <td>Groups API par lead, process suivant, etc.</td>
-                  <td class="mono">5–8 000 € ~M+3</td>
-                </tr>
-              </tbody>
-            </table>
+          <p class="sec-tag">07 · Pricing</p>
+          <h2>Ancrage</h2>
+          <p class="lede">Public : à partir de 5k. Interne : setup 7k.</p>
+          <div class="price">
+            <article>
+              <div class="price__phase">Porte</div>
+              <h3>Audit de fuite</h3>
+              <p>Chiffrage à emporter. Mapping opt-in → niveaux.</p>
+              <div class="price__eur">1 000 €</div>
+            </article>
+            <article>
+              <div class="price__phase">Install</div>
+              <h3>Système complet</h3>
+              <p>Tunnel + dashboard + notifs + FUP + SOP WA.</p>
+              <div class="price__eur">7 000 €</div>
+            </article>
+            <article>
+              <div class="price__phase">Socle</div>
+              <h3>Retainer</h3>
+              <p>Maintenance + 1 optimisation / mois dès J+7.</p>
+              <div class="price__eur">1 500 €/mois</div>
+            </article>
+            <article>
+              <div class="price__phase">Expand</div>
+              <h3>Phase 2</h3>
+              <p>Groups API par lead, process suivant qui saigne.</p>
+              <div class="price__eur">5–8 000 €</div>
+            </article>
           </div>
-          <p class="note">
-            <b>Garantie interne</b> (pas affichée public avant 3 clients mesurés) :
-            si RDV +30 % / 90 j non atteints → remboursement intégral + système gardé + maintenance 3 mois.
-          </p>
         </div>
       </section>
 
       <section id="regles">
         <div class="wrap">
-          <p class="sec-tag">08 · DO / DON'T</p>
-          <h2>Discipline de livraison</h2>
+          <p class="sec-tag">08 · Discipline</p>
+          <h2>Do / Don't</h2>
+          <p class="lede">Ce qui protège la crédibilité de l'offre.</p>
           <div class="rules">
-            <div class="rule rule--do">
-              <h3>+ ON FAIT</h3>
+            <article class="rule rule--do">
+              <h3>+ On fait</h3>
               <ul>
                 <li>Scorer et ranger chaque opt-in</li>
                 <li>Pousser le join WA par mail</li>
                 <li>Relancer les no-join</li>
                 <li>Notifier le commercial</li>
-                <li>Laisser le pipeline modifiable à la main</li>
+                <li>Laisser le pipeline à la main</li>
                 <li>Alerter sur les silences</li>
               </ul>
-            </div>
-            <div class="rule rule--dont">
-              <h3>− ON NE FAIT PAS</h3>
+            </article>
+            <article class="rule rule--dont">
+              <h3>− On ne fait pas</h3>
               <ul>
                 <li>Prendre le WhatsApp perso en QR</li>
-                <li>Promettre l'ajout forcé dans un groupe</li>
-                <li>Remplacer le commercial dans la relation</li>
-                <li>Imposer un nouveau CRM sans raison</li>
-                <li>Afficher la garantie avant preuves</li>
+                <li>Promettre l'ajout forcé</li>
+                <li>Remplacer le commercial</li>
+                <li>Imposer un CRM sans raison</li>
+                <li>Afficher la garantie trop tôt</li>
                 <li>Vendre « ChatGPT sur mesure »</li>
               </ul>
-            </div>
+            </article>
           </div>
         </div>
       </section>
     </main>
 
     <footer>
-      <div class="wrap">
-        HORIZON AGENCY · SOP /SOP · NOINDEX · DOCUMENT DE LIVRAISON INTERNE
-      </div>
+      <div class="wrap">HORIZON AGENCY · /SOP · NOINDEX · DOC DE LIVRAISON</div>
     </footer>
   </body>
 </html>
