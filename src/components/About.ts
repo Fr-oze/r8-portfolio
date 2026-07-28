@@ -61,9 +61,9 @@ export class About {
             <div class="about__col">
               <span class="about__h">CE QUE JE LIVRE</span>
               <ul>
-                <li>Un commercial qui ne dort jamais, installé en 7 jours</li>
-                <li>Réponse &lt; 5 min, relances, RDV dans ton agenda, sans que tu touches à rien</li>
-                <li>T'as la méthode. Il te manque le système. Je suis le maillon exécution</li>
+                <li>Tunnel opt-in → mail → groupe WhatsApp (ressource)</li>
+                <li>Dashboard : pipeline, récaps IA, alertes FUP</li>
+                <li>Notifs téléphone + SOP commercial. Toi tu closes.</li>
               </ul>
             </div>
           </div>

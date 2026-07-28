@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HORIZON AGENCY · SOP · ZÉRO LEAD MORT</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="Documentation interne : tunnel, dashboard, stack et procédure d'installation." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f4f5f7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f5f7;
+        --ink: #12141a;
+        --dim: #5c6570;
+        --line: #d5dae0;
+        --panel: #ffffff;
+        --soft: #3a424c;
+      }
+      * { margin: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Space Mono", ui-monospace, Menlo, monospace;
+        letter-spacing: 0.04em;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at 50% 40%, transparent 55%, rgba(18, 20, 24, 0.06) 100%);
+        z-index: 100;
+      }
+      ::selection { background: var(--ink); color: var(--bg); }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        padding: 96px 0 64px;
+        position: relative;
+        overflow: hidden;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.34em;
+        color: var(--dim);
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(2rem, 7vw, 4.2rem);
+        font-weight: 700;
+        line-height: 1.02;
+        margin: 18px 0 22px;
+        letter-spacing: 0.01em;
+      }
+      .lead {
+        max-width: 720px;
+        color: var(--soft);
+        font-size: 15px;
+      }
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin-top: 28px;
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .meta-row b { color: var(--ink); font-weight: 700; }
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: radial-gradient(circle at 80% 30%, #000 0%, transparent 60%);
+        -webkit-mask-image: radial-gradient(circle at 80% 30%, #000 0%, transparent 60%);
+        opacity: 0.6;
+      }
+
+      section { padding: 64px 0; border-bottom: 1px solid var(--line); }
+      .sec-tag {
+        font-size: 10px;
+        letter-spacing: 0.28em;
+        color: var(--dim);
+        text-transform: uppercase;
+        margin-bottom: 26px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .sec-tag::before {
+        content: "";
+        width: 22px;
+        height: 1px;
+        background: var(--ink);
+      }
+      h2 {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+      h3 {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      p.body { color: var(--soft); font-size: 14px; max-width: 720px; }
+      .muted { color: var(--dim); font-size: 13px; }
+      .note {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        font-size: 12px;
+        color: var(--soft);
+        max-width: 720px;
+      }
+      .note b { color: var(--ink); }
+
+      /* TOC */
+      .toc {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 28px;
+      }
+      .toc a {
+        background: var(--panel);
+        padding: 16px 18px;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+      .toc a span {
+        display: block;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        color: var(--dim);
+        margin-bottom: 6px;
+      }
+      .toc a strong {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      /* FLOW DIAGRAM */
+      .flow {
+        margin-top: 28px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        overflow: hidden;
+      }
+      .flow__row {
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        border-bottom: 1px solid var(--line);
+      }
+      .flow__row:last-child { border-bottom: none; }
+      .flow__n {
+        display: grid;
+        place-items: center;
+        border-right: 1px solid var(--line);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        background: rgba(18, 20, 26, 0.03);
+      }
+      .flow__body { padding: 18px 20px; }
+      .flow__body h3 { margin-bottom: 6px; }
+      .flow__body p { font-size: 13px; color: var(--soft); max-width: none; }
+      .flow__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .tag {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+        border: 1px solid var(--line);
+        padding: 4px 10px;
+      }
+      .tag--ink {
+        color: var(--bg);
+        background: var(--ink);
+        border-color: var(--ink);
+      }
+
+      /* SCHEMA ASCII / BOX */
+      .schema {
+        margin-top: 28px;
+        border: 1px solid var(--line);
+        background: #eef0f3;
+        padding: 22px 18px;
+        overflow-x: auto;
+      }
+      .schema pre {
+        font-family: inherit;
+        font-size: 11px;
+        line-height: 1.45;
+        color: var(--ink);
+        white-space: pre;
+        min-width: 640px;
+      }
+
+      /* COLS */
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 28px;
+      }
+      .cell { background: var(--panel); padding: 22px 22px 26px; }
+      .cell ul { list-style: none; margin-top: 10px; }
+      .cell li {
+        font-size: 13px;
+        color: #4a525c;
+        padding: 5px 0 5px 16px;
+        position: relative;
+      }
+      .cell li::before {
+        content: "·";
+        position: absolute;
+        left: 2px;
+        color: var(--ink);
+      }
+
+      /* TABLE */
+      .table-wrap {
+        margin-top: 28px;
+        border: 1px solid var(--line);
+        overflow-x: auto;
+        background: var(--panel);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        min-width: 640px;
+      }
+      th, td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+        background: rgba(18, 20, 26, 0.03);
+      }
+      tr:last-child td { border-bottom: none; }
+      td.mono { font-variant-numeric: tabular-nums; color: var(--soft); }
+
+      /* STATES */
+      .states {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 28px;
+      }
+      .state {
+        background: var(--panel);
+        padding: 18px 16px;
+        text-align: center;
+      }
+      .state b {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        margin-bottom: 8px;
+      }
+      .state span {
+        font-size: 11px;
+        color: var(--dim);
+        line-height: 1.45;
+      }
+
+      /* CHECKLIST */
+      .check {
+        margin-top: 22px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+      }
+      .check__row {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        border-bottom: 1px solid var(--line);
+      }
+      .check__row:last-child { border-bottom: none; }
+      .check__day {
+        display: grid;
+        place-items: center;
+        border-right: 1px solid var(--line);
+        font-size: 11px;
+        font-weight: 700;
+        background: rgba(18, 20, 26, 0.03);
+      }
+      .check__body { padding: 14px 18px; font-size: 13px; color: var(--soft); }
+      .check__body b { color: var(--ink); }
+
+      .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+      .rule { border: 1px solid var(--line); background: var(--panel); padding: 20px 22px; }
+      .rule h3 { display: flex; align-items: center; gap: 8px; }
+      .rule--do h3 { color: #2f855a; }
+      .rule--dont h3 { color: #c53030; }
+      .rule ul { list-style: none; margin-top: 8px; }
+      .rule li { font-size: 13px; color: #4a525c; padding: 5px 0 5px 18px; position: relative; }
+      .rule--do li::before { content: "+"; position: absolute; left: 0; color: #2f855a; }
+      .rule--dont li::before { content: "−"; position: absolute; left: 0; color: #c53030; }
+
+      footer {
+        padding: 56px 0 80px;
+        color: var(--dim);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+      }
+
+      @media (max-width: 640px) {
+        .rules { grid-template-columns: 1fr; }
+        section { padding: 48px 0; }
+        header { padding: 72px 0 48px; }
+        .schema pre { min-width: 520px; font-size: 10px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="wrap">
+        <p class="eyebrow">HORIZON AGENCY · DOC INTERNE · NOINDEX</p>
+        <h1>SOP<br />ZÉRO LEAD MORT</h1>
+        <p class="lead">
+          Ce document décrit le service livré : radar commercial + tunnel opt-in → mail → groupe WhatsApp,
+          dashboard client, alertes FUP. Pas un bot qui usurpe le WhatsApp perso du gérant.
+        </p>
+        <div class="meta-row">
+          <span>VERSION <b>1.0</b></span>
+          <span>STATUT <b>OPÉRATIONNEL</b></span>
+          <span>INSTALL <b>7 JOURS</b></span>
+          <span>PUBLIC <b>HORIZON-AGENCY.CO</b></span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="sommaire">
+        <div class="wrap">
+          <p class="sec-tag">00 · SOMMAIRE</p>
+          <h2>Parcours du document</h2>
+          <nav class="toc" aria-label="Sommaire">
+            <a href="#produit"><span>01</span><strong>Produit</strong></a>
+            <a href="#tunnel"><span>02</span><strong>Tunnel</strong></a>
+            <a href="#dashboard"><span>03</span><strong>Dashboard client</strong></a>
+            <a href="#whatsapp"><span>04</span><strong>WhatsApp (limites)</strong></a>
+            <a href="#stack"><span>05</span><strong>Stack</strong></a>
+            <a href="#install"><span>06</span><strong>Install 7 jours</strong></a>
+            <a href="#pricing"><span>07</span><strong>Pricing &amp; scope</strong></a>
+            <a href="#regles"><span>08</span><strong>Do / Don't</strong></a>
+          </nav>
+        </div>
+      </section>
+
+      <section id="produit">
+        <div class="wrap">
+          <p class="sec-tag">01 · PRODUIT</p>
+          <h2>Ce qu'on livre vraiment</h2>
+          <p class="body">
+            Un système qui transforme chaque opt-in ads en lead scoré, notifié, relancé,
+            puis engagé sur WhatsApp via un lien de groupe (ressource gratuite),
+            avec un dashboard qui dit au commercial quoi faire et quand.
+          </p>
+          <div class="cols">
+            <div class="cell">
+              <h3>Cœur de métier</h3>
+              <ul>
+                <li>Analyser une conv / un opt-in</li>
+                <li>Scorer chaud / tiède / froid</li>
+                <li>Ranger dans des cases (pipeline)</li>
+                <li>Détecter les silences (FUP)</li>
+                <li>Prioriser « qui contacter aujourd'hui »</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h3>Ce que le client voit</h3>
+              <ul>
+                <li>Opt-ins entrants + niveaux</li>
+                <li>Pipeline modifiable à la main</li>
+                <li>Fiche lead : description IA + récap</li>
+                <li>Alertes FUP / silence trop long</li>
+                <li>Notifs téléphone (gérant / commercial)</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h3>Ce qu'on ne promet pas</h3>
+              <ul>
+                <li>Prise de contrôle du WhatsApp perso</li>
+                <li>Bot indiscernable qui « est » le patron</li>
+                <li>Ajout forcé de numéros dans un groupe</li>
+                <li>Garantie publique avant 3 clients mesurés</li>
+              </ul>
+            </div>
+          </div>
+          <p class="note">
+            <b>Slogan public :</b> Zéro lead mort.
+            <b>Packaging :</b> radar commercial + tunnel d'engagement.
+            WhatsApp = terrain relationnel. Mail + dashboard = machine.
+          </p>
+        </div>
+      </section>
+
+      <section id="tunnel">
+        <div class="wrap">
+          <p class="sec-tag">02 · TUNNEL</p>
+          <h2>Opt-in → mail → groupe WA → humain</h2>
+          <p class="body">
+            Le mail livre le lien d'invitation WhatsApp (ressource dans le groupe).
+            Si le prospect ne rejoint pas, séquence de relance mail.
+            Dès qu'il rejoint : notif commercial, case pipeline, relais humain.
+          </p>
+
+          <div class="flow" aria-label="Tunnel étape par étape">
+            <div class="flow__row">
+              <div class="flow__n">01</div>
+              <div class="flow__body">
+                <h3>Ads → Opt-in</h3>
+                <p>Formulaire / landing. Champs utiles au scoring (besoin, urgence, budget signal, rôle…).</p>
+                <div class="flow__tags">
+                  <span class="tag">CAPTURE</span>
+                  <span class="tag">WEBHOOK</span>
+                  <span class="tag tag--ink">LEAD CRÉÉ</span>
+                </div>
+              </div>
+            </div>
+            <div class="flow__row">
+              <div class="flow__n">02</div>
+              <div class="flow__body">
+                <h3>Niveaux automatiques</h3>
+                <p>Règles + IA sur les réponses opt-in. Ex. A (chaud) / B (tiède) / C (froid). Case pipeline initiale.</p>
+                <div class="flow__tags">
+                  <span class="tag">SCORE</span>
+                  <span class="tag">NIVEAU</span>
+                  <span class="tag">PIPELINE</span>
+                </div>
+              </div>
+            </div>
+            <div class="flow__row">
+              <div class="flow__n">03</div>
+              <div class="flow__body">
+                <h3>Mail #1 + lien groupe WhatsApp</h3>
+                <p>
+                  Promesse : ressource gratuite dans le groupe.
+                  Corps du mail = valeur + CTA unique = rejoindre le groupe.
+                </p>
+                <div class="flow__tags">
+                  <span class="tag">RESEND / SMTP</span>
+                  <span class="tag">INVITE LINK</span>
+                  <span class="tag tag--ink">INVITE_SENT</span>
+                </div>
+              </div>
+            </div>
+            <div class="flow__row">
+              <div class="flow__n">04</div>
+              <div class="flow__body">
+                <h3>Branche A : il rejoint</h3>
+                <p>
+                  Signal join (webhook WA Groups ou tracking manuel/SOP).
+                  Notif téléphone commercial. Message d'accueil groupe. Case « Dans le groupe ».
+                </p>
+                <div class="flow__tags">
+                  <span class="tag">JOINED</span>
+                  <span class="tag">PUSH / TELEGRAM</span>
+                  <span class="tag tag--ink">HUMAN_TAKE</span>
+                </div>
+              </div>
+            </div>
+            <div class="flow__row">
+              <div class="flow__n">05</div>
+              <div class="flow__body">
+                <h3>Branche B : il ne rejoint pas</h3>
+                <p>
+                  Séquence mail de relance (J+1, J+3, J+5…). Angle ressource / FOMO / dernier rappel.
+                  Si toujours silence : alerte FUP dashboard, commercial décide (appel / abandon).
+                </p>
+                <div class="flow__tags">
+                  <span class="tag">MAIL SEQ</span>
+                  <span class="tag">NOT_JOINED</span>
+                  <span class="tag">FUP</span>
+                </div>
+              </div>
+            </div>
+            <div class="flow__row">
+              <div class="flow__n">06</div>
+              <div class="flow__body">
+                <h3>Relais commercial / patron</h3>
+                <p>
+                  Dans le groupe (ou 1:1 ensuite) : qualification, RDV, close.
+                  L'IA continue de récapituler et de déplacer les cases selon la conv.
+                </p>
+                <div class="flow__tags">
+                  <span class="tag">PIPELINE LIVE</span>
+                  <span class="tag">RÉCAP IA</span>
+                  <span class="tag">ALERTES SILENCE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="schema" aria-label="Schéma tunnel">
+            <pre>
+ADS ──▶ OPT-IN ──▶ SCORE / NIVEAU ──▶ MAIL #1 (lien groupe WA)
+                                            │
+                         ┌──────────────────┴──────────────────┐
+                         ▼                                     ▼
+                   JOIN GROUPE                           NO JOIN
+                         │                                     │
+                         ▼                                     ▼
+              NOTIF COMMERCIAL                      MAIL #2 #3 #4
+              ACCUEIL GROUPE                        (relance ressource)
+              CASE: Dans le groupe                         │
+                         │                          si toujours non
+                         ▼                                     ▼
+              COMMERCIAL PREND LE RELAIS              ALERTE FUP DASHBOARD
+              (conv → cases → FUP silence)
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard">
+        <div class="wrap">
+          <p class="sec-tag">03 · DASHBOARD CLIENT</p>
+          <h2>Ce que le gérant ouvre tous les jours</h2>
+          <p class="body">
+            Une seule vérité commerciale. Modifiable à la main. L'IA propose, l'humain décide.
+          </p>
+
+          <div class="cols">
+            <div class="cell">
+              <h3>Opt-ins</h3>
+              <ul>
+                <li>Liste temps réel</li>
+                <li>Source ads / campagne</li>
+                <li>Réponses brutes du form</li>
+                <li>Niveau A / B / C</li>
+                <li>Statut invite / join</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h3>Pipeline</h3>
+              <ul>
+                <li>Kanban modifiable</li>
+                <li>Cases types (ci-dessous)</li>
+                <li>Drag manuel prioritaire</li>
+                <li>Suggestion IA non bloquante</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h3>Fiche lead</h3>
+              <ul>
+                <li>Description IA (qui / besoin / urgence)</li>
+                <li>Récap conversation</li>
+                <li>Dernier contact + prochain FUP</li>
+                <li>Historique mails / join</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h3>Alertes</h3>
+              <ul>
+                <li>Nouvel opt-in (notif tel)</li>
+                <li>Join groupe</li>
+                <li>Silence &gt; seuil</li>
+                <li>FUP dû aujourd'hui</li>
+                <li>Chaud qui stagne</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 36px;">Cases pipeline (exemple v1)</h3>
+          <div class="states">
+            <div class="state"><b>OPT-IN</b><span>Capturé, pas encore mailé</span></div>
+            <div class="state"><b>INVITE SENT</b><span>Mail #1 parti</span></div>
+            <div class="state"><b>NO JOIN</b><span>En séquence relance</span></div>
+            <div class="state"><b>DANS LE GROUPE</b><span>Engagé WA</span></div>
+            <div class="state"><b>EN COURS</b><span>Commercial actif</span></div>
+            <div class="state"><b>RDV</b><span>Créneau posé</span></div>
+            <div class="state"><b>GAGNÉ / PERDU</b><span>Clos</span></div>
+          </div>
+
+          <div class="schema" aria-label="Schéma dashboard">
+            <pre>
+┌─────────────────────────────────────────────────────────────┐
+│  DASHBOARD                                                  │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐ │
+│  │ OPT-INS  │  │ PIPELINE │  │  FICHES  │  │  ALERTES   │ │
+│  │ + niveaux│  │  kanban  │  │ IA+récap │  │ FUP / push │ │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └─────┬──────┘ │
+│       └─────────────┴─────────────┴──────────────┘         │
+│                         │                                   │
+│                         ▼                                   │
+│              NOTIF TÉLÉPHONE COMMERCIAL                     │
+└─────────────────────────────────────────────────────────────┘
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="whatsapp">
+        <div class="wrap">
+          <p class="sec-tag">04 · WHATSAPP</p>
+          <h2>Rôle du groupe et limites API</h2>
+          <p class="body">
+            WhatsApp n'est pas la stack critique d'envoi froid. C'est le lieu d'engagement
+            après clic sur le lien reçu par mail.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Intention</th>
+                  <th>API officielle Meta</th>
+                  <th>Choix Horizon</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Créer un groupe</td>
+                  <td class="mono">Oui (Groups API, compte OBA)</td>
+                  <td>Oui si client OBA, sinon SOP manuel / groupe ressource</td>
+                </tr>
+                <tr>
+                  <td>Ajouter de force prospect + commercial</td>
+                  <td class="mono">Non (invite-only)</td>
+                  <td>Lien d'invite dans le mail</td>
+                </tr>
+                <tr>
+                  <td>Message auto d'ouverture</td>
+                  <td class="mono">Oui, après join</td>
+                  <td>Accueil post-join + relais humain</td>
+                </tr>
+                <tr>
+                  <td>Usurper le WhatsApp perso</td>
+                  <td class="mono">Hors scope / hors ToS (voie QR)</td>
+                  <td>Interdit dans l'offre</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="cols" style="margin-top: 28px;">
+            <div class="cell">
+              <h3>Option A · Groupe ressource</h3>
+              <ul>
+                <li>Un groupe (ou quelques-uns) avec la ressource</li>
+                <li>Join = engagé</li>
+                <li>Commercial DM / prend en charge ensuite</li>
+                <li>Plus simple à livrer en 7 jours</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h3>Option B · Groupe par lead</h3>
+              <ul>
+                <li>1 groupe : prospect + commercial (+ bot)</li>
+                <li>Plus « setter »</li>
+                <li>Nécessite OBA + Groups API ou SOP manuel</li>
+                <li>Phase 2 / clients matures</li>
+              </ul>
+            </div>
+          </div>
+
+          <p class="note">
+            <b>Règle produit :</b> le mail porte l'invite. WhatsApp ne commence qu'après consentement (clic join).
+            Ça respecte Meta et garde la proximité relationnelle.
+          </p>
+        </div>
+      </section>
+
+      <section id="stack">
+        <div class="wrap">
+          <p class="sec-tag">05 · STACK</p>
+          <h2>Sous le capot (référence install)</h2>
+          <p class="body">
+            Stack type. On s'adapte à l'existant client (CRM, hébergeur mail, form) tant que les webhooks existent.
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Brique</th>
+                  <th>Outils</th>
+                  <th>Rôle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Capture</td>
+                  <td class="mono">Landing / Typeform / maison</td>
+                  <td>Opt-in ads → payload</td>
+                </tr>
+                <tr>
+                  <td>Orchestration</td>
+                  <td class="mono">n8n / Make</td>
+                  <td>Routing, séquences, seuils FUP</td>
+                </tr>
+                <tr>
+                  <td>Data</td>
+                  <td class="mono">Postgres (Neon / Supabase)</td>
+                  <td>Leads, événements, états</td>
+                </tr>
+                <tr>
+                  <td>App / dashboard</td>
+                  <td class="mono">Next.js · TypeScript · Vercel</td>
+                  <td>UI client</td>
+                </tr>
+                <tr>
+                  <td>Mail</td>
+                  <td class="mono">Resend / SMTP client</td>
+                  <td>Mail #1 + relances no-join</td>
+                </tr>
+                <tr>
+                  <td>IA</td>
+                  <td class="mono">Claude / GPT</td>
+                  <td>Score, description, récap conv, suggestion case</td>
+                </tr>
+                <tr>
+                  <td>Notifs</td>
+                  <td class="mono">Telegram / push / SMS</td>
+                  <td>Alerte téléphone gérant / commercial</td>
+                </tr>
+                <tr>
+                  <td>WhatsApp</td>
+                  <td class="mono">Lien groupe · Groups API (OBA) optionnel</td>
+                  <td>Engagement post-mail</td>
+                </tr>
+                <tr>
+                  <td>Agenda</td>
+                  <td class="mono">Google Calendar / Cal.com</td>
+                  <td>RDV une fois humain engagé</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="schema" aria-label="Schéma stack">
+            <pre>
+[ ADS / LP ] ──webhook──▶ [ n8n ] ──▶ [ Postgres ]
+                              │              │
+                              ├── score IA   │
+                              ├── mail #1    │
+                              ├── seq relance│
+                              └── notifs     ▼
+                                        [ Dashboard Next ]
+                              │
+                              └──▶ lien groupe WA
+                                       │
+                                       ▼
+                                 [ Join / Human ]
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="install">
+        <div class="wrap">
+          <p class="sec-tag">06 · INSTALL 7 JOURS</p>
+          <h2>Procédure type</h2>
+          <p class="body">Temps client cible : ~1h de call + validations ponctuelles.</p>
+
+          <div class="check">
+            <div class="check__row">
+              <div class="check__day">J0</div>
+              <div class="check__body">
+                <b>Kickoff.</b> Accès ads / form / boîte mail / WhatsApp Business si existant.
+                Mapping champs opt-in → niveaux. Définition cases pipeline.
+              </div>
+            </div>
+            <div class="check__row">
+              <div class="check__day">J1</div>
+              <div class="check__body">
+                <b>Capture + DB.</b> Webhook opt-in, modèle lead, événements (invite_sent, joined…).
+              </div>
+            </div>
+            <div class="check__row">
+              <div class="check__day">J2</div>
+              <div class="check__body">
+                <b>Scoring.</b> Règles niveaux + prompt IA. Jeu de test sur 20 opt-ins fictifs / historiques.
+              </div>
+            </div>
+            <div class="check__row">
+              <div class="check__day">J3</div>
+              <div class="check__body">
+                <b>Mail.</b> Template #1 (ressource + lien groupe) + séquence no-join. Domaine / SPF / DKIM.
+              </div>
+            </div>
+            <div class="check__row">
+              <div class="check__day">J4</div>
+              <div class="check__body">
+                <b>WhatsApp.</b> Groupe ressource prêt + lien, ou Groups API si OBA.
+                SOP écrit pour le commercial (accueil, première question, escalation).
+              </div>
+            </div>
+            <div class="check__row">
+              <div class="check__day">J5</div>
+              <div class="check__body">
+                <b>Dashboard.</b> Opt-ins, kanban, fiches, alertes. Notif téléphone branchée.
+              </div>
+            </div>
+            <div class="check__row">
+              <div class="check__day">J6</div>
+              <div class="check__body">
+                <b>FUP engine.</b> Seuils silence (ex. 48h / 7j). Liste « à faire aujourd'hui ».
+              </div>
+            </div>
+            <div class="check__row">
+              <div class="check__day">J7</div>
+              <div class="check__body">
+                <b>Go-live.</b> Test bout-en-bout ads → opt-in → mail → join → notif.
+                Gate humain 14 jours si messages auto dans le groupe.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing">
+        <div class="wrap">
+          <p class="sec-tag">07 · PRICING &amp; SCOPE</p>
+          <h2>Ancrage commercial</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Livrable</th>
+                  <th>Prix</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Porte</td>
+                  <td>Audit de fuite chiffré (à emporter)</td>
+                  <td class="mono">1 000 €</td>
+                </tr>
+                <tr>
+                  <td>Install</td>
+                  <td>Tunnel + dashboard + notifs + FUP + SOP WA</td>
+                  <td class="mono">7 000 € (public : à partir de 5 000 €)</td>
+                </tr>
+                <tr>
+                  <td>Socle</td>
+                  <td>Retainer maintenance + 1 opti / mois</td>
+                  <td class="mono">1 500 € / mois dès J+7</td>
+                </tr>
+                <tr>
+                  <td>Expand</td>
+                  <td>Groups API par lead, process suivant, etc.</td>
+                  <td class="mono">5–8 000 € ~M+3</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">
+            <b>Garantie interne</b> (pas affichée public avant 3 clients mesurés) :
+            si RDV +30 % / 90 j non atteints → remboursement intégral + système gardé + maintenance 3 mois.
+          </p>
+        </div>
+      </section>
+
+      <section id="regles">
+        <div class="wrap">
+          <p class="sec-tag">08 · DO / DON'T</p>
+          <h2>Discipline de livraison</h2>
+          <div class="rules">
+            <div class="rule rule--do">
+              <h3>+ ON FAIT</h3>
+              <ul>
+                <li>Scorer et ranger chaque opt-in</li>
+                <li>Pousser le join WA par mail</li>
+                <li>Relancer les no-join</li>
+                <li>Notifier le commercial</li>
+                <li>Laisser le pipeline modifiable à la main</li>
+                <li>Alerter sur les silences</li>
+              </ul>
+            </div>
+            <div class="rule rule--dont">
+              <h3>− ON NE FAIT PAS</h3>
+              <ul>
+                <li>Prendre le WhatsApp perso en QR</li>
+                <li>Promettre l'ajout forcé dans un groupe</li>
+                <li>Remplacer le commercial dans la relation</li>
+                <li>Imposer un nouveau CRM sans raison</li>
+                <li>Afficher la garantie avant preuves</li>
+                <li>Vendre « ChatGPT sur mesure »</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        HORIZON AGENCY · SOP /SOP · NOINDEX · DOCUMENT DE LIVRAISON INTERNE
+      </div>
+    </footer>
+  </body>
+</html>
