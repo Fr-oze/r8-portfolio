@@ -141,8 +141,8 @@
           <span class="scroll-section__label">NO.015 / CALCULATEUR</span>
           <h2 class="scroll-section__title">CHIFFRE TA FUITE</h2>
           <p class="scroll-section__lede">
-            Stat iClosed : un lead contacté en moins de 5 minutes a environ
-            <b>+300&nbsp;% de chances</b> d'être closé. Bouge les curseurs : le comparateur suit.
+            Même volume de demandes. Même panier. La seule variable : combien tu contactes à temps,
+            et combien tu closes encore une fois qu'ils ont refroidi.
           </p>
         </header>
 
@@ -150,52 +150,104 @@
           <div class="leak-calc__controls">
             <label class="leak-slider">
               <span class="leak-slider__top">
-                <span class="leak-slider__label">Leads traités / mois</span>
+                <span class="leak-slider__label">Demandes entrantes / mois</span>
                 <b id="calc-leads-val">30</b>
               </span>
-              <input id="calc-leads" type="range" min="5" max="80" step="1" value="30" />
+              <input id="calc-leads" type="range" min="10" max="80" step="1" value="30" />
             </label>
             <label class="leak-slider">
               <span class="leak-slider__top">
-                <span class="leak-slider__label">Panier moyen / client</span>
+                <span class="leak-slider__label">Panier moyen</span>
                 <b id="calc-basket-val">4 000 €</b>
               </span>
-              <input id="calc-basket" type="range" min="1000" max="12000" step="250" value="4000" />
+              <input id="calc-basket" type="range" min="1500" max="12000" step="250" value="4000" />
             </label>
             <label class="leak-slider">
               <span class="leak-slider__top">
-                <span class="leak-slider__label">Taux de closing (réponse lente)</span>
-                <b id="calc-close-val">20 %</b>
+                <span class="leak-slider__label">Contactées en &lt; 1h (aujourd'hui)</span>
+                <b id="calc-fast-val">33 %</b>
               </span>
-              <input id="calc-close" type="range" min="3" max="35" step="1" value="20" />
+              <input id="calc-fast" type="range" min="10" max="70" step="1" value="33" />
+            </label>
+            <label class="leak-slider">
+              <span class="leak-slider__top">
+                <span class="leak-slider__label">Close sur lead chaud</span>
+                <b id="calc-close-hot-val">20 %</b>
+              </span>
+              <input id="calc-close-hot" type="range" min="8" max="40" step="1" value="20" />
+            </label>
+            <label class="leak-slider">
+              <span class="leak-slider__top">
+                <span class="leak-slider__label">Close sur lead refroidi</span>
+                <b id="calc-close-cool-val">5 %</b>
+              </span>
+              <input id="calc-close-cool" type="range" min="1" max="15" step="1" value="5" />
             </label>
             <p class="leak-calc__hint">
-              Avec contact &lt; 5 min, le taux passe à <b id="calc-close-hot">80 %</b>
-              (×4 · iClosed).
+              Avec le système, le close chaud est volontairement baissé à
+              <b id="calc-close-sys">15 %</b> : traiter 100&nbsp;% des leads fait entrer des demandes moins qualifiées dans le calcul.
             </p>
           </div>
 
-          <div class="leak-calc__compare">
-            <article class="leak-pane">
-              <span class="leak-pane__tag">AUJOURD'HUI</span>
-              <p class="leak-pane__kicker">Réponse tardive / leads qui refroidissent</p>
-              <div class="leak-pane__big" id="calc-ca-now">2 400 €</div>
-              <span class="leak-pane__sub">CA / mois</span>
-              <div class="leak-bar"><i id="calc-bar-now"></i></div>
-              <p class="leak-pane__meta"><b id="calc-clients-now">0.6</b> clients signés / mois</p>
-            </article>
-            <article class="leak-pane leak-pane--hot">
-              <span class="leak-pane__tag">AVEC HORIZON</span>
-              <p class="leak-pane__kicker">Chaque lead contacté en &lt; 5 min</p>
-              <div class="leak-pane__big" id="calc-ca-horizon">9 600 €</div>
-              <span class="leak-pane__sub">CA / mois</span>
-              <div class="leak-bar"><i id="calc-bar-horizon"></i></div>
-              <p class="leak-pane__meta"><b id="calc-clients-horizon">2.4</b> clients signés / mois</p>
-            </article>
+          <div class="leak-calc__result">
+            <table class="leak-table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Aujourd'hui</th>
+                  <th scope="col">Avec système</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Demandes entrantes / mois</th>
+                  <td id="calc-row-leads-now">30</td>
+                  <td id="calc-row-leads-sys">30</td>
+                </tr>
+                <tr>
+                  <th scope="row">Contactées en &lt; 1h</th>
+                  <td id="calc-row-fast-now">10</td>
+                  <td id="calc-row-fast-sys">30</td>
+                </tr>
+                <tr>
+                  <th scope="row">Contactées en &gt; 48h ou jamais</th>
+                  <td id="calc-row-late-now">20</td>
+                  <td id="calc-row-late-sys">0</td>
+                </tr>
+                <tr>
+                  <th scope="row">Close sur lead chaud</th>
+                  <td id="calc-row-hot-now">20 %</td>
+                  <td id="calc-row-hot-sys">15 %*</td>
+                </tr>
+                <tr>
+                  <th scope="row">Close sur lead refroidi</th>
+                  <td id="calc-row-cool-now">5 %</td>
+                  <td class="leak-table__muted">n/a</td>
+                </tr>
+                <tr>
+                  <th scope="row">Clients signés / mois</th>
+                  <td id="calc-row-clients-now">3,0</td>
+                  <td id="calc-row-clients-sys">4,5</td>
+                </tr>
+                <tr>
+                  <th scope="row">Panier moyen</th>
+                  <td id="calc-row-basket-now">4 000 €</td>
+                  <td id="calc-row-basket-sys">4 000 €</td>
+                </tr>
+                <tr class="leak-table__total">
+                  <th scope="row">CA généré</th>
+                  <td id="calc-row-ca-now">12 000 €</td>
+                  <td id="calc-row-ca-sys">18 000 €</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="leak-calc__footnote">
+              * Taux baissé volontairement : traiter 100&nbsp;% des leads fait entrer des demandes moins qualifiées dans le calcul.
+            </p>
             <div class="leak-delta">
               <span class="leak-delta__label">DELTA RÉCUPÉRABLE</span>
-              <strong id="calc-delta">+ 7 200 € / mois</strong>
-              <span id="calc-delta-year">+ 86 400 € / an</span>
+              <strong id="calc-delta">+ 6 000 € / mois</strong>
+              <span id="calc-delta-year">+ 72 000 € / an</span>
             </div>
           </div>
         </div>

@@ -1,31 +1,45 @@
 /**
- * Calculateur de fuite — comparateur temps réel.
- * Stat iClosed : un lead contacté en < 5 min a ~+300% de chances d'être closé (×4).
+ * Calculateur de fuite — modèle conservateur (offre Claude).
+ * Aujourd'hui : mix leads chauds / refroidis.
+ * Avec système : 100 % contactés, close volontairement baissé.
  */
 export function bindLeakCalc(root: HTMLElement | null) {
   if (!root) return;
 
   const leadsEl = root.querySelector<HTMLInputElement>("#calc-leads");
   const basketEl = root.querySelector<HTMLInputElement>("#calc-basket");
-  const closeEl = root.querySelector<HTMLInputElement>("#calc-close");
-  if (!leadsEl || !basketEl || !closeEl) return;
+  const fastEl = root.querySelector<HTMLInputElement>("#calc-fast");
+  const closeHotEl = root.querySelector<HTMLInputElement>("#calc-close-hot");
+  const closeCoolEl = root.querySelector<HTMLInputElement>("#calc-close-cool");
+  if (!leadsEl || !basketEl || !fastEl || !closeHotEl || !closeCoolEl) return;
 
   const out = {
     leads: root.querySelector("#calc-leads-val"),
     basket: root.querySelector("#calc-basket-val"),
-    close: root.querySelector("#calc-close-val"),
-    closeHot: root.querySelector("#calc-close-hot"),
-    caNow: root.querySelector("#calc-ca-now"),
-    caHorizon: root.querySelector("#calc-ca-horizon"),
-    clientsNow: root.querySelector("#calc-clients-now"),
-    clientsHorizon: root.querySelector("#calc-clients-horizon"),
+    fast: root.querySelector("#calc-fast-val"),
+    closeHot: root.querySelector("#calc-close-hot-val"),
+    closeCool: root.querySelector("#calc-close-cool-val"),
+    closeSys: root.querySelector("#calc-close-sys"),
+    rowLeadsNow: root.querySelector("#calc-row-leads-now"),
+    rowLeadsSys: root.querySelector("#calc-row-leads-sys"),
+    rowFastNow: root.querySelector("#calc-row-fast-now"),
+    rowFastSys: root.querySelector("#calc-row-fast-sys"),
+    rowLateNow: root.querySelector("#calc-row-late-now"),
+    rowLateSys: root.querySelector("#calc-row-late-sys"),
+    rowHotNow: root.querySelector("#calc-row-hot-now"),
+    rowHotSys: root.querySelector("#calc-row-hot-sys"),
+    rowCoolNow: root.querySelector("#calc-row-cool-now"),
+    rowClientsNow: root.querySelector("#calc-row-clients-now"),
+    rowClientsSys: root.querySelector("#calc-row-clients-sys"),
+    rowBasketNow: root.querySelector("#calc-row-basket-now"),
+    rowBasketSys: root.querySelector("#calc-row-basket-sys"),
+    rowCaNow: root.querySelector("#calc-row-ca-now"),
+    rowCaSys: root.querySelector("#calc-row-ca-sys"),
     delta: root.querySelector("#calc-delta"),
     deltaYear: root.querySelector("#calc-delta-year"),
-    barNow: root.querySelector<HTMLElement>("#calc-bar-now"),
-    barHorizon: root.querySelector<HTMLElement>("#calc-bar-horizon"),
   };
 
-  const HOT_MULT = 4; // +300% = ×4 (iClosed)
+  const SYSTEM_CLOSE_RATIO = 0.75; // 20 % → 15 %
 
   const fmtEuro = (n: number) =>
     new Intl.NumberFormat("fr-FR", {
@@ -34,36 +48,61 @@ export function bindLeakCalc(root: HTMLElement | null) {
       maximumFractionDigits: 0,
     }).format(Math.round(n));
 
-  const fmtPct = (n: number) => `${(n * 100).toFixed(n * 100 >= 10 ? 0 : 1)} %`;
+  const fmtNum = (n: number, digits = 0) =>
+    new Intl.NumberFormat("fr-FR", {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: digits,
+    }).format(n);
+
+  const fmtPct = (n: number) => {
+    const p = n * 100;
+    return `${fmtNum(p, p >= 10 || Number.isInteger(p) ? 0 : 1)} %`;
+  };
 
   const render = () => {
     const leads = Number(leadsEl.value);
     const basket = Number(basketEl.value);
-    const closeLate = Number(closeEl.value) / 100;
-    const closeHot = Math.min(closeLate * HOT_MULT, 0.95);
+    const fastPct = Number(fastEl.value) / 100;
+    const closeHot = Number(closeHotEl.value) / 100;
+    const closeCool = Number(closeCoolEl.value) / 100;
+    const closeSys = closeHot * SYSTEM_CLOSE_RATIO;
 
-    const clientsNow = leads * closeLate;
-    const clientsHorizon = leads * closeHot;
+    const fastNow = Math.round(leads * fastPct);
+    const lateNow = leads - fastNow;
+    const clientsNow = fastNow * closeHot + lateNow * closeCool;
+    const clientsSys = leads * closeSys;
     const caNow = clientsNow * basket;
-    const caHorizon = clientsHorizon * basket;
-    const delta = caHorizon - caNow;
-    const maxCa = Math.max(caNow, caHorizon, 1);
+    const caSys = clientsSys * basket;
+    const delta = caSys - caNow;
 
     if (out.leads) out.leads.textContent = String(leads);
     if (out.basket) out.basket.textContent = fmtEuro(basket);
-    if (out.close) out.close.textContent = fmtPct(closeLate);
+    if (out.fast) out.fast.textContent = fmtPct(fastPct);
     if (out.closeHot) out.closeHot.textContent = fmtPct(closeHot);
-    if (out.caNow) out.caNow.textContent = fmtEuro(caNow);
-    if (out.caHorizon) out.caHorizon.textContent = fmtEuro(caHorizon);
-    if (out.clientsNow) out.clientsNow.textContent = clientsNow.toFixed(1);
-    if (out.clientsHorizon) out.clientsHorizon.textContent = clientsHorizon.toFixed(1);
+    if (out.closeCool) out.closeCool.textContent = fmtPct(closeCool);
+    if (out.closeSys) out.closeSys.textContent = fmtPct(closeSys);
+
+    if (out.rowLeadsNow) out.rowLeadsNow.textContent = String(leads);
+    if (out.rowLeadsSys) out.rowLeadsSys.textContent = String(leads);
+    if (out.rowFastNow) out.rowFastNow.textContent = String(fastNow);
+    if (out.rowFastSys) out.rowFastSys.textContent = String(leads);
+    if (out.rowLateNow) out.rowLateNow.textContent = String(lateNow);
+    if (out.rowLateSys) out.rowLateSys.textContent = "0";
+    if (out.rowHotNow) out.rowHotNow.textContent = fmtPct(closeHot);
+    if (out.rowHotSys) out.rowHotSys.textContent = `${fmtPct(closeSys)}*`;
+    if (out.rowCoolNow) out.rowCoolNow.textContent = fmtPct(closeCool);
+    if (out.rowClientsNow) out.rowClientsNow.textContent = fmtNum(clientsNow, 1);
+    if (out.rowClientsSys) out.rowClientsSys.textContent = fmtNum(clientsSys, 1);
+    if (out.rowBasketNow) out.rowBasketNow.textContent = fmtEuro(basket);
+    if (out.rowBasketSys) out.rowBasketSys.textContent = fmtEuro(basket);
+    if (out.rowCaNow) out.rowCaNow.textContent = fmtEuro(caNow);
+    if (out.rowCaSys) out.rowCaSys.textContent = fmtEuro(caSys);
+
     if (out.delta) out.delta.textContent = `+ ${fmtEuro(delta)} / mois`;
     if (out.deltaYear) out.deltaYear.textContent = `+ ${fmtEuro(delta * 12)} / an`;
-    if (out.barNow) out.barNow.style.width = `${(caNow / maxCa) * 100}%`;
-    if (out.barHorizon) out.barHorizon.style.width = `${(caHorizon / maxCa) * 100}%`;
   };
 
-  [leadsEl, basketEl, closeEl].forEach((el) => {
+  [leadsEl, basketEl, fastEl, closeHotEl, closeCoolEl].forEach((el) => {
     el.addEventListener("input", render);
   });
   render();
