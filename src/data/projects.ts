@@ -51,7 +51,7 @@ export const PROJECTS: Project[] = [
         ["LE PILOTAGE", "Pouvoir de décision réel sur le produit et l'organisation. Quand ça bloque, on tranche, pas de simple conseil."],
       ],
       result:
-        "2,6 M€ de CA en 2025, 4 088 membres actifs, et un webinaire lancé qui a généré plus de 500 k€.",
+        "2,6 M€ de CA en 2025, 4 167 membres actifs, et un webinaire lancé qui a généré plus de 500 k€.",
       gallery: [
         ["LA HOME EN 3D", "/projects/vkstudio/landing.png"],
         ["LES TUNNELS DE VENTE", "/projects/vkstudio/tracking.png"],
