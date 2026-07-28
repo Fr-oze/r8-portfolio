@@ -84,11 +84,26 @@ const heroSpacer = document.querySelector(".hero-spacer");
 const scrollSections = document.querySelectorAll(".scroll-section");
 
 const syncPastHero = () => {
-  const threshold = (heroSpacer?.clientHeight ?? window.innerHeight) * 0.55;
+  const spacerH = heroSpacer?.clientHeight ?? window.innerHeight;
+  // Dès qu'on entre dans le contenu commercial, on coupe le debug 3D.
+  const threshold = spacerH * 0.35;
   document.body.classList.toggle("past-hero", window.scrollY > threshold);
 };
 window.addEventListener("scroll", syncPastHero, { passive: true });
+window.addEventListener("resize", syncPastHero, { passive: true });
 syncPastHero();
+
+const pageScroll = document.querySelector(".page-scroll");
+if (pageScroll && "IntersectionObserver" in window) {
+  new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting && entry.boundingClientRect.top < window.innerHeight * 0.75) {
+        document.body.classList.add("past-hero");
+      }
+    },
+    { threshold: [0, 0.05, 0.15] }
+  ).observe(pageScroll);
+}
 
 if ("IntersectionObserver" in window) {
   const sectionIo = new IntersectionObserver(
