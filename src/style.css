@@ -2333,43 +2333,38 @@ body.past-hero .ui__cta-projects {
 .scroll-section--stack-detail {
   border-top: 1px solid var(--line);
 }
-.stack-grid {
+.stack-logos {
+  list-style: none;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 1px;
   max-width: 1080px;
   margin: 0 auto;
-}
-.stack-block {
-  padding: 22px;
+  background: var(--line);
   border: 1px solid var(--line);
-  background: var(--panel);
 }
-.stack-block__title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.stack-list {
-  list-style: none;
+.stack-logos li {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 108px;
+  padding: 18px 10px;
+  background: var(--panel);
 }
-.stack-list li {
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: #4a525c;
-  padding-left: 14px;
-  position: relative;
+.stack-logos img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: brightness(0);
+  opacity: 0.88;
 }
-.stack-list li::before {
-  content: "·";
-  position: absolute;
-  left: 0;
-  color: var(--ink);
+.stack-logos span {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
 }
 
 /* --- IA --- */
@@ -2726,8 +2721,11 @@ body.past-hero .ui__cta-projects {
   .craft-grid {
     grid-template-columns: 1fr 1fr;
   }
-  .stack-grid {
-    grid-template-columns: 1fr;
+  .stack-logos {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .stack-logos li {
+    min-height: 96px;
   }
   .ia-row {
     grid-template-columns: 1fr;
