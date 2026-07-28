@@ -9,6 +9,7 @@ import { Projects } from "./components/Projects";
 import { About } from "./components/About";
 import { Contact } from "./components/Contact";
 import { OrbFlightMode } from "./components/OrbFlightMode";
+import { bindLeakCalc } from "./components/LeakCalc";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -45,7 +46,9 @@ const ui = new UI();
 const projects = new Projects();
 document.getElementById("open-projects")?.addEventListener("click", () => projects.toggle());
 document.getElementById("open-projects-cta")?.addEventListener("click", () => contact.show());
-document.getElementById("quip-projects")?.addEventListener("click", () => projects.show());
+document.getElementById("quip-projects")?.addEventListener("click", () => {
+  document.getElementById("calc")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 // Panneau About : portrait 3D data/wireframe + présentation.
 const about = new About();
 document.getElementById("about-projects")?.addEventListener("click", () => {
@@ -110,7 +113,10 @@ document.querySelectorAll(".project-card[data-project]").forEach((card) => {
   });
 });
 
+bindLeakCalc(document.getElementById("leak-calc"));
+
 document.getElementById("scroll-contact-cta")?.addEventListener("click", () => contact.show());
+document.getElementById("scroll-cases-cta")?.addEventListener("click", () => projects.show());
 
 window.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;

@@ -41,8 +41,8 @@
 
     <!-- Headline hero : gauche, superposée à la sphère -->
     <h1 class="hero-headline">
-      <span class="hero-headline__line">Zéro lead mort.</span>
-      <span class="hero-headline__line hero-headline__line--overlap">Ton agence jette déjà 6 000 €/mois.</span>
+      <span class="hero-headline__line">Imagine :</span>
+      <span class="hero-headline__line hero-headline__line--overlap">ton agence jette plus de 6k par mois sans t'en rendre compte.</span>
     </h1>
 
     <!-- ============ UI OVERLAY (cachée jusqu'à la fin du scan) ============ -->
@@ -51,7 +51,7 @@
       <nav class="ui__nav">
         <span class="ui__brand">HORIZON · ZÉRO LEAD MORT</span>
         <span class="ui__links">
-          <a href="#" class="ui__link" id="nav-projects">PREUVE</a>
+          <a href="#" class="ui__link" id="nav-projects">CAS</a>
           <a href="#" class="ui__link" id="nav-about">ABOUT</a>
           <a href="#" class="ui__link" id="nav-contact">AUDIT</a>
         </span>
@@ -64,7 +64,7 @@
       <!-- Phrase signature / transition -->
       <p class="ui__quip">
         LE PREMIER QUI RÉPOND GAGNE.
-        <button id="quip-projects" class="ui__quip-link">VOIR COMMENT →</button>
+        <button id="quip-projects" class="ui__quip-link" type="button">CHIFFRER LA FUITE →</button>
       </p>
 
       <!-- COIN BAS-GAUCHE : heure + ville -->
@@ -83,7 +83,7 @@
       <!-- COIN HAUT-GAUCHE : bouton projets + titre étude -->
       <div class="ui__corner ui__corner--tl ui__study">
         <button id="open-projects" class="ui__projects-btn">
-          <span class="ui__projects-dot"></span>PREUVE
+          <span class="ui__projects-dot"></span>CAS
         </button>
         <span class="ui__dim">NO.014 / SCAN REVEAL</span>
       </div>
@@ -136,48 +136,68 @@
 
     <!-- ============ SECTIONS DE SCROLL (sous le hero) ============ -->
     <main class="page-scroll">
-      <section id="work" class="scroll-section scroll-section--projects">
+      <section id="calc" class="scroll-section scroll-section--calc">
         <header class="scroll-section__head">
-          <span class="scroll-section__label">NO.015 / PREUVE D'EXÉCUTION</span>
-          <h2 class="scroll-section__title">CE QUE J'AI DÉJÀ LIVRÉ</h2>
+          <span class="scroll-section__label">NO.015 / CALCULATEUR</span>
+          <h2 class="scroll-section__title">CHIFFRE TA FUITE</h2>
+          <p class="scroll-section__lede">
+            Stat iClosed : un lead contacté en moins de 5 minutes a environ
+            <b>+300&nbsp;% de chances</b> d'être closé. Bouge les curseurs : le comparateur suit.
+          </p>
         </header>
-        <div class="project-grid">
-          <article class="project-card" data-project="vkstudio">
-            <span class="project-card__no">NO.001</span>
-            <h3 class="project-card__name">VK STUDIO</h3>
-            <p class="project-card__desc">Plateforme formation + funnels. Preuve qu'on peut faire tourner un pipe sans bricolage du dimanche.</p>
-            <div class="project-card__shot">
-              <img src="/projects/vkstudio/landing.png" alt="" loading="lazy" />
+
+        <div class="leak-calc" id="leak-calc">
+          <div class="leak-calc__controls">
+            <label class="leak-slider">
+              <span class="leak-slider__top">
+                <span class="leak-slider__label">Leads traités / mois</span>
+                <b id="calc-leads-val">30</b>
+              </span>
+              <input id="calc-leads" type="range" min="5" max="80" step="1" value="30" />
+            </label>
+            <label class="leak-slider">
+              <span class="leak-slider__top">
+                <span class="leak-slider__label">Panier moyen / client</span>
+                <b id="calc-basket-val">4 000 €</b>
+              </span>
+              <input id="calc-basket" type="range" min="1000" max="12000" step="250" value="4000" />
+            </label>
+            <label class="leak-slider">
+              <span class="leak-slider__top">
+                <span class="leak-slider__label">Taux de closing (réponse lente)</span>
+                <b id="calc-close-val">20 %</b>
+              </span>
+              <input id="calc-close" type="range" min="3" max="35" step="1" value="20" />
+            </label>
+            <p class="leak-calc__hint">
+              Avec contact &lt; 5 min, le taux passe à <b id="calc-close-hot">80 %</b>
+              (×4 · iClosed).
+            </p>
+          </div>
+
+          <div class="leak-calc__compare">
+            <article class="leak-pane">
+              <span class="leak-pane__tag">AUJOURD'HUI</span>
+              <p class="leak-pane__kicker">Réponse tardive / leads qui refroidissent</p>
+              <div class="leak-pane__big" id="calc-ca-now">2 400 €</div>
+              <span class="leak-pane__sub">CA / mois</span>
+              <div class="leak-bar"><i id="calc-bar-now"></i></div>
+              <p class="leak-pane__meta"><b id="calc-clients-now">0.6</b> clients signés / mois</p>
+            </article>
+            <article class="leak-pane leak-pane--hot">
+              <span class="leak-pane__tag">AVEC HORIZON</span>
+              <p class="leak-pane__kicker">Chaque lead contacté en &lt; 5 min</p>
+              <div class="leak-pane__big" id="calc-ca-horizon">9 600 €</div>
+              <span class="leak-pane__sub">CA / mois</span>
+              <div class="leak-bar"><i id="calc-bar-horizon"></i></div>
+              <p class="leak-pane__meta"><b id="calc-clients-horizon">2.4</b> clients signés / mois</p>
+            </article>
+            <div class="leak-delta">
+              <span class="leak-delta__label">DELTA RÉCUPÉRABLE</span>
+              <strong id="calc-delta">+ 7 200 € / mois</strong>
+              <span id="calc-delta-year">+ 86 400 € / an</span>
             </div>
-            <span class="project-card__tags"><i>LMS</i><i>FUNNELS</i></span>
-          </article>
-          <article class="project-card" data-project="pulseod">
-            <span class="project-card__no">NO.002</span>
-            <h3 class="project-card__name">PULSEOD</h3>
-            <p class="project-card__desc">Suivi commercial multi-comptes. Le genre d'outil qui remplit le CRM à ta place.</p>
-            <div class="project-card__shot">
-              <img src="/projects/pulseod/dashboard.png" alt="" loading="lazy" />
-            </div>
-            <span class="project-card__tags"><i>COMMERCIAL</i><i>PIPE</i></span>
-          </article>
-          <article class="project-card" data-project="frame-exe">
-            <span class="project-card__no">NO.003</span>
-            <h3 class="project-card__name">FRAME.EXE</h3>
-            <p class="project-card__desc">Pipeline YouTube automatisé. Encore un process qui tourne sans que tu sois dessus.</p>
-            <div class="project-card__shot">
-              <img src="/projects/frame-exe/dashboard.png" alt="" loading="lazy" />
-            </div>
-            <span class="project-card__tags"><i>CONTENU</i><i>PROCESS</i></span>
-          </article>
-          <article class="project-card" data-project="schema-chantierpilot">
-            <span class="project-card__no">NO.004</span>
-            <h3 class="project-card__name">SCHEMA</h3>
-            <p class="project-card__desc">Outils métier BTP. Même logique : un système livré, pas une méthode à appliquer seul.</p>
-            <div class="project-card__shot">
-              <img src="/projects/schema/chantierpilot_chantiers.png" alt="" loading="lazy" />
-            </div>
-            <span class="project-card__tags"><i>EXÉCUTION</i></span>
-          </article>
+          </div>
         </div>
       </section>
 
@@ -206,7 +226,7 @@
             <article class="process-step__card">
               <span class="process-step__phase">FLUX UNIQUE</span>
               <h3 class="process-step__title">Tous tes canaux au même endroit</h3>
-              <p>Mail, formulaire, DM, LinkedIn, WhatsApp, téléphone. Je me branche sur ce que tu as déjà. Zéro migration, ton équipe ne change rien.</p>
+              <p>Mail, formulaire, DM, LinkedIn, WhatsApp, téléphone. Je me branche sur ce que tu as déjà. Zéro migration.</p>
             </article>
           </li>
           <li class="process-step">
@@ -217,7 +237,7 @@
             <article class="process-step__card">
               <span class="process-step__phase">SCORE</span>
               <h3 class="process-step__title">Chaque demande scorée</h3>
-              <p>Le score sort de tes 10 meilleurs et 10 pires clients. Tes critères, pas les miens. Rien n'est jamais supprimé : ça priorise.</p>
+              <p>Le score sort de tes 10 meilleurs et 10 pires clients. Tes critères, pas les miens.</p>
             </article>
           </li>
           <li class="process-step">
@@ -237,39 +257,118 @@
               <span class="process-step__no">05</span>
             </div>
             <article class="process-step__card">
-              <span class="process-step__phase">RELANCE</span>
-              <h3 class="process-step__title">7 relances sans toi</h3>
-              <p>Séquences déjà écrites, réparties sur 45 jours et plusieurs canaux. Tu valides, tu ne rédiges pas.</p>
-            </article>
-          </li>
-          <li class="process-step">
-            <div class="process-step__marker">
-              <span class="process-step__dot" aria-hidden="true"></span>
-              <span class="process-step__no">06</span>
-            </div>
-            <article class="process-step__card">
-              <span class="process-step__phase">AGENDA</span>
-              <h3 class="process-step__title">RDV réservé tout seul</h3>
-              <p>Seuls les leads au-dessus de ton seuil touchent ton agenda. Confirmation et rappel automatiques.</p>
-            </article>
-          </li>
-          <li class="process-step">
-            <div class="process-step__marker">
-              <span class="process-step__dot" aria-hidden="true"></span>
-              <span class="process-step__no">07</span>
-            </div>
-            <article class="process-step__card">
-              <span class="process-step__phase">PILOTE</span>
-              <h3 class="process-step__title">Tableau de bord, zéro angle mort</h3>
-              <p>Une page, six chiffres, un rapport le lundi dans ta boîte. Installé en 7 jours. Ton temps total : une heure de call.</p>
+              <span class="process-step__phase">RELANCE + AGENDA</span>
+              <h3 class="process-step__title">7 relances, RDV tout seul</h3>
+              <p>Séquences testées, créneaux qualifiés uniquement, confirmation et rappel automatiques. Installé en 7 jours.</p>
             </article>
           </li>
         </ol>
       </section>
 
+      <section id="craft" class="scroll-section scroll-section--craft">
+        <header class="scroll-section__head">
+          <span class="scroll-section__label">NO.017 / EXÉCUTION</span>
+          <h2 class="scroll-section__title">ON LIVRE DU VRAI</h2>
+          <p class="scroll-section__lede">
+            Pas une méthode à appliquer le dimanche soir. Un système branché sur ta boîte, documenté, dont tu es propriétaire.
+          </p>
+        </header>
+        <div class="craft-grid">
+          <article class="craft-card">
+            <span class="craft-card__no">01</span>
+            <h3 class="craft-card__title">Délai</h3>
+            <p>Audit en 48h. Système opérationnel en 7 jours. Ton temps total : une heure de call.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">02</span>
+            <h3 class="craft-card__title">Contrôle</h3>
+            <p>Validation humaine les 14 premiers jours. Tu ouvres les vannes quand tu es à l'aise, pas avant.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">03</span>
+            <h3 class="craft-card__title">Propriété</h3>
+            <p>Accès, code, doc : tout est à toi. Retainer pour rester, pas pour te prendre en otage.</p>
+          </article>
+          <article class="craft-card">
+            <span class="craft-card__no">04</span>
+            <h3 class="craft-card__title">Terrain</h3>
+            <p>Je dirige une agence. Je connais le pipe, le lundi cassé, et la honte de la boîte mail.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="stack-detail" class="scroll-section scroll-section--stack-detail">
+        <header class="scroll-section__head">
+          <span class="scroll-section__label">NO.018 / STACK</span>
+          <h2 class="scroll-section__title">SOUS LE CAPOT</h2>
+          <p class="scroll-section__lede">
+            Tu n'achètes pas une techno. Tu achètes un commercial qui ne dort jamais.
+            Voici quand même ce qui tourne derrière, pour les curieux.
+          </p>
+        </header>
+        <div class="stack-grid">
+          <div class="stack-block">
+            <h3 class="stack-block__title">Produit &amp; data</h3>
+            <ul class="stack-list">
+              <li>Next.js · TypeScript</li>
+              <li>Postgres (Neon / Supabase)</li>
+              <li>Webhooks multi-canaux</li>
+              <li>CRM existant branché (pas remplacé)</li>
+            </ul>
+          </div>
+          <div class="stack-block">
+            <h3 class="stack-block__title">Orchestration</h3>
+            <ul class="stack-list">
+              <li>Automations fiables (n8n / Make)</li>
+              <li>Files d'attente + retries</li>
+              <li>Logs &amp; alertes si un flux casse</li>
+              <li>Relances multi-canal sur 45 jours</li>
+            </ul>
+          </div>
+          <div class="stack-block">
+            <h3 class="stack-block__title">Routage IA</h3>
+            <ul class="stack-list">
+              <li>Modèle léger pour tri &amp; score</li>
+              <li>Claude / GPT pour le ton &amp; la rédaction</li>
+              <li>Escalade humain si doute</li>
+              <li>Rollback vers un modèle plus fort si la réponse est mauvaise</li>
+            </ul>
+          </div>
+          <div class="stack-block">
+            <h3 class="stack-block__title">Pilot &amp; livraison</h3>
+            <ul class="stack-list">
+              <li>Tableau de bord 6 chiffres</li>
+              <li>Rapport lundi dans ta boîte</li>
+              <li>1 optimisation / mois (retainer)</li>
+              <li>Doc + formation si tu veux maintenir seul</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="ia" class="scroll-section scroll-section--ia">
+        <header class="scroll-section__head">
+          <span class="scroll-section__label">NO.019 / IA</span>
+          <h2 class="scroll-section__title">PAS UN CHATGPT SUR MESURE</h2>
+        </header>
+        <div class="ia-row">
+          <p class="ia-copy">
+            L'IA répond dans ton ton, cite le contexte du prospect, et sait quand elle ne sait pas.
+            Rien ne part sans filet au démarrage. Le but n'est pas de « faire de l'IA » :
+            c'est que chaque demande entrante soit traitée avant ton concurrent.
+          </p>
+          <ul class="ia-points">
+            <li><b>Score</b> sur tes vrais critères clients</li>
+            <li><b>Rédaction</b> calibrée sur tes 50 derniers échanges</li>
+            <li><b>Gate humain</b> avant l'autonomie</li>
+            <li><b>Escalade</b> vers toi sur les questions techniques</li>
+          </ul>
+        </div>
+      </section>
+
       <section id="approche" class="scroll-section scroll-section--approche">
         <header class="scroll-section__head scroll-section__head--center">
-          <span class="scroll-section__label">NO.017 / PROMESSE</span>
+          <span class="scroll-section__label">NO.020 / PROMESSE</span>
         </header>
         <p class="scroll-manifeste">
           Tu ne vas pas faire plus de marketing. Tu vas juste arrêter de jeter
@@ -289,9 +388,14 @@
 
       <section id="contact-scroll" class="scroll-section scroll-section--contact">
         <h2 class="scroll-contact__title">TA BOÎTE MAIL TE COÛTE COMBIEN&nbsp;?</h2>
-        <button id="scroll-contact-cta" class="ui__drive scroll-contact__btn" type="button">
-          <span class="ui__drive-ic">▸</span> CHIFFRER MA FUITE
-        </button>
+        <div class="scroll-contact__actions">
+          <button id="scroll-contact-cta" class="ui__drive scroll-contact__btn" type="button">
+            <span class="ui__drive-ic">▸</span> CHIFFRER MA FUITE
+          </button>
+          <button id="scroll-cases-cta" class="ui__drive ui__drive--ghost scroll-contact__btn" type="button">
+            <span class="ui__drive-ic">▦</span> VOIR DES CAS
+          </button>
+        </div>
       </section>
     </main>
 
