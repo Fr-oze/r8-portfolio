@@ -46,7 +46,9 @@ export class About {
           <span class="about__kind">ZÉRO LEAD MORT</span>
           <h2 class="about__name">MAXIMILLIEN</h2>
           <p class="about__lead">
-            Je dirige une agence. Je connais la sensation d'ouvrir sa boîte mail le lundi et de trouver trois demandes de la semaine dernière jamais traitées. J'installe le système qui règle ça.
+            Je dirige une agence, et je construis les tunnels de vente de VK Studio
+            (2,6&nbsp;M€ de CA en 2025). Je connais la sensation d'ouvrir sa boîte mail le lundi
+            et de trouver des demandes jamais traitées. J'installe le système qui règle ça.
           </p>
 
           <div class="about__cols">
