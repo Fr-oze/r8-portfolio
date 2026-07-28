@@ -66,14 +66,16 @@ body.ui-ready .hero-headline {
 .hero-headline__line {
   display: block;
   white-space: nowrap;
-  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  font-size: clamp(1.35rem, 2.5vw, 2.5rem);
   color: var(--ink);
   text-shadow: 0 2px 18px rgba(244, 245, 247, 0.8);
 }
 .hero-headline__line--overlap {
   padding-left: clamp(10px, 1.8vw, 28px);
-  color: rgba(18, 20, 26, 0.82);
+  color: rgba(18, 20, 26, 0.72);
   font-weight: 400;
+  white-space: normal;
+  max-width: min(92vw, 420px);
 }
 body.past-hero .hero-headline {
   opacity: 0;

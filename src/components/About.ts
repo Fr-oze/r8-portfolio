@@ -43,44 +43,44 @@ export class About {
         </figure>
 
         <div class="about__text">
-          <span class="about__kind">GROWTH DEVELOPER</span>
+          <span class="about__kind">ZÉRO LEAD MORT</span>
           <h2 class="about__name">MAXIMILLIEN</h2>
           <p class="about__lead">
-            Tu m'amènes un problème, je te ramène le logiciel qui le règle. J'aime les dossiers compliqués, ceux où il faut creuser avant de coder.
+            Je dirige une agence. Je connais la sensation d'ouvrir sa boîte mail le lundi et de trouver trois demandes de la semaine dernière jamais traitées. J'installe le système qui règle ça.
           </p>
 
           <div class="about__cols">
             <div class="about__col">
-              <span class="about__h">CE QUE J'AMÈNE</span>
+              <span class="about__h">POUR QUI</span>
               <ul>
-                <li>2,6 M€ générés pour une boîte en construisant ses outils et ses tunnels</li>
-                <li>Partenaire de croissance, je joue le résultat avec toi pas juste la livraison</li>
-                <li>Je m'adapte à ta situation, c'est ton problème qui décide de la solution</li>
+                <li>Fondateurs d'agence à 30–50k€/mois, experts (SEO, web, dev, branding, contenu)</li>
+                <li>Ceux qui ont déjà du flux entrant et qui en gâchent les deux tiers</li>
+                <li>Jamais media buying, acquisition ou growth : chez eux, le commercial est déjà le métier</li>
               </ul>
             </div>
             <div class="about__col">
-              <span class="about__h">COMMENT</span>
+              <span class="about__h">CE QUE JE LIVRE</span>
               <ul>
-                <li>On trouve toujours un moyen, même quand ça paraît bloqué au départ</li>
-                <li>Un seul interlocuteur, de l'idée à la prod, tu parles à celui qui code</li>
-                <li>Je livre vite, je corrige en direct, sans attendre le comité</li>
+                <li>Un commercial qui ne dort jamais, installé en 7 jours</li>
+                <li>Réponse &lt; 5 min, relances, RDV dans ton agenda, sans que tu touches à rien</li>
+                <li>T'as la méthode. Il te manque le système. Je suis le maillon exécution</li>
               </ul>
             </div>
           </div>
 
           <div class="about__facts">
-            <div><b>2,6 M€</b><span>générés pour un client</span></div>
-            <div><b>SOLO</b><span>de l'idée à la prod</span></div>
-            <div><b>🇦🇩</b><span>basé en Andorre, je bosse partout</span></div>
+            <div><b>7 J</b><span>installation complète</span></div>
+            <div><b>~6K€</b><span>fuite type / mois</span></div>
+            <div><b>🇦🇩</b><span>Andorre, je bosse partout</span></div>
           </div>
 
           <p class="about__quip">
-            La sphère qui vit derrière, c'est le même code que celui de mes outils. J'aime quand un logiciel utile est aussi beau à regarder, c'est toute l'idée de ce que je construis.
+            Réservé aux agences qui savent qu'elles gâchent leurs demandes. Si ton problème c'est d'en trouver, je ne suis pas le bon interlocuteur.
           </p>
 
           <div class="about__cta">
-            <button id="about-projects" class="about__btn">VOIR LES PROJETS →</button>
-            <a href="mailto:oze.fr.contact@gmail.com" class="about__btn about__btn--ghost">ME CONTACTER</a>
+            <button id="about-projects" class="about__btn">VOIR LA PREUVE →</button>
+            <a href="mailto:oze.fr.contact@gmail.com" class="about__btn about__btn--ghost">CHIFFRER MA FUITE</a>
           </div>
         </div>
       </div>`;

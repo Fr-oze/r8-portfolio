@@ -30,10 +30,10 @@ export class Contact {
 
         <div class="contact__inner">
           <div class="contact__intro">
-            <span class="contact__tag">DISPONIBLE</span>
-            <h2 class="contact__lead">Un projet à lancer,<br /><span>ou un problème à régler</span>&nbsp;?</h2>
+            <span class="contact__tag">AUDIT FUITE · 1 000 €</span>
+            <h2 class="contact__lead">On chiffre ce que<br /><span>ta boîte mail te coûte</span>&nbsp;?</h2>
             <p class="contact__sub">
-              Écris moi, je réponds vite. Pas de formulaire interminable, tu parles direct à celui qui code.
+              Une heure de call. Je vais chercher les données dans tes canaux. Si le chiffre ne justifie pas le système, on s'arrête là.
             </p>
           </div>
 

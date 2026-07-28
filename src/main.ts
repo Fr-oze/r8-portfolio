@@ -44,7 +44,7 @@ const ui = new UI();
 // et le lien PROJECTS du nav.
 const projects = new Projects();
 document.getElementById("open-projects")?.addEventListener("click", () => projects.toggle());
-document.getElementById("open-projects-cta")?.addEventListener("click", () => projects.show());
+document.getElementById("open-projects-cta")?.addEventListener("click", () => contact.show());
 document.getElementById("quip-projects")?.addEventListener("click", () => projects.show());
 // Panneau About : portrait 3D data/wireframe + présentation.
 const about = new About();
