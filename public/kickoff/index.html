@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horizon · Préparer ton kickoff</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="description"
+      content="Ce qu'il faut préparer avant le kickoff Horizon : docs, acompte, déroulé de l'appel."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f4f5f7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f5f7;
+        --ink: #12141a;
+        --dim: #5c6570;
+        --line: #d5dae0;
+        --panel: #ffffff;
+        --soft: #3a424c;
+        --wash: #eef0f3;
+      }
+      * { margin: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Space Mono", ui-monospace, Menlo, monospace;
+        font-size: 15px;
+        line-height: 1.7;
+        letter-spacing: 0.02em;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; }
+      .wrap {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 48px 20px 96px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 16px;
+      }
+      h1 {
+        font-size: clamp(1.6rem, 5vw, 2.1rem);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+      .intro {
+        color: var(--dim);
+        margin-bottom: 36px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+      nav {
+        margin-bottom: 40px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+      nav p {
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 12px;
+      }
+      nav ul { margin: 0; padding-left: 1.2em; }
+      nav li { margin: 6px 0; }
+      nav a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      section {
+        margin-bottom: 44px;
+        padding-bottom: 36px;
+        border-bottom: 1px solid var(--line);
+      }
+      section:last-of-type { border-bottom: none; }
+      h2 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+      .who {
+        font-size: 12px;
+        color: var(--dim);
+        margin-bottom: 16px;
+      }
+      h3 {
+        font-size: 13px;
+        margin: 22px 0 10px;
+      }
+      ul, ol { padding-left: 1.25em; }
+      li { margin: 8px 0; }
+      li ul {
+        margin-top: 6px;
+        margin-bottom: 8px;
+      }
+      li ul li {
+        margin: 4px 0;
+        color: var(--dim);
+        font-size: 14px;
+      }
+      .note {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        background: #fff;
+        font-size: 14px;
+        color: var(--dim);
+      }
+      .note strong {
+        display: block;
+        color: var(--ink);
+        margin-bottom: 6px;
+      }
+      .box {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 16px 18px;
+        margin-top: 12px;
+      }
+      .box b {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+      .box ul { margin: 0; }
+      .board {
+        border: 1px solid var(--line);
+        background: #fff;
+        margin-top: 16px;
+      }
+      .board__bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+        background: var(--wash);
+        font-size: 13px;
+        color: var(--dim);
+      }
+      .board__bar b { color: var(--ink); }
+      .board__progress {
+        height: 4px;
+        background: var(--line);
+      }
+      .board__progress > i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--ink);
+        transition: width 0.2s ease;
+      }
+      .todo {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .todo > li { border-top: 1px solid var(--line); }
+      .todo > li:first-child { border-top: none; }
+      .todo label {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 12px;
+        padding: 14px 16px;
+        cursor: pointer;
+        align-items: start;
+      }
+      .todo label:hover { background: var(--wash); }
+      .todo input {
+        margin-top: 3px;
+        width: 16px;
+        height: 16px;
+        accent-color: #12141a;
+      }
+      .todo .t {
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .todo label:has(input:checked) .t {
+        text-decoration: line-through;
+        color: var(--dim);
+        font-weight: 400;
+      }
+      .todo .h {
+        margin: 8px 0 0;
+        padding-left: 1.1em;
+        color: var(--dim);
+        font-size: 13px;
+      }
+      .group {
+        padding: 14px 16px 4px;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+        border-top: 1px solid var(--line);
+        background: var(--wash);
+      }
+      .group:first-child { border-top: none; }
+      footer {
+        margin-top: 28px;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      code {
+        font-size: 0.92em;
+        background: var(--wash);
+        padding: 1px 5px;
+        border: 1px solid var(--line);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="eyebrow">Horizon Agency · pour toi</p>
+      <h1>Préparer ton kickoff</h1>
+      <p class="intro">
+        Cette page t’explique quoi préparer avant l’appel, ce qui se passe pendant,
+        et comment on branche le système sans te prendre tes mots de passe.
+      </p>
+
+      <nav>
+        <p>Sommaire</p>
+        <ul>
+          <li><a href="#clair">En clair</a></li>
+          <li><a href="#avant">Avant l’appel</a></li>
+          <li><a href="#docs">Docs à préparer</a></li>
+          <li><a href="#appel">Pendant l’appel</a></li>
+          <li><a href="#branchement">Où on branche</a></li>
+          <li><a href="#checklist">Ta checklist</a></li>
+        </ul>
+      </nav>
+
+      <section id="clair">
+        <h2>En clair</h2>
+        <p class="who">Pas besoin d’être technique</p>
+        <h3>Le système en 4 phrases</h3>
+        <ul>
+          <li>Tes leads remplissent un formulaire (pub / landing).</li>
+          <li>On crée un groupe WhatsApp dédié pour chaque lead.</li>
+          <li>Le lead reçoit un mail avec le lien pour rejoindre.</li>
+          <li>Ton commercial est alerté et parle dans le groupe.</li>
+        </ul>
+        <h3>Ce qu’on ne te demandera jamais</h3>
+        <ul>
+          <li>Ton mot de passe Facebook, Google, banque ou WhatsApp perso</li>
+          <li>De prendre le contrôle de ton WhatsApp perso</li>
+          <li>De comprendre le jargon technique</li>
+        </ul>
+        <h3>Ce qu’on te demandera</h3>
+        <ul>
+          <li>Des documents d’entreprise (pour WhatsApp Business)</li>
+          <li>D’inviter Horizon sur tes outils (en 2 clics)</li>
+          <li>De coller 1 ou 2 réglages simples si besoin (on te guide)</li>
+        </ul>
+      </section>
+
+      <section id="avant">
+        <h2>Avant l’appel</h2>
+        <p class="who">Le kickoff démarre l’installation. Ce n’est pas un call commercial.</p>
+        <ul>
+          <li>Tu reçois cette page + un lien de paiement d’acompte + le lien Zoom/Meet</li>
+          <li>Tu prépares les documents listés plus bas</li>
+          <li>
+            <strong>L’acompte confirme ton créneau</strong> et démarre le compteur
+            d’installation (7 jours)
+          </li>
+          <li>
+            Formulation : « Dès réception de l’acompte, on bloque ton créneau
+            kickoff et on démarre l’installation. »
+          </li>
+          <li>
+            Sur l’appel : toi (fondateur) + la personne qui a accès au domaine /
+            Facebook Business si ce n’est pas toi
+          </li>
+        </ul>
+        <div class="note">
+          <strong>Important</strong>
+          Sans acompte, le créneau kickoff n’est pas confirmé. On peut échanger
+          par mail, mais on ne démarre pas l’install.
+        </div>
+      </section>
+
+      <section id="docs">
+        <h2>Docs à préparer (avant l’appel)</h2>
+        <p class="who">Sinon on perd 45 minutes à chercher des PDF</p>
+        <ul>
+          <li>
+            Document officiel de la société
+            <ul>
+              <li>ex. Certificate LLC / lettre IRS 147C</li>
+            </ul>
+          </li>
+          <li>
+            Relevé bancaire business ou preuve d’ownership
+            <ul>
+              <li>avec la même adresse que tu mettras dans Meta</li>
+            </ul>
+          </li>
+          <li>
+            Accès possible le jour J à :
+            <ul>
+              <li>Meta Business (Facebook Business)</li>
+              <li>ton DNS / Cloudflare / hébergeur de domaine</li>
+              <li>tes formulaires (systeme.io ou autre)</li>
+            </ul>
+          </li>
+          <li>Numéro WhatsApp Business prévu (idéalement dédié, pas ton perso)</li>
+          <li>Qui reçoit les alertes leads (prénom + téléphone du commercial)</li>
+        </ul>
+        <div class="note">
+          <strong>Astuce adresse</strong>
+          Si ton papier LLC et ta banque ont 2 adresses différentes, on utilise
+          l’adresse de la banque dans Meta.
+        </div>
+      </section>
+
+      <section id="appel">
+        <h2>Pendant l’appel (45–60 min)</h2>
+        <p class="who">Ordre fixe. On ne dérive pas sur la strat pub.</p>
+        <ol>
+          <li><strong>5 min</strong> · Objectif : zéro lead mort, 1 groupe WhatsApp / lead</li>
+          <li><strong>10 min</strong> · D’où viennent tes leads aujourd’hui, qui répond</li>
+          <li><strong>15 min</strong> · Accès : invitations (sans mots de passe)</li>
+          <li><strong>15 min</strong> · WhatsApp Business : docs / réglages</li>
+          <li><strong>10 min</strong> · Branchement : systeme.io / domaine / sous-domaine</li>
+          <li><strong>5 min</strong> · On coche la checklist, on fixe la suite</li>
+        </ol>
+        <h3>À la fin tu dois savoir</h3>
+        <ul>
+          <li>Qui fait quoi d’ici 48h (toi vs Horizon)</li>
+          <li>Sur quelle URL part le formulaire</li>
+          <li>Quand tu reçois le premier test live</li>
+        </ul>
+      </section>
+
+      <section id="branchement">
+        <h2>Où on branche le tunnel</h2>
+        <p class="who">On choisit le chemin le plus simple pour toi</p>
+
+        <div class="box">
+          <b>Cas A · Tes formulaires sont sur systeme.io</b>
+          <ul>
+            <li>On garde systeme.io</li>
+            <li>Tu invites Horizon (membre) ou on branche un webhook</li>
+            <li>Chaque inscription → groupe WhatsApp + mail</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <b>Cas B · Ton domaine est géré ailleurs</b>
+          <ul>
+            <li>Tu restes propriétaire du domaine</li>
+            <li>On t’envoie 1–3 lignes DNS à coller (TXT / CNAME)</li>
+            <li>Ou tu invites Horizon sur le DNS le temps de l’install</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <b>Cas C · Ton domaine principal sert déjà aux landing pages</b>
+          <ul>
+            <li>On ne touche pas à ton domaine principal</li>
+            <li>
+              On utilise un sous-domaine : <code>start.tonagence.com</code> ou
+              <code>go.tonagence.com</code>
+            </li>
+            <li>Tu crées un CNAME (on t’envoie la valeur). ~2 minutes</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <b>Cas D · Rien n’est prêt côté DNS</b>
+          <ul>
+            <li>On démarre sur un domaine provisoire</li>
+            <li>Dès que ton DNS est prêt, on bascule sur start.tondomaine.com</li>
+            <li>On ne bloque pas les 7 jours pour ça</li>
+          </ul>
+        </div>
+
+        <div class="note">
+          <strong>Décision au kickoff</strong>
+          On choisit A / B / C / D ensemble en 5 minutes. Pas besoin de décider seul avant.
+        </div>
+      </section>
+
+      <section id="checklist">
+        <h2>Ta checklist</h2>
+        <p class="who">Coche au fur et à mesure. Si Horizon t’a envoyé un lien perso, on voit la même progression.</p>
+
+        <div class="board" id="sop-board">
+          <div class="board__bar">
+            <span><b id="board-count">0/11</b> faits · <span id="sync-pill">Local</span> <span id="board-client"></span></span>
+          </div>
+          <div class="board__progress" aria-hidden="true"><i id="board-bar"></i></div>
+
+          <div class="group">Entreprise / Meta</div>
+          <ul class="todo">
+            <li>
+              <label>
+                <input type="checkbox" data-id="meta-portfolio" />
+                <span>
+                  <span class="t">Business Portfolio créé au nom de la société</span>
+                </span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="meta-infos" />
+                <span>
+                  <span class="t">Infos entreprise remplies</span>
+                  <ul class="h">
+                    <li>Nom légal, adresse banque, téléphone, site</li>
+                  </ul>
+                </span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="meta-docs" />
+                <span>
+                  <span class="t">Documents de vérification uploadés</span>
+                </span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="meta-review" />
+                <span>
+                  <span class="t">Vérification en cours ou validée</span>
+                </span>
+              </label>
+            </li>
+          </ul>
+
+          <div class="group">WhatsApp Business</div>
+          <ul class="todo">
+            <li>
+              <label>
+                <input type="checkbox" data-id="wa-channel" />
+                <span><span class="t">Channel WhatsApp ouvert</span></span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="wa-webhook" />
+                <span><span class="t">Webhook collé (URL fournie par Horizon)</span></span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="wa-display" />
+                <span><span class="t">Nom d’affichage WhatsApp demandé</span></span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="wa-templates" />
+                <span><span class="t">Template d’invitation soumis</span></span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="wa-groups" />
+                <span><span class="t">Demande Groups API / support envoyée</span></span>
+              </label>
+            </li>
+          </ul>
+
+          <div class="group">Accès + contexte</div>
+          <ul class="todo">
+            <li>
+              <label>
+                <input type="checkbox" data-id="access-invite" />
+                <span><span class="t">Horizon invité sur tes outils (sans mot de passe)</span></span>
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="checkbox" data-id="access-context" />
+                <span>
+                  <span class="t">Contexte commercial envoyé</span>
+                  <ul class="h">
+                    <li>Qui reçoit les notifs, pipeline, relances, ton des mails</li>
+                  </ul>
+                </span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <footer>horizon-agency.co/kickoff</footer>
+    </div>
+
+    <script>
+(function () {
+  const boxes = [...document.querySelectorAll('#sop-board input[data-id]')];
+  const countEl = document.getElementById('board-count');
+  const barEl = document.getElementById('board-bar');
+  const pill = document.getElementById('sync-pill');
+  const clientEl = document.getElementById('board-client');
+  const params = new URLSearchParams(location.search);
+  let checklistId = params.get('c') || '';
+  let saveTimer = null;
+  const LOCAL_KEY = 'horizon-kickoff-checks-v1';
+
+  function readChecks() {
+    const out = {};
+    boxes.forEach((b) => { out[b.dataset.id] = !!b.checked; });
+    return out;
+  }
+
+  function applyChecks(map) {
+    boxes.forEach((b) => { b.checked = !!(map && map[b.dataset.id]); });
+    renderProgress();
+  }
+
+  function renderProgress() {
+    const total = boxes.length;
+    const done = boxes.filter((b) => b.checked).length;
+    countEl.textContent = done + '/' + total;
+    barEl.style.width = Math.round((done / Math.max(total, 1)) * 100) + '%';
+  }
+
+  function setSync(on, name) {
+    pill.textContent = on ? 'Sync' : 'Local';
+    clientEl.textContent = name ? ' · ' + name : '';
+  }
+
+  function persistLocal() {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(readChecks()));
+  }
+
+  async function persistRemote() {
+    if (!checklistId) return;
+    try {
+      await fetch('/api/sop/' + checklistId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ checks: readChecks() }),
+      });
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  function scheduleSave() {
+    renderProgress();
+    persistLocal();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(persistRemote, 350);
+  }
+
+  boxes.forEach((b) => b.addEventListener('change', scheduleSave));
+
+  async function boot() {
+    if (checklistId) {
+      try {
+        const res = await fetch('/api/sop/' + checklistId);
+        const data = await res.json().catch(() => null);
+        if (res.ok && data?.ok) {
+          applyChecks(data.checks || {});
+          setSync(true, data.client_name || '');
+          return;
+        }
+      } catch (e) {}
+    }
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY);
+      if (raw) applyChecks(JSON.parse(raw));
+      else renderProgress();
+    } catch {
+      renderProgress();
+    }
+    setSync(false, '');
+  }
+
+  boot();
+})();
+    </script>
+  </body>
+</html>

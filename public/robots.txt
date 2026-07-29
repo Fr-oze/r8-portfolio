@@ -4,5 +4,7 @@ Disallow: /sop
 Disallow: /sop/
 Disallow: /SOP
 Disallow: /SOP/
+Disallow: /kickoff
+Disallow: /kickoff/
 Disallow: /branding
 Disallow: /branding/
