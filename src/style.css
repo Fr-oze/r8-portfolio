@@ -3078,3 +3078,31 @@ body.past-hero .ui__nav {
     font-size: 12px;
   }
 }
+
+.site-legal {
+  position: relative;
+  z-index: 2;
+  padding: 28px 24px calc(28px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+.site-legal__inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+}
+.site-legal a {
+  color: var(--dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.site-legal a:hover {
+  color: var(--ink);
+}
+
