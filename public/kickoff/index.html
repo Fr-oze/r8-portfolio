@@ -500,7 +500,7 @@
           <div class="panel__head">On te demandera <span>toi</span></div>
           <div class="panel__body">
             <ul>
-              <li>Des documents d’entreprise (WhatsApp Business)</li>
+              <li>Des documents d’entreprise (pour la verif WhatsApp Business)</li>
               <li>D’inviter Horizon sur tes outils (en 2 clics)</li>
               <li>De coller 1 ou 2 réglages simples si besoin</li>
             </ul>
@@ -540,38 +540,107 @@
       <section id="docs" style="animation-delay: 0.1s">
         <p class="sec-tag">03 · Docs</p>
         <h2>À avoir sous la main</h2>
-        <p class="lede">Sinon on perd 45 minutes à chercher des PDF.</p>
+        <p class="lede">
+          Des documents <strong>d’entreprise</strong> uniquement. Pas de pièce
+          d’identité perso, pas de relevé perso.
+        </p>
+
         <div class="panel">
-          <div class="panel__body" style="padding-top: 18px">
+          <div class="panel__head">À quoi ça sert <span>transparence</span></div>
+          <div class="panel__body">
             <ul>
               <li>
-                <strong>Document officiel de la société</strong>
-                (Certificate LLC / lettre IRS 147C…)
+                <strong>Meta / WhatsApp</strong> vérifie que le compte Business
+                appartient à une vraie société (anti-fraude).
               </li>
               <li>
-                <strong>Relevé bancaire business</strong> ou preuve d’ownership
-                (même adresse que dans Meta)
+                Sans ça, pas de WhatsApp Business API fiable : pas de groupes par
+                lead, pas de templates.
               </li>
               <li>
-                <strong>Accès le jour J</strong> : Meta Business, DNS / domaine,
-                formulaires (systeme.io ou autre)
+                Les docs vont dans le tunnel de vérification Meta / 360dialog.
+                Horizon ne les revend pas, ne les publie pas, ne s’en sert pas
+                pour autre chose que cette verif.
               </li>
               <li>
-                <strong>Numéro WhatsApp Business</strong> prévu (idéalement
-                dédié)
-              </li>
-              <li>
-                <strong>Qui reçoit les alertes</strong> : prénom + téléphone du
-                commercial
+                Tu peux flouter IBAN / soldes inutiles. On a besoin du
+                <strong>nom légal</strong> + <strong>adresse</strong> (et
+                éventuellement le n° d’entreprise).
               </li>
             </ul>
           </div>
         </div>
+
+        <div class="panel">
+          <div class="panel__head">1 · Preuve que la société existe <span>selon ton statut</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>
+                <strong>France · SAS / SARL / EURL…</strong> : extrait Kbis
+                (moins de 3 mois) ou avis Sirene / INSEE
+              </li>
+              <li>
+                <strong>France · micro-entreprise</strong> : avis de situation
+                SIREN / URSSAF ou attestation INSEE
+              </li>
+              <li>
+                <strong>Suisse</strong> : extrait du registre du commerce
+              </li>
+              <li>
+                <strong>Andorre</strong> : certificat d’inscription / docs
+                registre commercial
+              </li>
+              <li>
+                <strong>USA · LLC / Corp</strong> : Certificate of Formation /
+                Articles + lettre IRS EIN (147C) si tu l’as
+              </li>
+              <li>
+                <strong>Autre pays</strong> : équivalent officiel
+                « certificat d’immatriculation » / tax ID délivré par
+                l’administration
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">2 · Preuve d’adresse / ownership <span>souvent utile</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>
+                Relevé bancaire <strong>business</strong> récent (nom de la
+                société + adresse)
+              </li>
+              <li>
+                Ou facture pro (électricité / internet / téléphone) au nom de
+                la société
+              </li>
+              <li>
+                Si le doc « existence » a déjà le nom + l’adresse, un seul
+                fichier peut suffire
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">3 · Le jour J <span>accès</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>Meta Business (Facebook Business)</li>
+              <li>DNS / domaine (Cloudflare, hébergeur…)</li>
+              <li>Formulaires (systeme.io ou autre)</li>
+              <li>Numéro WhatsApp Business prévu (idéalement dédié)</li>
+              <li>Qui reçoit les alertes : prénom + téléphone du commercial</li>
+            </ul>
+          </div>
+        </div>
+
         <div class="note">
           <strong>Astuce adresse</strong>
           <p>
-            Si ton papier LLC et ta banque ont 2 adresses différentes, on
-            utilise l’adresse de la banque.
+            Si ton papier officiel et ta banque ont 2 adresses différentes, on
+            utilise l’adresse de la banque dans Meta.
           </p>
         </div>
       </section>
@@ -644,8 +713,8 @@
         <p class="sec-tag">06 · Checklist</p>
         <h2>Coche ce qui est fait</h2>
         <p class="lede">
-          Au fur et à mesure. Si Horizon t’a envoyé un lien perso, on voit la
-          même progression.
+          Au fur et à mesure. Si Horizon t’a envoyé ton lien de checklist, on
+          voit la même progression.
         </p>
 
         <div class="board" id="sop-board">
