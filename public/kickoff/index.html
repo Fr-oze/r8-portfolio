@@ -7,7 +7,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <meta
       name="description"
-      content="Ce qu'il faut préparer avant le kickoff Horizon : docs, acompte, déroulé de l'appel."
+      content="Prépare ton kickoff Horizon : docs, acompte, déroulé, checklist interactive."
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#f4f5f7" />
@@ -26,6 +26,7 @@
         --panel: #ffffff;
         --soft: #3a424c;
         --wash: #eef0f3;
+        --ok: #2f855a;
       }
       * { margin: 0; box-sizing: border-box; }
       html { scroll-behavior: smooth; }
@@ -33,382 +34,630 @@
         background: var(--bg);
         color: var(--ink);
         font-family: "Space Mono", ui-monospace, Menlo, monospace;
-        font-size: 15px;
-        line-height: 1.7;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.03em;
+        line-height: 1.65;
         -webkit-font-smoothing: antialiased;
       }
+      ::selection { background: var(--ink); color: var(--bg); }
       a { color: inherit; }
-      .wrap {
-        max-width: 640px;
-        margin: 0 auto;
-        padding: 48px 20px 96px;
+
+      .grid-bg {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+        opacity: 0.55;
       }
-      .eyebrow {
+
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 20px 120px;
+      }
+
+      /* HERO */
+      .hero {
+        padding: 56px 0 40px;
+        animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 36px;
+      }
+      .brand__mark {
         font-size: 11px;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .brand__tag {
+        font-size: 10px;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--dim);
-        margin-bottom: 16px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 8px 10px;
       }
-      h1 {
-        font-size: clamp(1.6rem, 5vw, 2.1rem);
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        margin-bottom: 12px;
+      .hero h1 {
+        font-size: clamp(2.2rem, 8vw, 3.6rem);
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        margin-bottom: 18px;
+        max-width: 10ch;
       }
-      .intro {
+      .hero__lead {
+        max-width: 34rem;
+        font-size: 15px;
+        color: var(--soft);
+        margin-bottom: 28px;
+      }
+      .hero__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 10px 12px;
         color: var(--dim);
-        margin-bottom: 36px;
-        padding-bottom: 28px;
-        border-bottom: 1px solid var(--line);
       }
-      nav {
-        margin-bottom: 40px;
-        padding-bottom: 28px;
+      .chip b { color: var(--ink); }
+
+      /* STICKY PROGRESS */
+      .progress-dock {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        margin: 0 -20px 36px;
+        padding: 0 20px;
+        background: rgba(244, 245, 247, 0.92);
+        backdrop-filter: blur(10px);
         border-bottom: 1px solid var(--line);
+        animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
       }
-      nav p {
+      .progress-dock__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 0 12px;
+      }
+      .progress-dock__label {
         font-size: 11px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--dim);
-        margin-bottom: 12px;
       }
-      nav ul { margin: 0; padding-left: 1.2em; }
-      nav li { margin: 6px 0; }
-      nav a {
-        text-decoration: underline;
-        text-underline-offset: 3px;
-      }
-      section {
-        margin-bottom: 44px;
-        padding-bottom: 36px;
-        border-bottom: 1px solid var(--line);
-      }
-      section:last-of-type { border-bottom: none; }
-      h2 {
-        font-size: 1.1rem;
-        margin-bottom: 8px;
-      }
-      .who {
-        font-size: 12px;
-        color: var(--dim);
-        margin-bottom: 16px;
-      }
-      h3 {
-        font-size: 13px;
-        margin: 22px 0 10px;
-      }
-      ul, ol { padding-left: 1.25em; }
-      li { margin: 8px 0; }
-      li ul {
-        margin-top: 6px;
-        margin-bottom: 8px;
-      }
-      li ul li {
-        margin: 4px 0;
-        color: var(--dim);
+      .progress-dock__label b {
+        color: var(--ink);
         font-size: 14px;
+        letter-spacing: 0;
+        text-transform: none;
       }
-      .note {
-        margin-top: 16px;
-        padding: 14px 16px;
+      .progress-dock__sync {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .progress-dock__sync.on { color: var(--ok); }
+      .progress-track {
+        height: 3px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .progress-track > i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: var(--ink);
+        transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* NAV PILLS */
+      .toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 48px;
+        animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+      }
+      .toc a {
+        text-decoration: none;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         border: 1px solid var(--line);
-        background: #fff;
-        font-size: 14px;
+        background: var(--panel);
+        padding: 10px 12px;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+      }
+      .toc a:hover {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+
+      section {
+        margin-bottom: 56px;
+        animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      .sec-tag {
+        font-size: 10px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
         color: var(--dim);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sec-tag::before {
+        content: "";
+        width: 20px;
+        height: 1px;
+        background: var(--ink);
+      }
+      h2 {
+        font-size: clamp(1.4rem, 4vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin-bottom: 10px;
+      }
+      .lede {
+        color: var(--soft);
+        font-size: 14px;
+        max-width: 36rem;
+        margin-bottom: 22px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+      .panel + .panel { margin-top: 12px; }
+      .panel__head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+        background: var(--wash);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .panel__head span {
+        font-weight: 400;
+        color: var(--dim);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .panel__body { padding: 18px 18px 8px; }
+      .panel__body ul,
+      .panel__body ol {
+        margin: 0 0 12px;
+        padding-left: 1.2em;
+      }
+      .panel__body li { margin: 8px 0; font-size: 14px; color: var(--soft); }
+      .panel__body li strong { color: var(--ink); font-weight: 700; }
+
+      .note {
+        margin-top: 14px;
+        border: 1px solid var(--ink);
+        background: #fff;
+        padding: 16px 18px;
       }
       .note strong {
         display: block;
-        color: var(--ink);
-        margin-bottom: 6px;
-      }
-      .box {
-        border: 1px solid var(--line);
-        background: var(--panel);
-        padding: 16px 18px;
-        margin-top: 12px;
-      }
-      .box b {
-        display: block;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
         margin-bottom: 8px;
-        font-size: 14px;
       }
-      .box ul { margin: 0; }
+      .note p { font-size: 14px; color: var(--soft); }
+
+      /* CHECKLIST */
       .board {
+        background: var(--panel);
         border: 1px solid var(--line);
-        background: #fff;
-        margin-top: 16px;
+        overflow: hidden;
       }
-      .board__bar {
+      .board__intro {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 10px 20px;
         align-items: center;
         justify-content: space-between;
-        padding: 14px 16px;
-        border-bottom: 1px solid var(--line);
-        background: var(--wash);
+        background: linear-gradient(180deg, #fff 0%, var(--wash) 100%);
+      }
+      .board__intro p {
         font-size: 13px;
-        color: var(--dim);
+        color: var(--soft);
+        max-width: 28rem;
       }
-      .board__bar b { color: var(--ink); }
-      .board__progress {
-        height: 4px;
-        background: var(--line);
-      }
-      .board__progress > i {
-        display: block;
-        height: 100%;
-        width: 0;
-        background: var(--ink);
-        transition: width 0.2s ease;
-      }
-      .todo {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-      .todo > li { border-top: 1px solid var(--line); }
-      .todo > li:first-child { border-top: none; }
-      .todo label {
-        display: grid;
-        grid-template-columns: 22px 1fr;
-        gap: 12px;
-        padding: 14px 16px;
-        cursor: pointer;
-        align-items: start;
-      }
-      .todo label:hover { background: var(--wash); }
-      .todo input {
-        margin-top: 3px;
-        width: 16px;
-        height: 16px;
-        accent-color: #12141a;
-      }
-      .todo .t {
+      .board__pct {
+        font-size: 28px;
         font-weight: 700;
-        font-size: 14px;
+        letter-spacing: -0.03em;
+        line-height: 1;
       }
-      .todo label:has(input:checked) .t {
-        text-decoration: line-through;
+      .board__pct small {
+        display: block;
+        margin-top: 6px;
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
         color: var(--dim);
         font-weight: 400;
       }
-      .todo .h {
-        margin: 8px 0 0;
-        padding-left: 1.1em;
-        color: var(--dim);
-        font-size: 13px;
-      }
+
       .group {
-        padding: 14px 16px 4px;
-        font-size: 11px;
-        letter-spacing: 0.16em;
+        padding: 14px 20px 8px;
+        font-size: 10px;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
         color: var(--dim);
         border-top: 1px solid var(--line);
         background: var(--wash);
       }
-      .group:first-child { border-top: none; }
+      .group:first-of-type { border-top: none; }
+
+      .todo { list-style: none; margin: 0; padding: 0; }
+      .todo > li { border-top: 1px solid var(--line); }
+      .todo label {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 14px;
+        align-items: start;
+        padding: 16px 20px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .todo label:hover { background: rgba(18, 20, 26, 0.03); }
+      .todo input {
+        appearance: none;
+        width: 22px;
+        height: 22px;
+        margin-top: 1px;
+        border: 1.5px solid var(--ink);
+        background: #fff;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      }
+      .todo input::after {
+        content: "";
+        width: 10px;
+        height: 5px;
+        border-left: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+        transform: rotate(-45deg) translateY(-1px);
+      }
+      .todo input:checked {
+        background: var(--ink);
+        border-color: var(--ink);
+        animation: pop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .todo input:checked::after {
+        border-left-color: #fff;
+        border-bottom-color: #fff;
+      }
+      .todo .t {
+        display: block;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.35;
+        transition: color 0.2s, text-decoration-color 0.2s;
+      }
+      .todo label:has(input:checked) .t {
+        color: var(--dim);
+        font-weight: 400;
+        text-decoration: line-through;
+        text-decoration-thickness: 1px;
+      }
+      .todo .h {
+        margin: 8px 0 0;
+        padding-left: 1.05em;
+        color: var(--dim);
+        font-size: 13px;
+      }
+      .todo .h li { margin: 4px 0; }
+
+      .done-banner {
+        display: none;
+        margin-top: 14px;
+        padding: 18px 20px;
+        border: 1px solid var(--ok);
+        background: #fff;
+        color: var(--ok);
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .done-banner.show { display: block; }
+
       footer {
-        margin-top: 28px;
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
         font-size: 11px;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--dim);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
       }
-      code {
-        font-size: 0.92em;
-        background: var(--wash);
-        padding: 1px 5px;
-        border: 1px solid var(--line);
+
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes pop {
+        0% { transform: scale(0.85); }
+        60% { transform: scale(1.08); }
+        100% { transform: scale(1); }
+      }
+
+      @media (max-width: 560px) {
+        .hero { padding-top: 36px; }
+        .hero h1 { font-size: 2.1rem; }
+        .todo label { padding: 14px 16px; }
+        .board__intro { padding: 16px; }
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <p class="eyebrow">Horizon Agency · pour toi</p>
-      <h1>Préparer ton kickoff</h1>
-      <p class="intro">
-        Cette page t’explique quoi préparer avant l’appel, ce qui se passe pendant,
-        et comment on branche le système sans te prendre tes mots de passe.
-      </p>
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="page">
+      <header class="hero">
+        <div class="brand">
+          <div class="brand__mark">Horizon</div>
+          <div class="brand__tag" id="client-tag">Kickoff</div>
+        </div>
+        <h1>Prépare ton kickoff</h1>
+        <p class="hero__lead">
+          Tout ce qu’il te faut avant l’appel, ce qui se passe pendant,
+          et une checklist à cocher. Simple. Pas de jargon.
+        </p>
+        <div class="hero__meta">
+          <span class="chip">Durée <b>45–60 min</b></span>
+          <span class="chip">Préparer <b>~20 min</b></span>
+          <span class="chip">Install <b>7 jours</b></span>
+        </div>
+      </header>
 
-      <nav>
-        <p>Sommaire</p>
-        <ul>
-          <li><a href="#clair">En clair</a></li>
-          <li><a href="#avant">Avant l’appel</a></li>
-          <li><a href="#docs">Docs à préparer</a></li>
-          <li><a href="#appel">Pendant l’appel</a></li>
-          <li><a href="#branchement">Où on branche</a></li>
-          <li><a href="#checklist">Ta checklist</a></li>
-        </ul>
+      <div class="progress-dock" id="progress-dock">
+        <div class="progress-dock__inner">
+          <div class="progress-dock__label">
+            Progression · <b id="board-count">0/11</b>
+          </div>
+          <div class="progress-dock__sync" id="sync-pill">Sauvegarde locale</div>
+        </div>
+        <div class="progress-track"><i id="board-bar"></i></div>
+      </div>
+
+      <nav class="toc" aria-label="Sommaire">
+        <a href="#clair">En clair</a>
+        <a href="#avant">Avant l’appel</a>
+        <a href="#docs">Docs</a>
+        <a href="#appel">Pendant</a>
+        <a href="#branchement">Branchement</a>
+        <a href="#checklist">Checklist</a>
       </nav>
 
-      <section id="clair">
-        <h2>En clair</h2>
-        <p class="who">Pas besoin d’être technique</p>
-        <h3>Le système en 4 phrases</h3>
-        <ul>
-          <li>Tes leads remplissent un formulaire (pub / landing).</li>
-          <li>On crée un groupe WhatsApp dédié pour chaque lead.</li>
-          <li>Le lead reçoit un mail avec le lien pour rejoindre.</li>
-          <li>Ton commercial est alerté et parle dans le groupe.</li>
-        </ul>
-        <h3>Ce qu’on ne te demandera jamais</h3>
-        <ul>
-          <li>Ton mot de passe Facebook, Google, banque ou WhatsApp perso</li>
-          <li>De prendre le contrôle de ton WhatsApp perso</li>
-          <li>De comprendre le jargon technique</li>
-        </ul>
-        <h3>Ce qu’on te demandera</h3>
-        <ul>
-          <li>Des documents d’entreprise (pour WhatsApp Business)</li>
-          <li>D’inviter Horizon sur tes outils (en 2 clics)</li>
-          <li>De coller 1 ou 2 réglages simples si besoin (on te guide)</li>
-        </ul>
+      <section id="clair" style="animation-delay: 0.05s">
+        <p class="sec-tag">01 · En clair</p>
+        <h2>Pas besoin d’être technique</h2>
+        <p class="lede">On installe le système. Toi tu prépares quelques trucs. On te guide.</p>
+
+        <div class="panel">
+          <div class="panel__head">Le système <span>4 phrases</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>Tes leads remplissent un formulaire.</li>
+              <li>On crée un groupe WhatsApp dédié pour chaque lead.</li>
+              <li>Le lead reçoit un mail avec le lien pour rejoindre.</li>
+              <li>Ton commercial est alerté et parle dans le groupe.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">On ne te demandera jamais <span>interdit</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>Ton mot de passe Facebook, Google, banque ou WhatsApp perso</li>
+              <li>De prendre le contrôle de ton WhatsApp perso</li>
+              <li>De comprendre le jargon technique</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">On te demandera <span>toi</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>Des documents d’entreprise (WhatsApp Business)</li>
+              <li>D’inviter Horizon sur tes outils (en 2 clics)</li>
+              <li>De coller 1 ou 2 réglages simples si besoin</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <section id="avant">
-        <h2>Avant l’appel</h2>
-        <p class="who">Le kickoff démarre l’installation. Ce n’est pas un call commercial.</p>
-        <ul>
-          <li>Tu reçois cette page + un lien de paiement d’acompte + le lien Zoom/Meet</li>
-          <li>Tu prépares les documents listés plus bas</li>
-          <li>
-            <strong>L’acompte confirme ton créneau</strong> et démarre le compteur
-            d’installation (7 jours)
-          </li>
-          <li>
-            Formulation : « Dès réception de l’acompte, on bloque ton créneau
-            kickoff et on démarre l’installation. »
-          </li>
-          <li>
-            Sur l’appel : toi (fondateur) + la personne qui a accès au domaine /
-            Facebook Business si ce n’est pas toi
-          </li>
-        </ul>
+      <section id="avant" style="animation-delay: 0.08s">
+        <p class="sec-tag">02 · Avant l’appel</p>
+        <h2>Prépare, puis on démarre</h2>
+        <p class="lede">Le kickoff démarre l’installation. Ce n’est pas un call commercial.</p>
+        <div class="panel">
+          <div class="panel__body" style="padding-top: 18px">
+            <ul>
+              <li>Tu reçois cette page + le lien de paiement d’acompte + le Zoom/Meet</li>
+              <li>Tu prépares les documents listés plus bas</li>
+              <li>
+                <strong>L’acompte confirme ton créneau</strong> et démarre le
+                compteur d’installation (7 jours)
+              </li>
+              <li>
+                Sur l’appel : toi + la personne qui a accès au domaine / Facebook
+                Business si ce n’est pas toi
+              </li>
+            </ul>
+          </div>
+        </div>
         <div class="note">
           <strong>Important</strong>
-          Sans acompte, le créneau kickoff n’est pas confirmé. On peut échanger
-          par mail, mais on ne démarre pas l’install.
+          <p>
+            Sans acompte, le créneau n’est pas confirmé. On peut échanger par
+            mail, mais on ne démarre pas l’install.
+          </p>
         </div>
       </section>
 
-      <section id="docs">
-        <h2>Docs à préparer (avant l’appel)</h2>
-        <p class="who">Sinon on perd 45 minutes à chercher des PDF</p>
-        <ul>
-          <li>
-            Document officiel de la société
+      <section id="docs" style="animation-delay: 0.1s">
+        <p class="sec-tag">03 · Docs</p>
+        <h2>À avoir sous la main</h2>
+        <p class="lede">Sinon on perd 45 minutes à chercher des PDF.</p>
+        <div class="panel">
+          <div class="panel__body" style="padding-top: 18px">
             <ul>
-              <li>ex. Certificate LLC / lettre IRS 147C</li>
+              <li>
+                <strong>Document officiel de la société</strong>
+                (Certificate LLC / lettre IRS 147C…)
+              </li>
+              <li>
+                <strong>Relevé bancaire business</strong> ou preuve d’ownership
+                (même adresse que dans Meta)
+              </li>
+              <li>
+                <strong>Accès le jour J</strong> : Meta Business, DNS / domaine,
+                formulaires (systeme.io ou autre)
+              </li>
+              <li>
+                <strong>Numéro WhatsApp Business</strong> prévu (idéalement
+                dédié)
+              </li>
+              <li>
+                <strong>Qui reçoit les alertes</strong> : prénom + téléphone du
+                commercial
+              </li>
             </ul>
-          </li>
-          <li>
-            Relevé bancaire business ou preuve d’ownership
-            <ul>
-              <li>avec la même adresse que tu mettras dans Meta</li>
-            </ul>
-          </li>
-          <li>
-            Accès possible le jour J à :
-            <ul>
-              <li>Meta Business (Facebook Business)</li>
-              <li>ton DNS / Cloudflare / hébergeur de domaine</li>
-              <li>tes formulaires (systeme.io ou autre)</li>
-            </ul>
-          </li>
-          <li>Numéro WhatsApp Business prévu (idéalement dédié, pas ton perso)</li>
-          <li>Qui reçoit les alertes leads (prénom + téléphone du commercial)</li>
-        </ul>
+          </div>
+        </div>
         <div class="note">
           <strong>Astuce adresse</strong>
-          Si ton papier LLC et ta banque ont 2 adresses différentes, on utilise
-          l’adresse de la banque dans Meta.
+          <p>
+            Si ton papier LLC et ta banque ont 2 adresses différentes, on
+            utilise l’adresse de la banque.
+          </p>
         </div>
       </section>
 
-      <section id="appel">
-        <h2>Pendant l’appel (45–60 min)</h2>
-        <p class="who">Ordre fixe. On ne dérive pas sur la strat pub.</p>
-        <ol>
-          <li><strong>5 min</strong> · Objectif : zéro lead mort, 1 groupe WhatsApp / lead</li>
-          <li><strong>10 min</strong> · D’où viennent tes leads aujourd’hui, qui répond</li>
-          <li><strong>15 min</strong> · Accès : invitations (sans mots de passe)</li>
-          <li><strong>15 min</strong> · WhatsApp Business : docs / réglages</li>
-          <li><strong>10 min</strong> · Branchement : systeme.io / domaine / sous-domaine</li>
-          <li><strong>5 min</strong> · On coche la checklist, on fixe la suite</li>
-        </ol>
-        <h3>À la fin tu dois savoir</h3>
-        <ul>
-          <li>Qui fait quoi d’ici 48h (toi vs Horizon)</li>
-          <li>Sur quelle URL part le formulaire</li>
-          <li>Quand tu reçois le premier test live</li>
-        </ul>
-      </section>
-
-      <section id="branchement">
-        <h2>Où on branche le tunnel</h2>
-        <p class="who">On choisit le chemin le plus simple pour toi</p>
-
-        <div class="box">
-          <b>Cas A · Tes formulaires sont sur systeme.io</b>
-          <ul>
-            <li>On garde systeme.io</li>
-            <li>Tu invites Horizon (membre) ou on branche un webhook</li>
-            <li>Chaque inscription → groupe WhatsApp + mail</li>
-          </ul>
-        </div>
-
-        <div class="box">
-          <b>Cas B · Ton domaine est géré ailleurs</b>
-          <ul>
-            <li>Tu restes propriétaire du domaine</li>
-            <li>On t’envoie 1–3 lignes DNS à coller (TXT / CNAME)</li>
-            <li>Ou tu invites Horizon sur le DNS le temps de l’install</li>
-          </ul>
-        </div>
-
-        <div class="box">
-          <b>Cas C · Ton domaine principal sert déjà aux landing pages</b>
-          <ul>
-            <li>On ne touche pas à ton domaine principal</li>
-            <li>
-              On utilise un sous-domaine : <code>start.tonagence.com</code> ou
-              <code>go.tonagence.com</code>
-            </li>
-            <li>Tu crées un CNAME (on t’envoie la valeur). ~2 minutes</li>
-          </ul>
-        </div>
-
-        <div class="box">
-          <b>Cas D · Rien n’est prêt côté DNS</b>
-          <ul>
-            <li>On démarre sur un domaine provisoire</li>
-            <li>Dès que ton DNS est prêt, on bascule sur start.tondomaine.com</li>
-            <li>On ne bloque pas les 7 jours pour ça</li>
-          </ul>
-        </div>
-
-        <div class="note">
-          <strong>Décision au kickoff</strong>
-          On choisit A / B / C / D ensemble en 5 minutes. Pas besoin de décider seul avant.
+      <section id="appel" style="animation-delay: 0.12s">
+        <p class="sec-tag">04 · Pendant</p>
+        <h2>Déroulement (45–60 min)</h2>
+        <p class="lede">Ordre fixe. On ne dérive pas sur la pub.</p>
+        <div class="panel">
+          <div class="panel__body" style="padding-top: 18px">
+            <ol>
+              <li><strong>5 min</strong> · Objectif : 1 groupe WhatsApp / lead</li>
+              <li><strong>10 min</strong> · D’où viennent tes leads, qui répond</li>
+              <li><strong>15 min</strong> · Accès : invitations (sans mots de passe)</li>
+              <li><strong>15 min</strong> · WhatsApp Business : docs / réglages</li>
+              <li><strong>10 min</strong> · Branchement : systeme.io / domaine / sous-domaine</li>
+              <li><strong>5 min</strong> · On coche la checklist, on fixe la suite</li>
+            </ol>
+          </div>
         </div>
       </section>
 
-      <section id="checklist">
-        <h2>Ta checklist</h2>
-        <p class="who">Coche au fur et à mesure. Si Horizon t’a envoyé un lien perso, on voit la même progression.</p>
+      <section id="branchement" style="animation-delay: 0.14s">
+        <p class="sec-tag">05 · Branchement</p>
+        <h2>On choisit le chemin le plus simple</h2>
+        <p class="lede">Décision ensemble au kickoff. Pas besoin de trancher seul avant.</p>
+
+        <div class="panel">
+          <div class="panel__head">Cas A · systeme.io <span>forms</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>On garde ton systeme.io</li>
+              <li>Tu invites Horizon ou on branche un webhook</li>
+              <li>Chaque inscription → groupe WhatsApp + mail</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">Cas B · Domaine géré ailleurs <span>DNS</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>Tu restes propriétaire</li>
+              <li>On t’envoie 1–3 lignes DNS à coller</li>
+              <li>Ou invite temporaire sur le DNS</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">Cas C · Domaine = landing pages <span>start.</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>On ne touche pas à ton domaine principal</li>
+              <li>Sous-domaine dédié : start.tonagence.com</li>
+              <li>Un CNAME à coller (~2 min)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">Cas D · Rien prêt <span>provisoire</span></div>
+          <div class="panel__body">
+            <ul>
+              <li>On démarre en provisoire</li>
+              <li>On bascule sur start.tondomaine.com dès que le DNS est prêt</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="checklist" style="animation-delay: 0.16s">
+        <p class="sec-tag">06 · Checklist</p>
+        <h2>Coche ce qui est fait</h2>
+        <p class="lede">
+          Au fur et à mesure. Si Horizon t’a envoyé un lien perso, on voit la
+          même progression.
+        </p>
 
         <div class="board" id="sop-board">
-          <div class="board__bar">
-            <span><b id="board-count">0/11</b> faits · <span id="sync-pill">Local</span> <span id="board-client"></span></span>
+          <div class="board__intro">
+            <p id="board-hint">
+              Chaque case cochée est sauvegardée. Tu peux revenir plus tard.
+            </p>
+            <div class="board__pct">
+              <span id="board-pct">0%</span>
+              <small>complété</small>
+            </div>
           </div>
-          <div class="board__progress" aria-hidden="true"><i id="board-bar"></i></div>
 
           <div class="group">Entreprise / Meta</div>
           <ul class="todo">
@@ -504,9 +753,16 @@
             </li>
           </ul>
         </div>
+
+        <div class="done-banner" id="done-banner">
+          Checklist complète. On est prêts pour la suite.
+        </div>
       </section>
 
-      <footer>horizon-agency.co/kickoff</footer>
+      <footer>
+        <span>Horizon Agency</span>
+        <span>horizon-agency.co/kickoff</span>
+      </footer>
     </div>
 
     <script>
@@ -514,8 +770,11 @@
   const boxes = [...document.querySelectorAll('#sop-board input[data-id]')];
   const countEl = document.getElementById('board-count');
   const barEl = document.getElementById('board-bar');
+  const pctEl = document.getElementById('board-pct');
   const pill = document.getElementById('sync-pill');
-  const clientEl = document.getElementById('board-client');
+  const hint = document.getElementById('board-hint');
+  const tag = document.getElementById('client-tag');
+  const doneBanner = document.getElementById('done-banner');
   const params = new URLSearchParams(location.search);
   let checklistId = params.get('c') || '';
   let saveTimer = null;
@@ -535,13 +794,23 @@
   function renderProgress() {
     const total = boxes.length;
     const done = boxes.filter((b) => b.checked).length;
+    const pct = Math.round((done / Math.max(total, 1)) * 100);
     countEl.textContent = done + '/' + total;
-    barEl.style.width = Math.round((done / Math.max(total, 1)) * 100) + '%';
+    pctEl.textContent = pct + '%';
+    barEl.style.width = pct + '%';
+    doneBanner.classList.toggle('show', done === total && total > 0);
   }
 
   function setSync(on, name) {
-    pill.textContent = on ? 'Sync' : 'Local';
-    clientEl.textContent = name ? ' · ' + name : '';
+    pill.textContent = on
+      ? (name ? 'Sync · ' + name : 'Sync active')
+      : 'Sauvegarde locale';
+    pill.classList.toggle('on', on);
+    if (name) {
+      tag.textContent = name;
+      hint.textContent =
+        'Checklist de ' + name + '. Tes coches sont partagées avec Horizon.';
+    }
   }
 
   function persistLocal() {
@@ -556,9 +825,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ checks: readChecks() }),
       });
-    } catch (e) {
-      console.warn(e);
-    }
+    } catch (e) {}
   }
 
   function scheduleSave() {
