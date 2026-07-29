@@ -1084,11 +1084,12 @@
           <a href="#todo-ko">01 Todo kickoff</a>
           <a href="#todo-presta">02 Todo presta</a>
           <a href="#oublis">03 Ne pas oublier</a>
-          <a href="#lien-client">04 Lien client</a>
-          <a href="#branchement">05 Branchement</a>
-          <a href="#acces">06 Accès</a>
-          <a href="#maintenance">07 Maintenance</a>
-          <a href="#regles">08 Do / Don't</a>
+          <a href="#verif">04 Verif 360/Meta</a>
+          <a href="#lien-client">05 Lien client</a>
+          <a href="#branchement">06 Branchement</a>
+          <a href="#acces">07 Accès</a>
+          <a href="#maintenance">08 Maintenance</a>
+          <a href="#regles">09 Do / Don't</a>
         </div>
       </div>
     </nav>
@@ -1206,9 +1207,11 @@
             <h3>WhatsApp / Meta</h3>
             <ul>
               <li>Adresse Meta = adresse banque si 2 adresses sur les docs</li>
+              <li>Raison sociale Meta = mot pour mot le certificat (pas « Max - Horizon »)</li>
+              <li>Nom légal visible en texte sur le site client (footer)</li>
               <li>Pas de coexistence perso+API si on vise Groups</li>
               <li>Webhook Channel + WABA = même URL</li>
-              <li>Groups API peut rester bloqué (OBA) → avoir le fallback 1:1 prêt</li>
+              <li>Groups API peut rester bloqué (OBA) → fallback 1:1 prêt</li>
               <li>Jamais demander le mot de passe / QR WhatsApp perso</li>
             </ul>
             <h3>Presta</h3>
@@ -1223,9 +1226,60 @@
         </div>
       </section>
 
+      <section id="verif">
+        <div class="wrap">
+          <p class="sec-tag">04 · Verif 360 / Meta</p>
+          <h2>Quand le client bloque (et il bloquera)</h2>
+          <p class="lede">
+            Cette étape est chiante. Tu la cadrages dès le kickoff pour pas que le chantier meure dessus.
+          </p>
+          <div class="plain">
+            <h3>Posture</h3>
+            <ul>
+              <li>Tu ne promets pas « WhatsApp groups live en 48h »</li>
+              <li>Tu dis : « On lance l'install en parallèle. La verif Meta peut prendre 2–10 jours + allers-retours. »</li>
+              <li>Le compteur 7 jours = tunnel + dashboard + mail. WA API groups = dès que Meta valide.</li>
+            </ul>
+            <h3>Qui fait quoi</h3>
+            <ul>
+              <li><b>Client</b> : fournit les docs + screenshot Business Info + confirme qu'il est représentant</li>
+              <li><b>Toi</b> : checks qualité avant envoi, colles le pack, gères le ticket 360, screen-share si UI bug</li>
+              <li>Tu ne lui demandes jamais de « se débrouiller seul » sur le portail 360</li>
+            </ul>
+            <h3>Pack type (max 3 fichiers sur le portail)</h3>
+            <ul>
+              <li><code>certificate.pdf</code> : certificat officiel (Kbis / Certificate of Formation…). Pas une lettre remplie, pas une 147C seule</li>
+              <li><code>business-info.pdf</code> : screenshot Paramètres → Infos entreprise (raison sociale = certificat)</li>
+              <li><code>readme.pdf</code> : nom + rôle + email owner, confirm representative, confirm WhatsApp Policy, URL site</li>
+              <li>Si le Submit du portail bug : envoi des 3 fichiers + texte par mail/chat support 360</li>
+            </ul>
+            <h3>Checks avant submit (toi)</h3>
+            <ul>
+              <li>Raison sociale Meta = certificat (mot pour mot)</li>
+              <li>Adresse Meta = doc</li>
+              <li>Site live avec le nom légal en texte lisible (footer)</li>
+              <li>Pas de CIN / doc perso</li>
+              <li>PDF &lt; 5 Mo, non protégés</li>
+            </ul>
+            <h3>Si ça trainaille</h3>
+            <ul>
+              <li>J+3 sans réponse : relance ticket 360</li>
+              <li>Refus « filled letter » : remplacer par le vrai certificat</li>
+              <li>Refus nom site : ajouter le nom légal en footer client</li>
+              <li>Pendant ce temps : avancer form, mail, dashboard, scoring (pas bloqué)</li>
+              <li>Si Groups API inaccessible après verif : livrer en 1:1 API + roadmap OBA</li>
+            </ul>
+            <h3>Phrase client (à coller)</h3>
+            <ul>
+              <li>« Meta vérifie que ta boîte est réelle. C'est leur process anti-fraude, pas le nôtre. On te guide fichier par fichier. En parallèle on avance le reste du système. »</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <section id="lien-client">
         <div class="wrap">
-          <p class="sec-tag">04 · Lien client</p>
+          <p class="sec-tag">05 · Lien client</p>
           <h2>Créer / suivre /kickoff</h2>
           <p class="lede">Le client coche de son côté. Tu suis ici la même progression.</p>
           <div class="board" id="sop-board">
@@ -1263,7 +1317,7 @@
 
       <section id="branchement">
         <div class="wrap">
-          <p class="sec-tag">05 · Branchement</p>
+          <p class="sec-tag">06 · Branchement</p>
           <h2>Décision au kickoff</h2>
           <div class="scenario"><div class="scenario__h">A · systeme.io</div><div class="scenario__b"><ul><li>Garder leur form + webhook Horizon</li></ul></div></div>
           <div class="scenario"><div class="scenario__h">B · Domaine ailleurs</div><div class="scenario__b"><ul><li>TXT/CNAME à coller ou invite DNS temporaire</li></ul></div></div>
@@ -1274,7 +1328,7 @@
 
       <section id="acces">
         <div class="wrap">
-          <p class="sec-tag">06 · Accès</p>
+          <p class="sec-tag">07 · Accès</p>
           <h2>Ce que tu demandes (jamais de login perso)</h2>
           <div class="access" role="table">
             <div class="access__row"><div>Outil</div><div>Comment</div><div>Droits</div></div>
@@ -1289,7 +1343,7 @@
 
       <section id="maintenance">
         <div class="wrap">
-          <p class="sec-tag">07 · Maintenance</p>
+          <p class="sec-tag">08 · Maintenance</p>
           <h2>Tu portes les abos</h2>
           <div class="price">
             <article><div class="price__phase">Install</div><h3>Mise en place</h3><p>Sur devis</p><div class="price__eur">1×</div></article>
@@ -1302,7 +1356,7 @@
 
       <section id="regles">
         <div class="wrap">
-          <p class="sec-tag">08 · Discipline</p>
+          <p class="sec-tag">09 · Discipline</p>
           <h2>Do / Don't</h2>
           <div class="rules">
             <article class="rule rule--do">
