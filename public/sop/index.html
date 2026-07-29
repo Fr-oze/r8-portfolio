@@ -1,0 +1,1246 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HORIZON AGENCY · sop · ZÉRO LEAD MORT</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="Doc de livraison : checklist client, accès sans login perso, tunnel et install." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f4f5f7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f4f5f7;
+        --ink: #12141a;
+        --dim: #5c6570;
+        --line: #d5dae0;
+        --panel: #ffffff;
+        --soft: #3a424c;
+        --wash: #eef0f3;
+      }
+      * { margin: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Space Mono", ui-monospace, Menlo, monospace;
+        letter-spacing: 0.04em;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at 50% 30%, transparent 50%, rgba(18, 20, 24, 0.05) 100%);
+        z-index: 100;
+      }
+      ::selection { background: var(--ink); color: var(--bg); }
+      a { color: inherit; text-decoration: none; }
+      img { display: block; }
+
+      .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+      /* HERO */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid var(--line);
+        min-height: 78vh;
+        display: flex;
+        align-items: flex-end;
+        padding: 120px 0 72px;
+      }
+      .hero__grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, #000 0%, transparent 70%);
+        -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, #000 0%, transparent 70%);
+        opacity: 0.7;
+      }
+      .hero__orb {
+        position: absolute;
+        right: -8%;
+        top: 8%;
+        width: min(520px, 55vw);
+        height: min(520px, 55vw);
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 40% 35%, rgba(18,20,26,0.06), transparent 55%),
+          repeating-radial-gradient(circle at 50% 50%, transparent 0 14px, rgba(18,20,26,0.04) 14px 15px);
+        pointer-events: none;
+      }
+      .hero__orb::before,
+      .hero__orb::after {
+        content: "";
+        position: absolute;
+        inset: 18%;
+        border-radius: 50%;
+        border: 1px dashed rgba(18, 20, 26, 0.18);
+      }
+      .hero__orb::after { inset: 34%; border-style: solid; opacity: 0.5; }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.34em;
+        color: var(--dim);
+        text-transform: uppercase;
+      }
+      .hero h1 {
+        font-size: clamp(2.6rem, 9vw, 5.6rem);
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+        margin: 20px 0 24px;
+        max-width: 12ch;
+      }
+      .hero__lead {
+        max-width: 34rem;
+        font-size: 15px;
+        color: var(--soft);
+      }
+      .hero__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 36px;
+      }
+      .chip {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 10px 14px;
+        color: var(--dim);
+      }
+      .chip b { color: var(--ink); }
+
+      /* NAV STRIP */
+      .navstrip {
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .navstrip__inner {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .navstrip__inner::-webkit-scrollbar { display: none; }
+      .navstrip a {
+        flex: 0 0 auto;
+        padding: 16px 18px;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--dim);
+        border-right: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .navstrip a:hover { color: var(--ink); background: var(--wash); }
+
+      /* SECTIONS */
+      section { padding: 88px 0; border-bottom: 1px solid var(--line); }
+      .sec-tag {
+        font-size: 10px;
+        letter-spacing: 0.28em;
+        color: var(--dim);
+        text-transform: uppercase;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .sec-tag::before {
+        content: "";
+        width: 24px;
+        height: 1px;
+        background: var(--ink);
+      }
+      h2 {
+        font-size: clamp(1.7rem, 4vw, 2.6rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin-bottom: 14px;
+        max-width: 18ch;
+      }
+      .lede {
+        font-size: 15px;
+        color: var(--soft);
+        max-width: 40rem;
+        margin-bottom: 40px;
+      }
+
+      /* SPLIT INTRO */
+      .split {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 28px;
+        align-items: stretch;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+      .panel__head {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--dim);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .panel__body { padding: 22px 20px 26px; }
+      .statgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .stat {
+        background: var(--panel);
+        padding: 22px 18px;
+      }
+      .stat b {
+        display: block;
+        font-size: clamp(1.4rem, 3vw, 1.9rem);
+        letter-spacing: -0.03em;
+        margin-bottom: 8px;
+      }
+      .stat span {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+        line-height: 1.4;
+      }
+
+      /* THREE COL */
+      .tri {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 28px;
+      }
+      .tri article {
+        background: var(--panel);
+        padding: 26px 22px 28px;
+        min-height: 220px;
+      }
+      .tri__n {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--dim);
+        margin-bottom: 28px;
+      }
+      .tri h3 {
+        font-size: 15px;
+        letter-spacing: 0.04em;
+        margin-bottom: 14px;
+      }
+      .tri ul { list-style: none; }
+      .tri li {
+        font-size: 13px;
+        color: var(--soft);
+        padding: 7px 0 7px 14px;
+        position: relative;
+        border-top: 1px solid transparent;
+      }
+      .tri li + li { border-top-color: var(--line); }
+      .tri li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 15px;
+        width: 5px;
+        height: 1px;
+        background: var(--ink);
+      }
+      .tri--mute li { color: var(--dim); }
+
+      /* PIPELINE VISUAL */
+      .pipe {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-top: 8px;
+      }
+      .pipe__step {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 18px 14px 20px;
+        min-height: 150px;
+      }
+      .pipe__step::after {
+        content: "→";
+        position: absolute;
+        right: -11px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        width: 18px;
+        height: 18px;
+        background: var(--bg);
+        color: var(--dim);
+        font-size: 12px;
+        display: grid;
+        place-items: center;
+      }
+      .pipe__step:last-child::after { display: none; }
+      .pipe__n {
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        color: var(--dim);
+        margin-bottom: 16px;
+      }
+      .pipe__title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        margin-bottom: 10px;
+        line-height: 1.3;
+      }
+      .pipe__desc {
+        font-size: 11px;
+        color: var(--soft);
+        line-height: 1.5;
+      }
+      .pipe__step--hot {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+      .pipe__step--hot .pipe__n,
+      .pipe__step--hot .pipe__desc { color: rgba(244, 245, 247, 0.65); }
+
+      /* BRANCH */
+      .branch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .branch__card {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        overflow: hidden;
+      }
+      .branch__top {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+        background: var(--wash);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .branch__top h3 {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .branch__badge {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--dim);
+      }
+      .branch__badge--ok {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+      .branch__body { padding: 20px; }
+      .branch__body ol {
+        list-style: none;
+        counter-reset: b;
+      }
+      .branch__body li {
+        counter-increment: b;
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        gap: 12px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--soft);
+      }
+      .branch__body li:first-child { border-top: none; padding-top: 0; }
+      .branch__body li::before {
+        content: counter(b, decimal-leading-zero);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--ink);
+        padding-top: 2px;
+      }
+
+      /* DASHBOARD MOCK */
+      .dash {
+        margin-top: 8px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        overflow: hidden;
+        box-shadow: 0 24px 60px rgba(18, 20, 26, 0.06);
+      }
+      .dash__chrome {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: var(--wash);
+      }
+      .dash__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--line);
+      }
+      .dash__dot:nth-child(1) { background: #c4c8ce; }
+      .dash__url {
+        margin-left: 10px;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        color: var(--dim);
+        text-transform: uppercase;
+      }
+      .dash__layout {
+        display: grid;
+        grid-template-columns: 200px 1fr 240px;
+        min-height: 420px;
+      }
+      .dash__side {
+        border-right: 1px solid var(--line);
+        padding: 18px 14px;
+        background: #fbfbfc;
+      }
+      .dash__side h4,
+      .dash__alerts h4,
+      .dash__main h4 {
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 14px;
+      }
+      .navitem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px;
+        font-size: 12px;
+        border: 1px solid transparent;
+        margin-bottom: 4px;
+        color: var(--soft);
+      }
+      .navitem--on {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .navitem i {
+        font-style: normal;
+        font-size: 10px;
+        opacity: 0.7;
+      }
+      .dash__main { padding: 18px 16px; }
+      .kanban {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .col h5 {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 10px;
+        padding: 0 2px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        background: var(--bg);
+        padding: 12px;
+        margin-bottom: 8px;
+      }
+      .card b {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .card p {
+        font-size: 11px;
+        color: var(--dim);
+        line-height: 1.4;
+      }
+      .card__lvl {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: 1px solid var(--line);
+        padding: 3px 7px;
+        color: var(--dim);
+      }
+      .card__lvl--a {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+      .dash__alerts {
+        border-left: 1px solid var(--line);
+        padding: 18px 14px;
+        background: #fbfbfc;
+      }
+      .alert {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 12px;
+        margin-bottom: 8px;
+      }
+      .alert strong {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+      }
+      .alert span {
+        font-size: 11px;
+        color: var(--dim);
+        line-height: 1.4;
+      }
+      .alert--hot {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+      .alert--hot span { color: rgba(244,245,247,0.65); }
+
+      /* FEATURE ROW */
+      .feat {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 28px;
+      }
+      .feat article {
+        background: var(--panel);
+        padding: 24px 18px 26px;
+      }
+      .feat__ico {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        background: var(--wash);
+      }
+      .feat__ico svg { width: 16px; height: 16px; }
+      .feat h3 {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .feat p {
+        font-size: 12px;
+        color: var(--soft);
+        line-height: 1.55;
+      }
+
+      /* WA COMPARE */
+      .compare {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 14px;
+      }
+      .compare__table {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        overflow: hidden;
+      }
+      .compare__row {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+      }
+      .compare__row:last-child { border-bottom: none; }
+      .compare__row > * { padding: 14px 16px; }
+      .compare__row > *:not(:last-child) { border-right: 1px solid var(--line); }
+      .compare__row--head {
+        background: var(--wash);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .compare__row b { font-weight: 700; }
+      .ok { color: #2f855a; }
+      .no { color: #c53030; }
+      .compare__side {
+        display: grid;
+        gap: 14px;
+      }
+      .opt {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 22px 20px;
+        height: 100%;
+      }
+      .opt h3 {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .opt p { font-size: 13px; color: var(--soft); margin-bottom: 14px; }
+      .opt ul { list-style: none; }
+      .opt li {
+        font-size: 12px;
+        color: var(--soft);
+        padding: 6px 0 6px 14px;
+        position: relative;
+        border-top: 1px solid var(--line);
+      }
+      .opt li:first-of-type { border-top: none; }
+      .opt li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 14px;
+        width: 6px;
+        height: 1px;
+        background: var(--ink);
+      }
+
+      /* STACK LOGOS */
+      .logos {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .logos li {
+        list-style: none;
+        background: var(--panel);
+        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 16px 8px;
+      }
+      .logos img {
+        width: 26px;
+        height: 26px;
+        filter: brightness(0);
+        opacity: 0.88;
+      }
+      .logos span {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+
+      /* TIMELINE */
+      .timeline {
+        position: relative;
+        margin-top: 8px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 27px;
+        top: 8px;
+        bottom: 8px;
+        width: 1px;
+        background: var(--line);
+      }
+      .tl {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: 18px;
+        margin-bottom: 12px;
+      }
+      .tl__day {
+        width: 56px;
+        height: 56px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        position: relative;
+        z-index: 1;
+      }
+      .tl__card {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 18px 20px;
+      }
+      .tl__card h3 {
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+      .tl__card p {
+        font-size: 13px;
+        color: var(--soft);
+      }
+
+      /* PRICING */
+      .price {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .price article {
+        background: var(--panel);
+        padding: 26px 20px 28px;
+        min-height: 210px;
+        display: flex;
+        flex-direction: column;
+      }
+      .price article:first-child {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .price__phase {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin-bottom: 28px;
+      }
+      .price article:first-child .price__phase { color: rgba(244,245,247,0.55); }
+      .price h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+      .price p {
+        font-size: 12px;
+        color: var(--soft);
+        flex: 1;
+        line-height: 1.5;
+      }
+      .price article:first-child p { color: rgba(244,245,247,0.7); }
+      .price__eur {
+        margin-top: 22px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      /* DO DONT */
+      .rules {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .rule {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 26px 24px;
+        min-height: 280px;
+      }
+      .rule h3 {
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .rule--do h3 { color: #2f855a; }
+      .rule--dont h3 { color: #c53030; }
+      .rule ul { list-style: none; }
+      .rule li {
+        font-size: 13px;
+        color: var(--soft);
+        padding: 10px 0 10px 22px;
+        border-top: 1px solid var(--line);
+        position: relative;
+      }
+      .rule li:first-child { border-top: none; }
+      .rule--do li::before {
+        content: "+";
+        position: absolute;
+        left: 0;
+        color: #2f855a;
+        font-weight: 700;
+      }
+      .rule--dont li::before {
+        content: "−";
+        position: absolute;
+        left: 0;
+        color: #c53030;
+        font-weight: 700;
+      }
+
+      footer {
+        padding: 56px 0 80px;
+        color: var(--dim);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+      }
+
+      @media (max-width: 980px) {
+        .split, .compare, .dash__layout { grid-template-columns: 1fr; }
+        .dash__side, .dash__alerts { border: none; border-top: 1px solid var(--line); }
+        .pipe { grid-template-columns: repeat(3, 1fr); }
+        .pipe__step:nth-child(3)::after { display: none; }
+        .tri, .feat, .price, .logos { grid-template-columns: repeat(2, 1fr); }
+        .kanban { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 640px) {
+        .hero { min-height: auto; padding: 88px 0 56px; }
+        .hero__orb { opacity: 0.35; }
+        section { padding: 64px 0; }
+        .pipe, .branch, .rules, .tri, .feat, .price, .logos, .kanban { grid-template-columns: 1fr; }
+        .pipe__step::after { display: none; }
+        .statgrid { grid-template-columns: 1fr; }
+        .compare__row { grid-template-columns: 1fr; }
+        .compare__row > *:not(:last-child) { border-right: none; border-bottom: 1px solid var(--line); }
+      }
+    
+      .check { list-style: none; margin: 0; padding: 0; }
+      .check li {
+        position: relative;
+        padding: 16px 16px 16px 48px;
+        border-top: 1px solid var(--line);
+        background: var(--panel);
+      }
+      .check li:first-child { border-top: none; }
+      .check li::before {
+        content: attr(data-n);
+        position: absolute;
+        left: 14px;
+        top: 16px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        color: var(--dim);
+        font-weight: 700;
+      }
+      .check b { display: block; margin-bottom: 4px; }
+      .check span { color: var(--soft); font-size: 13px; }
+      .access {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr 1fr;
+        gap: 0;
+        border: 1px solid var(--line);
+        background: var(--panel);
+      }
+      .access__row { display: contents; }
+      .access__row > * {
+        padding: 14px 16px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--soft);
+      }
+      .access__row:first-child > * {
+        border-top: none;
+        background: var(--wash);
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .access__row > *:not(:last-child) { border-right: 1px solid var(--line); }
+      .access__row b { color: var(--ink); font-weight: 700; }
+      .pill {
+        display: inline-block;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: 1px solid var(--line);
+        padding: 4px 8px;
+        color: var(--dim);
+      }
+      .pill--ok { border-color: #2f855a; color: #2f855a; }
+      .pill--wait { border-color: #c05621; color: #c05621; }
+      .pill--todo { border-color: var(--ink); color: var(--ink); }
+      @media (max-width: 900px) {
+        .access { grid-template-columns: 1fr; }
+        .access__row > *:not(:last-child) { border-right: none; }
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <header class="hero">
+      <div class="hero__grid" aria-hidden="true"></div>
+      <div class="hero__orb" aria-hidden="true"></div>
+      <div class="wrap">
+        <p class="eyebrow">Horizon Agency · Doc livraison · Noindex</p>
+        <h1>sop<br />ZÉRO LEAD MORT</h1>
+        <p class="hero__lead">
+          Ce que le client doit faire, comment donner accès sans login perso,
+          et ce qu'on installe de notre côté. Un groupe WhatsApp par lead via API.
+        </p>
+        <div class="hero__meta">
+          <span class="chip">VERSION <b>1.2</b></span>
+          <span class="chip">INSTALL <b>7 JOURS</b></span>
+          <span class="chip">PRIX <b>SUR DEVIS</b></span>
+          <span class="chip">URL <b>/sop</b></span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="navstrip" aria-label="Sections">
+      <div class="wrap">
+        <div class="navstrip__inner">
+          <a href="#reste">01 Reste à faire</a>
+          <a href="#client">02 Checklist client</a>
+          <a href="#acces">03 Accès (sans login)</a>
+          <a href="#meta-wa">04 Meta / WhatsApp</a>
+          <a href="#tunnel">05 Tunnel</a>
+          <a href="#dashboard">06 Dashboard</a>
+          <a href="#install">07 Install 7j</a>
+          <a href="#regles">08 Do / Don't</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section id="reste">
+        <div class="wrap">
+          <p class="sec-tag">01 · Où on en est</p>
+          <h2>Ce qu'il reste à faire</h2>
+          <p class="lede">État type après kickoff. À cocher avec le client.</p>
+          <div class="feat">
+            <article>
+              <p class="pill pill--ok">Fait / en cours</p>
+              <h3>Côté Horizon</h3>
+              <p>Site + page /demo. Opt-in (Brevo). Webhook 360. Notifs mail internes. Dashboard / tunnel à brancher sur le compte client.</p>
+            </article>
+            <article>
+              <p class="pill pill--wait">Attente</p>
+              <h3>Côté client Meta</h3>
+              <p>Business Verification soumise (docs LLC + ownership). Review 360dialog / Meta. Puis display name WA + templates.</p>
+            </article>
+            <article>
+              <p class="pill pill--todo">Bloquant produit</p>
+              <h3>Groups API</h3>
+              <p>Débloquer Templates + Groups (souvent OBA). Sans ça : pas de création auto 1 groupe / lead.</p>
+            </article>
+            <article>
+              <p class="pill pill--todo">Après verif</p>
+              <h3>Go-live</h3>
+              <p>Inviter Horizon en Partner. Webhooks. Templates invite. Test bout-en-bout. Formation commercial.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="client">
+        <div class="wrap">
+          <p class="sec-tag">02 · Checklist client</p>
+          <h2>Ce que tu dois faire (1h max)</h2>
+          <p class="lede">
+            Tu gardes tes mots de passe. Tu invites Horizon avec des droits ciblés.
+            On ne te demande jamais le login perso Facebook / Google / banque.
+          </p>
+          <ul class="check">
+            <li data-n="01">
+              <b>Créer / désigner le Business Portfolio Meta</b>
+              <span>business.facebook.com · portfolio au nom légal de la société (ex. Horizon Agency LLC), pas le compte perso.</span>
+            </li>
+            <li data-n="02">
+              <b>Renseigner Infos entreprise</b>
+              <span>Nom légal exact + adresse (celle des docs bancaires / 147C) + téléphone + site. Une seule adresse, partout la même.</span>
+            </li>
+            <li data-n="03">
+              <b>Lancer Business Verification</b>
+              <span>Security Center → Start verification. Upload : lettre IRS 147C / Certificate LLC + preuve ownership / relevé business.</span>
+            </li>
+            <li data-n="04">
+              <b>Ouvrir un channel WhatsApp Cloud API</b>
+              <span>Via 360dialog (ou BSP). Numéro business dédié au process (pas le WhatsApp perso en coexistence si tu vises Groups API).</span>
+            </li>
+            <li data-n="05">
+              <b>Configurer les webhooks</b>
+              <span>Channel + WABA → URL fournie par Horizon. Même URL sur les deux champs.</span>
+            </li>
+            <li data-n="06">
+              <b>Après verif : display name + templates</b>
+              <span>Demander le nom d'affichage WhatsApp. Faire approuver le template group_invite_link (et welcome si besoin).</span>
+            </li>
+            <li data-n="07">
+              <b>Ticket support 360dialog</b>
+              <span>« Activer Template messaging + Groups API / éligibilité OBA pour ce channel ». Coller Channel / WABA ID.</span>
+            </li>
+            <li data-n="08">
+              <b>Inviter Horizon (voir section Accès)</b>
+              <span>Partner Meta + user 360dialog + accès ads / DNS / mail si besoin. Zéro partage de mot de passe.</span>
+            </li>
+            <li data-n="09">
+              <b>Donner le contexte commercial</b>
+              <span>Qui reçoit les notifs, cases pipeline, seuils FUP, ton des mails, commercial dans les groupes.</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="acces">
+        <div class="wrap">
+          <p class="sec-tag">03 · Accès propres</p>
+          <h2>Donner la main sans login perso</h2>
+          <p class="lede">
+            Principe : invitation email / Partner access. Jamais « tiens mon mot de passe ».
+            Email Horizon à inviter : fourni au kickoff.
+          </p>
+          <div class="access" role="table" aria-label="Matrice d'accès">
+            <div class="access__row" role="row">
+              <div>Outil</div>
+              <div>Comment donner accès</div>
+              <div>Droits demandés</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>Meta Business</b></div>
+              <div>Paramètres → Partenaires → Ajouter. Ou Utilisateurs → Ajouter des personnes (email Horizon).</div>
+              <div>Admin / Full control sur le portfolio (ou Partner avec assets Ads + WABA)</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>WhatsApp / WABA</b></div>
+              <div>Business Settings → Comptes WhatsApp → Assigner le partenaire / user Horizon au WABA.</div>
+              <div>Gestion complète du WABA (templates, numéro, webhooks)</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>360dialog</b></div>
+              <div>Invite un user (email Horizon) sur le projet channel. Ou Partner Hub si agence.</div>
+              <div>Admin channel (API key, webhooks, templates)</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>Facebook / Instagram Ads</b></div>
+              <div>Business Manager → Partager le compte pub avec le Partner Horizon. Pas le login Ads perso.</div>
+              <div>Publier / analyser campagnes</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>Google Ads</b></div>
+              <div>Inviter le MCC Horizon (ID fourni au kickoff) en Admin ou Standard.</div>
+              <div>Standard minimum (lire + conversions)</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>Domaine / DNS</b></div>
+              <div>Invite Cloudflare / registrar, ou le client colle lui-même les TXT/CNAME qu'on envoie.</div>
+              <div>SPF/DKIM mail + domaine Meta si besoin</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>Brevo / mail</b></div>
+              <div>Invite membre d'équipe (email Horizon), ou API key dédiée « Horizon install » (révocable).</div>
+              <div>Envoi + domaines authentifiés</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>Analytics (GA4)</b></div>
+              <div>Admin → Accès à la propriété → Ajouter Horizon.</div>
+              <div>Éditeur (events / conversions)</div>
+            </div>
+            <div class="access__row" role="row">
+              <div><b>Repo / Vercel</b></div>
+              <div>Invite GitHub org + projet Vercel Team. Jamais le compte perso Git.</div>
+              <div>Deploy prod + env vars</div>
+            </div>
+          </div>
+          <div class="rules" style="margin-top:28px">
+            <article class="rule rule--do">
+              <h3>+ Accès OK</h3>
+              <ul>
+                <li>Invitation email / Partner ID</li>
+                <li>API key dédiée, révocable</li>
+                <li>Records DNS collés par le client</li>
+                <li>Numéro WA Cloud (pas QR perso)</li>
+              </ul>
+            </article>
+            <article class="rule rule--dont">
+              <h3>− Accès interdit</h3>
+              <ul>
+                <li>Mot de passe Facebook / Google</li>
+                <li>Session partagée / code 2FA</li>
+                <li>Accès banque / boîte mail perso</li>
+                <li>Prise de contrôle WhatsApp perso</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="meta-wa">
+        <div class="wrap">
+          <p class="sec-tag">04 · Meta / WhatsApp (détail)</p>
+          <h2>Verif, adresse, Groups API</h2>
+          <p class="lede">Les pièges qu'on vient de traverser. À suivre dans cet ordre.</p>
+          <div class="split">
+            <div class="panel">
+              <div class="panel__head"><span>Business Verification</span><span>Docs</span></div>
+              <div class="panel__body">
+                <p class="lede" style="margin:0;max-width:none">
+                  Une seule adresse dans Meta : celle du relevé bancaire LLC / registered agent US.
+                  Docs typiques : lettre IRS 147C (nom + EIN) + proof of account ownership / relevé business.
+                  Si Certificate LLC et banque ont 2 adresses, Meta = adresse banque.
+                </p>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel__head"><span>Groups API</span><span>OBA</span></div>
+              <div class="panel__body">
+                <p class="lede" style="margin:0;max-width:none">
+                  Groups API exige souvent un Official Business Account (badge bleu).
+                  Prérequis : verif business, display name approuvé, 2FA numéro, ~30 jours Cloud API, pas coexistence perso+API.
+                  Demande via support 360dialog. Meta décide.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="tri" style="margin-top:28px">
+            <article>
+              <div class="tri__n">Page Facebook</div>
+              <h3>Pas bloquant</h3>
+              <ul>
+                <li>Rename Page ≠ verif business</li>
+                <li>Display name WhatsApp = priorité</li>
+                <li>Portfolio peut rester temporaire</li>
+              </ul>
+            </article>
+            <article>
+              <div class="tri__n">Webhooks</div>
+              <h3>À coller</h3>
+              <ul>
+                <li>Channel Webhook URL</li>
+                <li>WABA Webhook URL (même URL)</li>
+                <li>Fournie par Horizon à l'install</li>
+              </ul>
+            </article>
+            <article class="tri--mute">
+              <div class="tri__n">Fallback</div>
+              <h3>Si pas d'OBA</h3>
+              <ul>
+                <li>1:1 API + dashboard</li>
+                <li>Ou invite manuelle temporaire</li>
+                <li>Produit groupe API reporté</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="tunnel">
+        <div class="wrap">
+          <p class="sec-tag">05 · Tunnel</p>
+          <h2>Opt-in → groupe API → mail → humain</h2>
+          <p class="lede">Ce qu'on installe une fois les accès et le channel prêts.</p>
+          <div class="pipe" aria-label="Tunnel">
+            <article class="pipe__step"><div class="pipe__n">01</div><div class="pipe__title">Ads → Opt-in</div><p class="pipe__desc">Form. Champs utiles au score.</p></article>
+            <article class="pipe__step"><div class="pipe__n">02</div><div class="pipe__title">Score A / B / C</div><p class="pipe__desc">Règles + IA. Case initiale.</p></article>
+            <article class="pipe__step pipe__step--hot"><div class="pipe__n">03</div><div class="pipe__title">Groupe WA · API</div><p class="pipe__desc">1 groupe / lead. Invite link.</p></article>
+            <article class="pipe__step"><div class="pipe__n">04</div><div class="pipe__title">Mail d'invite</div><p class="pipe__desc">Lien groupe. Relances no-join.</p></article>
+            <article class="pipe__step"><div class="pipe__n">05</div><div class="pipe__title">Notif téléphone</div><p class="pipe__desc">Join → alerte commercial.</p></article>
+            <article class="pipe__step"><div class="pipe__n">06</div><div class="pipe__title">Relais humain</div><p class="pipe__desc">Conv → cases → FUP.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard">
+        <div class="wrap">
+          <p class="sec-tag">06 · Dashboard</p>
+          <h2>La vérité du pipe</h2>
+          <p class="lede">Opt-ins, kanban, fiches IA, alertes FUP. L'humain décide.</p>
+          <div class="feat">
+            <article><h3>Opt-ins</h3><p>Source, réponses, niveau, invite / join.</p></article>
+            <article><h3>Pipeline</h3><p>Kanban drag. Suggestion IA non bloquante.</p></article>
+            <article><h3>Fiche lead</h3><p>Récap, dernier contact, prochain FUP.</p></article>
+            <article><h3>Alertes</h3><p>Nouvel opt-in, join, silence &gt; seuil.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="install">
+        <div class="wrap">
+          <p class="sec-tag">07 · Install</p>
+          <h2>7 jours</h2>
+          <p class="lede">~1h client (checklist). Le reste = exécution Horizon.</p>
+          <div class="timeline">
+            <div class="tl"><div class="tl__day">J0</div><div class="tl__card"><h3>Kickoff</h3><p>Invitations accès. Mapping champs → niveaux. Cases + seuils FUP.</p></div></div>
+            <div class="tl"><div class="tl__day">J1</div><div class="tl__card"><h3>Capture + DB</h3><p>Webhook opt-in, modèle lead, events.</p></div></div>
+            <div class="tl"><div class="tl__day">J2</div><div class="tl__card"><h3>Scoring</h3><p>Règles niveaux + prompt. Test 20 opt-ins.</p></div></div>
+            <div class="tl"><div class="tl__day">J3</div><div class="tl__card"><h3>WhatsApp API</h3><p>Channel, webhooks, templates, test groupe.</p></div></div>
+            <div class="tl"><div class="tl__day">J4</div><div class="tl__card"><h3>Mail</h3><p>Invite + séquence no-join. SPF/DKIM.</p></div></div>
+            <div class="tl"><div class="tl__day">J5</div><div class="tl__card"><h3>Dashboard</h3><p>Kanban, fiches, notifs téléphone.</p></div></div>
+            <div class="tl"><div class="tl__day">J6</div><div class="tl__card"><h3>FUP</h3><p>Seuils silence. Accueil auto post-join.</p></div></div>
+            <div class="tl"><div class="tl__day">J7</div><div class="tl__card"><h3>Go-live</h3><p>Test bout-en-bout + handoff commercial.</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="regles">
+        <div class="wrap">
+          <p class="sec-tag">08 · Discipline</p>
+          <h2>Do / Don't</h2>
+          <div class="rules">
+            <article class="rule rule--do">
+              <h3>+ On fait</h3>
+              <ul>
+                <li>Scorer et ranger chaque opt-in</li>
+                <li>Créer le groupe via API quand éligible</li>
+                <li>Pousser le join par mail</li>
+                <li>Notifier le commercial</li>
+                <li>Travailler en Partner access</li>
+              </ul>
+            </article>
+            <article class="rule rule--dont">
+              <h3>− On ne fait pas</h3>
+              <ul>
+                <li>Prendre le WhatsApp perso en QR</li>
+                <li>Demander les mots de passe</li>
+                <li>Promettre l'ajout forcé dans un groupe</li>
+                <li>Remplacer le commercial</li>
+                <li>Afficher la garantie trop tôt</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">HORIZON AGENCY · /sop · NOINDEX · DOC DE LIVRAISON</div>
+    </footer>
+  </body>
+</html>
+
