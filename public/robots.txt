@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /sop
+Disallow: /sop/
 Disallow: /SOP
 Disallow: /SOP/
 Disallow: /branding

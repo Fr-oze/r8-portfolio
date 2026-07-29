@@ -1,7 +1,14 @@
 {
+  "redirects": [
+    { "source": "/SOP", "destination": "/sop/", "permanent": true },
+    { "source": "/SOP/", "destination": "/sop/", "permanent": true },
+    { "source": "/SOP/:path*", "destination": "/sop/:path*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/demo", "destination": "/demo/index.html" },
     { "source": "/demo/", "destination": "/demo/index.html" },
+    { "source": "/sop", "destination": "/sop/index.html" },
+    { "source": "/sop/", "destination": "/sop/index.html" },
     {
       "source": "/api/demo",
       "destination": "https://waitlist.horizon-agency.co/api/demo"
