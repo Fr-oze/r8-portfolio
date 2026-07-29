@@ -30,11 +30,11 @@ export class Contact {
 
         <div class="contact__inner">
           <div class="contact__intro">
-            <span class="contact__tag">INSTALL · 7 JOURS</span>
-            <h2 class="contact__lead">On arrête de laisser<br /><span>pourrir tes demandes</span>&nbsp;?</h2>
+            <span class="contact__tag">DÉMO LIVE</span>
+            <h2 class="contact__lead">Optin-toi et vois<br /><span>à quoi ça ressemble</span>&nbsp;?</h2>
             <p class="contact__sub">
-              Formulaire, WhatsApp, suivi. Installé en 7 jours.
-              Un call d'une heure pour démarrer.
+              Tu vis le parcours pour de vrai : formulaire → groupe WhatsApp → suivi.
+              En attendant que le tunnel soit branché, écris-moi et on te fait entrer.
             </p>
           </div>
 

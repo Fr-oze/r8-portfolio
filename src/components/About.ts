@@ -82,7 +82,7 @@ export class About {
 
           <div class="about__cta">
             <button id="about-projects" class="about__btn">VOIR LA PREUVE →</button>
-            <a href="mailto:oze.fr.contact@gmail.com" class="about__btn about__btn--ghost">CHIFFRER MA FUITE</a>
+            <a href="mailto:oze.fr.contact@gmail.com" class="about__btn about__btn--ghost">VOIR LE SYSTÈME EN VRAI</a>
           </div>
         </div>
       </div>`;
