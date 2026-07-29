@@ -208,6 +208,8 @@ body.past-hero .hero-headline {
   padding: 26px 32px;
   font-size: 12px;
   text-transform: uppercase;
+  z-index: 12;
+  transition: background 0.3s ease-out, border-color 0.3s ease-out, backdrop-filter 0.3s ease-out;
 }
 .ui__brand {
   font-weight: 700;
@@ -2085,11 +2087,23 @@ body.past-hero .ui__cta-projects {
   transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
 }
 
+/* Barre opaque : le contenu ne passe plus sous la marque */
+body.past-hero .ui__nav {
+  background: rgba(244, 245, 247, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
 .scroll-section {
-  padding: 72px 32px;
+  padding: 88px 32px 72px;
+  scroll-margin-top: 88px;
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+.page-scroll > .scroll-section:first-child {
+  padding-top: 104px;
 }
 .scroll-section--in {
   opacity: 1;
@@ -2962,7 +2976,15 @@ body.past-hero .ui__cta-projects {
 
 @media (max-width: 720px) {
   .scroll-section {
-    padding: 56px 18px;
+    padding: 72px 18px 56px;
+    scroll-margin-top: 72px;
+  }
+  .page-scroll > .scroll-section:first-child {
+    padding-top: 88px;
+  }
+  body.past-hero .ui__nav {
+    padding-top: 12px;
+    padding-bottom: 12px;
   }
   .leak-calc {
     grid-template-columns: 1fr;
