@@ -949,6 +949,52 @@
       .sync-pill--on { border-color: #2f855a; color: #2f855a; }
       .sync-pill--off { border-color: var(--line); }
 
+
+      .plain {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 24px 26px;
+      }
+      .plain h3 {
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+        margin: 22px 0 10px;
+      }
+      .plain h3:first-child { margin-top: 0; }
+      .plain ul, .plain ol {
+        margin: 0 0 6px;
+        padding-left: 1.25em;
+      }
+      .plain li { margin: 8px 0; color: var(--ink); }
+      .plain .soft { color: var(--soft); font-size: 14px; }
+      .scenario {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        margin-top: 12px;
+      }
+      .scenario__h {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+        background: var(--wash);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .scenario__b {
+        padding: 16px 18px 18px;
+      }
+      .scenario__b ul { margin: 0; padding-left: 1.2em; }
+      .scenario__b li { margin: 7px 0; font-size: 14px; color: var(--soft); }
+      .callout {
+        margin-top: 16px;
+        border: 1px solid var(--ink);
+        background: #fff;
+        padding: 16px 18px;
+        font-size: 14px;
+      }
+      .callout b { display: block; margin-bottom: 6px; }
+
       .kickoff {
         background: var(--panel);
         border: 1px solid var(--line);
@@ -1007,11 +1053,12 @@
         <p class="eyebrow">Horizon Agency · Doc livraison · Noindex</p>
         <h1>sop<br />ZÉRO LEAD MORT</h1>
         <p class="hero__lead">
-          Ce que le client doit faire, comment donner accès sans login perso,
-          et ce qu'on installe de notre côté. Un groupe WhatsApp par lead via API.
+          Page de livraison pour toi (client) et pour Horizon.
+          En clair : quoi préparer, quoi payer avant le kickoff, quoi cocher,
+          et comment on branche le système sans te prendre tes mots de passe.
         </p>
         <div class="hero__meta">
-          <span class="chip">VERSION <b>1.4</b></span>
+          <span class="chip">VERSION <b>1.5</b></span>
           <span class="chip">INSTALL <b>7 JOURS</b></span>
           <span class="chip">PRIX <b>SUR DEVIS</b></span>
           <span class="chip">URL <b>/sop</b></span>
@@ -1022,60 +1069,143 @@
     <nav class="navstrip" aria-label="Sections">
       <div class="wrap">
         <div class="navstrip__inner">
-          <a href="#reste">01 Reste à faire</a>
-          <a href="#client">02 Kickoff client</a>
-          <a href="#acces">03 Accès (sans login)</a>
-          <a href="#meta-wa">04 Meta / WhatsApp</a>
-          <a href="#tunnel">05 Tunnel</a>
-          <a href="#dashboard">06 Dashboard</a>
-          <a href="#install">07 Install 7j</a>
-          <a href="#maintenance">08 Maintenance</a>
-          <a href="#regles">09 Do / Don't</a>
+          <a href="#comprendre">01 En clair</a>
+          <a href="#avant">02 Avant le kickoff</a>
+          <a href="#pendant">03 Pendant le kickoff</a>
+          <a href="#client">04 Checklist</a>
+          <a href="#branchement">05 Branchement</a>
+          <a href="#acces">06 Accès</a>
+          <a href="#meta-wa">07 WhatsApp</a>
+          <a href="#tunnel">08 Tunnel</a>
+          <a href="#dashboard">09 Dashboard</a>
+          <a href="#install">10 Install 7j</a>
+          <a href="#maintenance">11 Maintenance</a>
+          <a href="#regles">12 Do / Don't</a>
         </div>
       </div>
     </nav>
 
     <main>
-      <section id="reste">
+
+      <section id="comprendre">
         <div class="wrap">
-          <p class="sec-tag">01 · Où on en est</p>
-          <h2>Ce qu'il reste à faire</h2>
-          <p class="lede">État type après kickoff. À cocher avec le client.</p>
-          <div class="feat">
-            <article>
-              <p class="pill pill--ok">Fait / en cours</p>
-              <h3>Côté Horizon</h3>
-              <p>Site + page /demo. Opt-in (Brevo). Webhook 360. Notifs mail internes. Dashboard / tunnel à brancher sur le compte client.</p>
-            </article>
-            <article>
-              <p class="pill pill--wait">Attente</p>
-              <h3>Côté client Meta</h3>
-              <p>Business Verification soumise (docs LLC + ownership). Review 360dialog / Meta. Puis display name WA + templates.</p>
-            </article>
-            <article>
-              <p class="pill pill--todo">Bloquant produit</p>
-              <h3>Groups API</h3>
-              <p>Débloquer Templates + Groups (souvent OBA). Sans ça : pas de création auto 1 groupe / lead.</p>
-            </article>
-            <article>
-              <p class="pill pill--todo">Après verif</p>
-              <h3>Go-live</h3>
-              <p>Inviter Horizon en Partner. Webhooks. Templates invite. Test bout-en-bout. Formation commercial.</p>
-            </article>
+          <p class="sec-tag">01 · En clair</p>
+          <h2>Si tu n'y connais rien</h2>
+          <p class="lede">
+            Pas besoin d'être technique. Tu prépares quelques docs, tu paies l'acompte,
+            on fait un appel, tu coches les cases, on installe. Horizon gère le reste.
+          </p>
+          <div class="plain">
+            <h3>Le système en 4 phrases</h3>
+            <ul>
+              <li>Tes leads remplissent un formulaire (pub / landing).</li>
+              <li>On crée un groupe WhatsApp dédié pour chaque lead.</li>
+              <li>Le lead reçoit un mail avec le lien pour rejoindre.</li>
+              <li>Ton commercial est alerté et parle dans le groupe.</li>
+            </ul>
+            <h3>Ce qu'on ne te demandera jamais</h3>
+            <ul>
+              <li>Ton mot de passe Facebook, Google, banque ou WhatsApp perso</li>
+              <li>De « pirater » ton WhatsApp perso avec un QR code</li>
+              <li>De comprendre Meta, 360dialog ou le code</li>
+            </ul>
+            <h3>Ce qu'on te demandera</h3>
+            <ul>
+              <li>Des documents d'entreprise (pour vérifier le compte WhatsApp Business)</li>
+              <li>D'inviter Horizon sur tes outils (en 2 clics, sans donner de login)</li>
+              <li>De coller 1 ou 2 réglages simples si besoin (on te guide)</li>
+            </ul>
           </div>
         </div>
       </section>
 
+      <section id="avant">
+        <div class="wrap">
+          <p class="sec-tag">02 · Avant le kickoff</p>
+          <h2>Préviens, prépare, paie l'acompte</h2>
+          <p class="lede">
+            Le kickoff n'est pas un call commercial. C'est le démarrage de l'install.
+            S'il est mal préparé, on perd 45 minutes à chercher des PDF.
+          </p>
+          <div class="plain">
+            <h3>1 · Prévenir le client (Horizon → toi)</h3>
+            <ul>
+              <li>Envoyer cette page <code>/sop</code> + le lien checklist perso (<code>?c=…</code>)</li>
+              <li>Proposer 2 créneaux d'appel (45–60 min)</li>
+              <li>Dire clairement : « On démarre après acompte + docs prêts »</li>
+              <li>Rappeler qui doit être sur l'appel (fondateur + la personne qui a accès Meta / domaine si ce n'est pas toi)</li>
+            </ul>
+
+            <h3>2 · Condition pour confirmer le créneau</h3>
+            <ul>
+              <li><b>Acompte reçu</b> (ordre de grandeur : 30–50 % de l'install, fixé sur le devis)</li>
+              <li>Pourquoi : le kickoff ouvre les 7 jours d'install. Sans acompte, ce n'est plus une livraison, c'est un call gratuit qui glisse.</li>
+              <li>Formulation propre (à coller dans le mail) : « Dès réception de l'acompte, on bloque ton créneau kickoff et on démarre le compteur d'installation. »</li>
+              <li>Ce n'est pas « paye ou on s'appelle pas » en mode menace. C'est : <b>l'appel = début de chantier</b>, donc on démarre quand le chantier est validé.</li>
+            </ul>
+
+            <h3>3 · Docs à préparer AVANT l'appel (sinon ça traîne)</h3>
+            <ul>
+              <li>Document officiel de la société (LLC : Certificate / lettre IRS 147C)</li>
+              <li>Relevé bancaire business ou preuve d'ownership (même adresse que tu mettras dans Meta)</li>
+              <li>Accès possible le jour J à : Meta Business, 360dialog (si déjà créé), DNS / Cloudflare ou registrar du domaine, système de formulaires (systeme.io, etc.)</li>
+              <li>Numéro WhatsApp Business prévu (idéalement dédié au process, pas ton perso)</li>
+              <li>Qui reçoit les notifs leads (prénom + téléphone du commercial)</li>
+            </ul>
+
+            <h3>4 · Ce que tu reçois avant l'appel</h3>
+            <ul>
+              <li>Lien de cette page + checklist interactive</li>
+              <li>Lien de paiement acompte / facture</li>
+              <li>Lien Zoom / Meet</li>
+              <li>Rappel des docs (liste ci-dessus)</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <b>Règle Horizon</b>
+            Pas d'acompte = pas de créneau kickoff confirmé. On peut échanger par mail, mais on ne démarre pas l'install.
+          </div>
+        </div>
+      </section>
+
+      <section id="pendant">
+        <div class="wrap">
+          <p class="sec-tag">03 · Pendant le kickoff</p>
+          <h2>Déroulement de l'appel (45–60 min)</h2>
+          <p class="lede">Ordre fixe. On ne dérive pas sur la strat pub pendant cet appel.</p>
+          <div class="plain">
+            <ol>
+              <li><b>5 min</b> · Rappel objectif : zéro lead mort, 1 groupe WhatsApp / lead, dashboard.</li>
+              <li><b>10 min</b> · Mapping : d'où viennent tes leads aujourd'hui (ads, form, CRM) et qui répond.</li>
+              <li><b>15 min</b> · Accès : invitations Partner (Meta, domaine, formulaires) sans mots de passe.</li>
+              <li><b>15 min</b> · WhatsApp Business : verif docs / channel / webhooks (ou plan d'action si pas fini).</li>
+              <li><b>10 min</b> · Branchement tunnel : systeme.io / domaine / sous-domaine (voir section suivante).</li>
+              <li><b>5 min</b> · Checklist : on coche ensemble ce qui est fait, on fixe les reliquats + date go-live.</li>
+            </ol>
+            <h3>À la fin de l'appel tu dois savoir</h3>
+            <ul>
+              <li>Qui fait quoi d'ici 48h (toi vs Horizon)</li>
+              <li>Sur quel domaine / URL part le formulaire</li>
+              <li>Quand tu reçois le premier test live</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
       <section id="client">
         <div class="wrap">
-          <p class="sec-tag">02 · Kickoff client</p>
-          <h2>À faire au kickoff (~1h)</h2>
+          <p class="sec-tag">04 · Checklist kickoff</p>
+          <h2>Coche ce qui est fait</h2>
           <p class="lede">
-            Coche au fur et à mesure. Avec un lien client (<code>?c=…</code>), la progression
-            est partagée entre toi et Horizon. Sans lien : sauvegarde locale sur cet appareil.
+            Liste simple. Tu coches quand c'est fait. Avec le lien que Horizon t'a envoyé,
+            on voit la même progression. Pas besoin de tout finir pendant l'appel.
           </p>
 
+          <div class="callout" style="margin-bottom:14px">
+            <b>Rappel</b>
+            Cette checklist sert après acompte + créneau kickoff confirmé.
+            Avant ça : prépare les docs (section « Avant le kickoff »).
+          </div>
           <div class="board" id="sop-board">
             <div class="board__bar">
               <div class="board__meta">
@@ -1224,10 +1354,71 @@
         </div>
       </section>
 
+      <section id="branchement">
+        <div class="wrap">
+          <p class="sec-tag">05 · Branchement</p>
+          <h2>Où on pose le tunnel</h2>
+          <p class="lede">
+            On s'adapte à ton setup. Tu n'as pas à tout migrer. On choisit le chemin le plus simple.
+          </p>
+
+          <div class="scenario">
+            <div class="scenario__h">Cas A · Tes formulaires sont sur systeme.io</div>
+            <div class="scenario__b">
+              <ul>
+                <li>On garde systeme.io comme capture (opt-in).</li>
+                <li>Tu nous donnes accès (invitation membre) ou un webhook vers Horizon.</li>
+                <li>Dès qu'un lead s'inscrit, on crée le groupe WhatsApp + on envoie le mail.</li>
+                <li>Pas besoin de bouger tes tunnels pubs tout de suite.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario__h">Cas B · Ton domaine est géré ailleurs (O2switch, Ionos, Cloudflare…)</div>
+            <div class="scenario__b">
+              <ul>
+                <li>Tu restes propriétaire du domaine.</li>
+                <li>On t'envoie 1–3 lignes DNS à coller (TXT / CNAME) pour le mail et éventuellement la page.</li>
+                <li>Ou tu invites Horizon sur le DNS le temps de l'install (révocable après).</li>
+                <li>Aucun transfert de domaine obligatoire.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario__h">Cas C · Ton domaine principal sert déjà aux landing pages</div>
+            <div class="scenario__b">
+              <ul>
+                <li>On ne touche pas à ton domaine principal (tes LP restent intactes).</li>
+                <li>On utilise un sous-domaine dédié, ex. <b>start.tonagence.com</b> ou <b>go.tonagence.com</b>.</li>
+                <li>Tu crées un CNAME (on t'envoie la valeur exacte). Environ 2 minutes.</li>
+                <li>Le tunnel Horizon vit sur ce sous-domaine. Tes ads peuvent pointer dessus.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario__h">Cas D · Rien n'est prêt côté DNS (pire cas, simple)</div>
+            <div class="scenario__b">
+              <ul>
+                <li>Horizon héberge le tunnel sur un domaine provisoire le temps de l'install.</li>
+                <li>Dès que ton DNS est prêt, on bascule sur start.tondomaine.com.</li>
+                <li>Objectif : ne jamais bloquer les 7 jours pour une bagarre de DNS.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout">
+            <b>Décision au kickoff</b>
+            On choisit A / B / C / D ensemble en 5 minutes. Tu n'as pas à décider seul avant l'appel.
+          </div>
+        </div>
+      </section>
 
       <section id="acces">
         <div class="wrap">
-          <p class="sec-tag">03 · Accès propres</p>
+          <p class="sec-tag">06 · Accès propres</p>
           <h2>Donner la main sans login perso</h2>
           <p class="lede">
             Principe : invitation email / Partner access. Jamais « tiens mon mot de passe ».
@@ -1310,7 +1501,7 @@
 
       <section id="meta-wa">
         <div class="wrap">
-          <p class="sec-tag">04 · Meta / WhatsApp (détail)</p>
+          <p class="sec-tag">07 · Meta / WhatsApp</p>
           <h2>Verif, adresse, Groups API</h2>
           <p class="lede">Les pièges qu'on vient de traverser. À suivre dans cet ordre.</p>
           <div class="split">
@@ -1369,7 +1560,7 @@
 
       <section id="tunnel">
         <div class="wrap">
-          <p class="sec-tag">05 · Tunnel</p>
+          <p class="sec-tag">08 · Tunnel</p>
           <h2>Opt-in → groupe API → mail → humain</h2>
           <p class="lede">Ce qu'on installe une fois les accès et le channel prêts.</p>
           <div class="pipe" aria-label="Tunnel">
@@ -1385,7 +1576,7 @@
 
       <section id="dashboard">
         <div class="wrap">
-          <p class="sec-tag">06 · Dashboard</p>
+          <p class="sec-tag">09 · Dashboard</p>
           <h2>La vérité du pipe</h2>
           <p class="lede">Opt-ins, kanban, fiches IA, alertes FUP. L'humain décide.</p>
           <div class="feat">
@@ -1399,7 +1590,7 @@
 
       <section id="install">
         <div class="wrap">
-          <p class="sec-tag">07 · Install</p>
+          <p class="sec-tag">10 · Install</p>
           <h2>7 jours</h2>
           <p class="lede">~1h client (checklist). Le reste = exécution Horizon.</p>
           <div class="timeline">
@@ -1418,7 +1609,7 @@
 
       <section id="maintenance">
         <div class="wrap">
-          <p class="sec-tag">08 · Maintenance</p>
+          <p class="sec-tag">11 · Maintenance</p>
           <h2>Horizon porte les abos</h2>
           <p class="lede">
             Tu ne jongles pas avec 6 factures outils. Horizon paie la stack,
@@ -1473,7 +1664,7 @@
 
       <section id="regles">
         <div class="wrap">
-          <p class="sec-tag">09 · Discipline</p>
+          <p class="sec-tag">12 · Discipline</p>
           <h2>Do / Don't</h2>
           <div class="rules">
             <article class="rule rule--do">
