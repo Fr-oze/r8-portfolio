@@ -839,42 +839,121 @@
         .compare__row > *:not(:last-child) { border-right: none; border-bottom: 1px solid var(--line); }
       }
     
-      .kickoff {
+
+      .board {
         background: var(--panel);
         border: 1px solid var(--line);
-        padding: 28px 28px 20px;
+        margin-bottom: 14px;
       }
+      .board__bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+        background: var(--wash);
+      }
+      .board__meta { font-size: 12px; color: var(--dim); letter-spacing: 0.06em; }
+      .board__meta b { color: var(--ink); }
+      .board__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+      .board__btn {
+        font: inherit;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        padding: 10px 12px;
+        cursor: pointer;
+      }
+      .board__btn:hover { background: var(--ink); color: var(--bg); }
+      .board__btn--primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+      .board__btn--primary:hover { opacity: 0.88; }
+      .board__progress {
+        height: 4px;
+        background: var(--line);
+        width: 100%;
+      }
+      .board__progress > i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: var(--ink);
+        transition: width 0.25s ease;
+      }
+      .todo { list-style: none; margin: 0; padding: 8px 0 12px; }
+      .todo > li {
+        border-top: 1px solid var(--line);
+        padding: 0;
+      }
+      .todo > li:first-child { border-top: none; }
+      .todo label.item {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px 20px;
+        cursor: pointer;
+      }
+      .todo label.item:hover { background: var(--wash); }
+      .todo input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        accent-color: #12141a;
+        cursor: pointer;
+      }
+      .todo .item__title {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .todo label.item:has(input:checked) .item__title {
+        text-decoration: line-through;
+        color: var(--dim);
+        font-weight: 400;
+      }
+      .todo .item__help {
+        margin: 8px 0 0;
+        padding-left: 1.1em;
+        color: var(--soft);
+        font-size: 13px;
+      }
+      .todo .item__help li { margin: 3px 0; }
       .kickoff h3 {
-        font-size: 12px;
+        font-size: 11px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--dim);
-        margin: 22px 0 10px;
+        margin: 22px 20px 4px;
       }
-      .kickoff h3:first-child { margin-top: 0; }
-      .kickoff > ul {
-        margin: 0 0 8px;
-        padding-left: 1.2em;
-      }
-      .kickoff > ul > li {
-        margin: 10px 0;
-        color: var(--ink);
-      }
-      .kickoff ul ul {
-        margin: 6px 0 4px;
-        padding-left: 1.2em;
-      }
-      .kickoff ul ul li {
-        margin: 4px 0;
-        color: var(--soft);
-        font-size: 14px;
-      }
+      .kickoff h3:first-of-type { margin-top: 8px; }
       .kickoff .tip {
-        margin-top: 18px;
+        margin: 8px 20px 20px;
         padding-top: 16px;
         border-top: 1px solid var(--line);
         font-size: 13px;
         color: var(--dim);
+      }
+      .sync-pill {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: 1px solid var(--line);
+        padding: 4px 8px;
+        color: var(--dim);
+      }
+      .sync-pill--on { border-color: #2f855a; color: #2f855a; }
+      .sync-pill--off { border-color: var(--line); }
+
+      .kickoff {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 0;
+        overflow: hidden;
       }
       .access {
         display: grid;
@@ -932,7 +1011,7 @@
           et ce qu'on installe de notre côté. Un groupe WhatsApp par lead via API.
         </p>
         <div class="hero__meta">
-          <span class="chip">VERSION <b>1.3</b></span>
+          <span class="chip">VERSION <b>1.4</b></span>
           <span class="chip">INSTALL <b>7 JOURS</b></span>
           <span class="chip">PRIX <b>SUR DEVIS</b></span>
           <span class="chip">URL <b>/sop</b></span>
@@ -950,7 +1029,8 @@
           <a href="#tunnel">05 Tunnel</a>
           <a href="#dashboard">06 Dashboard</a>
           <a href="#install">07 Install 7j</a>
-          <a href="#regles">08 Do / Don't</a>
+          <a href="#maintenance">08 Maintenance</a>
+          <a href="#regles">09 Do / Don't</a>
         </div>
       </div>
     </nav>
@@ -986,72 +1066,164 @@
         </div>
       </section>
 
+
       <section id="client">
         <div class="wrap">
           <p class="sec-tag">02 · Kickoff client</p>
           <h2>À faire au kickoff (~1h)</h2>
           <p class="lede">
-            Tu gardes tes mots de passe. Tu invites Horizon. Jamais de login perso.
+            Coche au fur et à mesure. Avec un lien client (<code>?c=…</code>), la progression
+            est partagée entre toi et Horizon. Sans lien : sauvegarde locale sur cet appareil.
           </p>
 
-          <div class="kickoff">
-            <h3>Meta Business</h3>
-            <ul>
-              <li>Ouvrir le Business Portfolio au nom de la société (pas le compte perso)</li>
-              <li>
-                Remplir les infos entreprise :
-                <ul>
-                  <li>nom légal exact (ex. Horizon Agency LLC)</li>
-                  <li>adresse = celle du relevé bancaire / domiciliation US</li>
-                  <li>téléphone + site web</li>
-                </ul>
-              </li>
-              <li>
-                Lancer la Business Verification et uploader :
-                <ul>
-                  <li>lettre IRS 147C (ou Certificate LLC)</li>
-                  <li>preuve ownership / relevé bancaire business</li>
-                </ul>
-              </li>
-              <li>Attendre la validation (statut « under review » = OK pour l’instant)</li>
-            </ul>
+          <div class="board" id="sop-board">
+            <div class="board__bar">
+              <div class="board__meta">
+                <span class="sync-pill sync-pill--off" id="sync-pill">Local</span>
+                <span id="board-client"></span>
+                · <b id="board-count">0/11</b> faits
+              </div>
+              <div class="board__actions">
+                <button type="button" class="board__btn" id="btn-copy">Copier le lien</button>
+                <button type="button" class="board__btn board__btn--primary" id="btn-create">Créer un lien client</button>
+              </div>
+            </div>
+            <div class="board__progress" aria-hidden="true"><i id="board-bar"></i></div>
 
-            <h3>WhatsApp · 360dialog</h3>
-            <ul>
-              <li>Créer / ouvrir le channel Cloud API</li>
-              <li>Coller la webhook URL fournie par Horizon (Channel + WABA = même URL)</li>
-              <li>Après verif Meta : demander le display name WhatsApp</li>
-              <li>Faire approuver le template d’invite groupe</li>
-              <li>
-                Envoyer un ticket support 360dialog :
-                <ul>
-                  <li>« Activer Template messaging + Groups API / OBA »</li>
-                  <li>joindre Channel ID + WABA ID</li>
-                </ul>
-              </li>
-            </ul>
+            <div class="kickoff">
+              <h3>Meta Business</h3>
+              <ul class="todo">
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="meta-portfolio" />
+                    <span>
+                      <span class="item__title">Ouvrir le Business Portfolio au nom de la société</span>
+                      <ul class="item__help">
+                        <li>Pas le compte Facebook perso</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="meta-infos" />
+                    <span>
+                      <span class="item__title">Remplir les infos entreprise</span>
+                      <ul class="item__help">
+                        <li>Nom légal exact (ex. Horizon Agency LLC)</li>
+                        <li>Adresse = relevé bancaire / domiciliation US</li>
+                        <li>Téléphone + site web</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="meta-docs" />
+                    <span>
+                      <span class="item__title">Lancer la Business Verification + upload docs</span>
+                      <ul class="item__help">
+                        <li>Lettre IRS 147C (ou Certificate LLC)</li>
+                        <li>Preuve ownership / relevé bancaire business</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="meta-review" />
+                    <span>
+                      <span class="item__title">Verif sous review / validée</span>
+                      <ul class="item__help">
+                        <li>« Under review » = OK, on attend</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+              </ul>
 
-            <h3>Accès + contexte</h3>
-            <ul>
-              <li>Inviter Horizon en Partner / user (voir section Accès ci-dessous)</li>
-              <li>
-                Envoyer le contexte commercial :
-                <ul>
-                  <li>qui reçoit les notifs</li>
-                  <li>cases du pipeline</li>
-                  <li>seuils de relance (FUP)</li>
-                  <li>ton des mails</li>
-                </ul>
-              </li>
-            </ul>
+              <h3>WhatsApp · 360dialog</h3>
+              <ul class="todo">
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="wa-channel" />
+                    <span><span class="item__title">Créer / ouvrir le channel Cloud API</span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="wa-webhook" />
+                    <span>
+                      <span class="item__title">Coller la webhook URL Horizon</span>
+                      <ul class="item__help">
+                        <li>Channel + WABA = même URL</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="wa-display" />
+                    <span><span class="item__title">Display name WhatsApp demandé / approuvé</span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="wa-templates" />
+                    <span><span class="item__title">Template d’invite groupe soumis / approuvé</span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="wa-groups" />
+                    <span>
+                      <span class="item__title">Ticket 360 : Templates + Groups API / OBA</span>
+                      <ul class="item__help">
+                        <li>Joindre Channel ID + WABA ID</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+              </ul>
 
-            <p class="tip">
-              Astuce adresse : si le papier LLC et la banque ont 2 adresses
-              différentes, mets dans Meta l’adresse de la banque.
-            </p>
+              <h3>Accès + contexte</h3>
+              <ul class="todo">
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="access-invite" />
+                    <span>
+                      <span class="item__title">Inviter Horizon (Partner / user)</span>
+                      <ul class="item__help">
+                        <li>Voir section Accès ci-dessous · jamais de mot de passe</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label class="item">
+                    <input type="checkbox" data-id="access-context" />
+                    <span>
+                      <span class="item__title">Envoyer le contexte commercial</span>
+                      <ul class="item__help">
+                        <li>Qui reçoit les notifs</li>
+                        <li>Cases pipeline</li>
+                        <li>Seuils FUP</li>
+                        <li>Ton des mails</li>
+                      </ul>
+                    </span>
+                  </label>
+                </li>
+              </ul>
+
+              <p class="tip">
+                Astuce adresse : si le papier LLC et la banque ont 2 adresses
+                différentes, mets dans Meta l’adresse de la banque.
+              </p>
+            </div>
           </div>
         </div>
       </section>
+
 
       <section id="acces">
         <div class="wrap">
@@ -1243,9 +1415,65 @@
         </div>
       </section>
 
+
+      <section id="maintenance">
+        <div class="wrap">
+          <p class="sec-tag">08 · Maintenance</p>
+          <h2>Horizon porte les abos</h2>
+          <p class="lede">
+            Tu ne jongles pas avec 6 factures outils. Horizon paie la stack,
+            tu paies un retainer mensuel qui inclut la maintenance du système.
+          </p>
+          <div class="price">
+            <article>
+              <div class="price__phase">Install</div>
+              <h3>Mise en place</h3>
+              <p>Tunnel + groupes WA API + dashboard + FUP. Une fois.</p>
+              <div class="price__eur">Sur devis</div>
+            </article>
+            <article>
+              <div class="price__phase">Socle</div>
+              <h3>Retainer mensuel</h3>
+              <p>Maintenance + monitoring + 1 opti / mois. Abonnements inclus.</p>
+              <div class="price__eur">~1 500 €/mois</div>
+            </article>
+            <article>
+              <div class="price__phase">Coût stack</div>
+              <h3>Côté Horizon</h3>
+              <p>WA API, mail, hosting, DB, tooling… porté par Horizon.</p>
+              <div class="price__eur">~100–150 €/mois</div>
+            </article>
+            <article>
+              <div class="price__phase">Logique</div>
+              <h3>Pourquoi</h3>
+              <p>Zéro friction client. Marge saine. Upsell expand ensuite.</p>
+              <div class="price__eur">Ancre interne</div>
+            </article>
+          </div>
+          <div class="feat" style="margin-top:14px">
+            <article>
+              <h3>Inclus dans le retainer</h3>
+              <p>Hébergement, mail transactionnel, channel WA, correctifs, 1 optimisation / mois, support.</p>
+            </article>
+            <article>
+              <h3>Hors retainer</h3>
+              <p>Nouveaux process, refonte ads lourde, features hors scope (devis expand).</p>
+            </article>
+            <article>
+              <h3>Côté client</h3>
+              <p>Une facture Horizon / mois. Pas d’abo 360 / Brevo / Vercel à gérer.</p>
+            </article>
+            <article>
+              <h3>Côté Horizon</h3>
+              <p>On mutualise la stack, on facture la valeur du système qui tourne.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section id="regles">
         <div class="wrap">
-          <p class="sec-tag">08 · Discipline</p>
+          <p class="sec-tag">09 · Discipline</p>
           <h2>Do / Don't</h2>
           <div class="rules">
             <article class="rule rule--do">
@@ -1276,6 +1504,157 @@
     <footer>
       <div class="wrap">HORIZON AGENCY · /sop · NOINDEX · DOC DE LIVRAISON</div>
     </footer>
+
+    <script>
+(function () {
+  const boxes = [...document.querySelectorAll('#sop-board input[data-id]')];
+  const countEl = document.getElementById('board-count');
+  const barEl = document.getElementById('board-bar');
+  const pill = document.getElementById('sync-pill');
+  const clientEl = document.getElementById('board-client');
+  const btnCopy = document.getElementById('btn-copy');
+  const btnCreate = document.getElementById('btn-create');
+  const params = new URLSearchParams(location.search);
+  let checklistId = params.get('c') || '';
+  let saveTimer = null;
+  const LOCAL_KEY = 'horizon-sop-checks-v1';
+
+  function readChecks() {
+    const out = {};
+    boxes.forEach((b) => { out[b.dataset.id] = !!b.checked; });
+    return out;
+  }
+
+  function applyChecks(map) {
+    boxes.forEach((b) => {
+      b.checked = !!(map && map[b.dataset.id]);
+    });
+    renderProgress();
+  }
+
+  function renderProgress() {
+    const total = boxes.length;
+    const done = boxes.filter((b) => b.checked).length;
+    countEl.textContent = done + '/' + total;
+    barEl.style.width = Math.round((done / total) * 100) + '%';
+  }
+
+  function setSync(on, name) {
+    pill.textContent = on ? 'Sync' : 'Local';
+    pill.classList.toggle('sync-pill--on', on);
+    pill.classList.toggle('sync-pill--off', !on);
+    clientEl.textContent = name ? name : '';
+  }
+
+  function persistLocal() {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(readChecks()));
+  }
+
+  async function persistRemote() {
+    if (!checklistId) return;
+    try {
+      await fetch('/api/sop/' + checklistId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ checks: readChecks() }),
+      });
+    } catch (e) {
+      console.warn('sop sync failed', e);
+    }
+  }
+
+  function scheduleSave() {
+    renderProgress();
+    persistLocal();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(persistRemote, 350);
+  }
+
+  boxes.forEach((b) => b.addEventListener('change', scheduleSave));
+
+  btnCopy.addEventListener('click', async () => {
+    const url = checklistId
+      ? location.origin + '/sop/?c=' + checklistId
+      : location.href.split('#')[0];
+    try {
+      await navigator.clipboard.writeText(url);
+      btnCopy.textContent = 'Copié';
+      setTimeout(() => { btnCopy.textContent = 'Copier le lien'; }, 1200);
+    } catch {
+      prompt('Copie ce lien :', url);
+    }
+  });
+
+  btnCreate.addEventListener('click', async () => {
+    const name = prompt('Nom du client (ex. Agence Dupont) :');
+    if (name === null) return;
+    let secret = sessionStorage.getItem('sop_secret') || '';
+    if (!secret) {
+      secret = prompt('Secret Horizon (SOP_SECRET) :') || '';
+      if (!secret) return;
+      sessionStorage.setItem('sop_secret', secret);
+    }
+    btnCreate.disabled = true;
+    btnCreate.textContent = 'Création…';
+    try {
+      const res = await fetch('/api/sop', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + secret,
+        },
+        body: JSON.stringify({ client_name: name.trim() }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.ok) {
+        if (res.status === 401) sessionStorage.removeItem('sop_secret');
+        alert('Création impossible. Vérifie le secret / le déploiement API.');
+        return;
+      }
+      // seed current local checks into new board
+      checklistId = data.id;
+      await fetch('/api/sop/' + checklistId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ checks: readChecks() }),
+      });
+      location.href = '/sop/?c=' + checklistId + '#client';
+    } catch {
+      alert('Réseau indisponible.');
+    } finally {
+      btnCreate.disabled = false;
+      btnCreate.textContent = 'Créer un lien client';
+    }
+  });
+
+  async function boot() {
+    if (checklistId) {
+      try {
+        const res = await fetch('/api/sop/' + checklistId);
+        const data = await res.json().catch(() => null);
+        if (res.ok && data?.ok) {
+          applyChecks(data.checks || {});
+          setSync(true, data.client_name || 'Client');
+          return;
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY);
+      if (raw) applyChecks(JSON.parse(raw));
+      else renderProgress();
+    } catch {
+      renderProgress();
+    }
+    setSync(false, '');
+  }
+
+  boot();
+})();
+    </script>
+
   </body>
 </html>
 

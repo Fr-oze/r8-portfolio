@@ -16,6 +16,14 @@
     {
       "source": "/api/webhooks/360dialog",
       "destination": "https://waitlist.horizon-agency.co/api/webhooks/360dialog"
+    },
+    {
+      "source": "/api/sop",
+      "destination": "https://waitlist.horizon-agency.co/api/sop"
+    },
+    {
+      "source": "/api/sop/:id",
+      "destination": "https://waitlist.horizon-agency.co/api/sop/:id"
     }
   ]
 }
