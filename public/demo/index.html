@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HORIZON · Voir le système en vrai</title>
+    <meta
+      name="description"
+      content="Opt-in démo : on crée ton groupe WhatsApp (1 lead = 1 groupe) et tu reçois le lien par mail."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f5f7;
+        --ink: #12141a;
+        --dim: #5c6570;
+        --line: #d5dae0;
+        --accent: #4f56d8;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Space Mono", ui-monospace, Menlo, monospace;
+        letter-spacing: 0.04em;
+      }
+      .wrap {
+        max-width: 34rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem 4rem;
+      }
+      .label {
+        font-size: 0.65rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      h1 {
+        margin-top: 1rem;
+        font-size: clamp(1.45rem, 4vw, 1.85rem);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      .lead {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--dim);
+      }
+      form {
+        margin-top: 2.25rem;
+        display: grid;
+        gap: 1rem;
+      }
+      .row {
+        display: grid;
+        gap: 1rem;
+      }
+      @media (min-width: 560px) {
+        .row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      label {
+        display: block;
+      }
+      label span.hint {
+        display: block;
+        margin-top: 0.4rem;
+        font-size: 0.68rem;
+        color: var(--dim);
+      }
+      input {
+        margin-top: 0.45rem;
+        width: 100%;
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 0.85rem 0.75rem;
+        font: inherit;
+        font-size: 0.875rem;
+        color: var(--ink);
+        outline: none;
+      }
+      input:focus {
+        border-color: var(--ink);
+      }
+      button {
+        margin-top: 0.35rem;
+        width: 100%;
+        border: 0;
+        background: var(--ink);
+        color: var(--bg);
+        padding: 1rem 1rem;
+        font: inherit;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-align: left;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: wait;
+      }
+      .err {
+        color: #b42318;
+        font-size: 0.85rem;
+      }
+      .ok {
+        margin-top: 2rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 1.4rem;
+      }
+      .ok p {
+        margin-top: 0.75rem;
+        line-height: 1.65;
+        font-size: 0.95rem;
+      }
+      .ok .dim {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        color: var(--dim);
+      }
+      .ok a {
+        color: inherit;
+      }
+      .back {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--dim);
+        text-decoration: none;
+      }
+      .back:hover {
+        color: var(--ink);
+      }
+      .hp {
+        position: absolute;
+        left: -9999px;
+        height: 0;
+        width: 0;
+        opacity: 0;
+      }
+      .foot {
+        margin-top: 0.35rem;
+        font-size: 0.68rem;
+        line-height: 1.6;
+        color: var(--dim);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <a class="back" href="/">← Horizon</a>
+      <p class="label">Horizon · démo live</p>
+      <h1>Vois le système en vrai.</h1>
+      <p class="lead">
+        Tu t’inscris. On crée ton groupe WhatsApp démo (1 lead = 1 groupe). Tu
+        reçois le lien par mail. C’est exactement le format qu’on installe chez
+        toi.
+      </p>
+
+      <div id="success" class="ok" hidden>
+        <p class="label" style="color: var(--accent)">OK</p>
+        <p id="success-msg"></p>
+        <p class="dim">
+          Astuce : envoie aussi un « Hi » sur
+          <a href="https://wa.me/33674247494" target="_blank" rel="noopener"
+            >wa.me/33674247494</a
+          >
+          pour ouvrir la session.
+        </p>
+      </div>
+
+      <form id="demo-form" novalidate>
+        <div class="row">
+          <label>
+            <span class="label">Prénom</span>
+            <input name="prenom" autocomplete="given-name" required />
+          </label>
+          <label>
+            <span class="label">Nom</span>
+            <input name="nom" autocomplete="family-name" required />
+          </label>
+        </div>
+
+        <label>
+          <span class="label">Email</span>
+          <input name="email" type="email" autocomplete="email" required />
+          <span class="hint">Pour t’envoyer le lien d’invite du groupe.</span>
+        </label>
+
+        <label>
+          <span class="label">WhatsApp</span>
+          <input
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            placeholder="+33 6 …"
+            required
+          />
+        </label>
+
+        <label>
+          <span class="label">Leads à traiter / semaine</span>
+          <input
+            name="leads_per_week"
+            type="number"
+            min="1"
+            max="10000"
+            inputmode="numeric"
+            required
+          />
+        </label>
+
+        <label>
+          <span class="label">CA moyen / mois (€)</span>
+          <input
+            name="ca_per_month"
+            type="number"
+            min="0"
+            max="50000000"
+            step="100"
+            inputmode="numeric"
+            required
+          />
+        </label>
+
+        <input
+          class="hp"
+          name="company"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+        />
+
+        <p id="error" class="err" hidden></p>
+
+        <button type="submit" id="submit">Voir le système en vrai →</button>
+        <p class="foot">Pas de spam. Un mail avec ton lien de groupe, c’est tout.</p>
+      </form>
+    </main>
+
+    <script>
+      const form = document.getElementById("demo-form");
+      const errorEl = document.getElementById("error");
+      const success = document.getElementById("success");
+      const successMsg = document.getElementById("success-msg");
+      const submit = document.getElementById("submit");
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorEl.hidden = true;
+
+        const fd = new FormData(form);
+        const prenom = String(fd.get("prenom") || "").trim();
+        const nom = String(fd.get("nom") || "").trim();
+        const email = String(fd.get("email") || "").trim();
+        const phone = String(fd.get("phone") || "").trim();
+        const leads = String(fd.get("leads_per_week") || "").trim();
+        const ca = String(fd.get("ca_per_month") || "").trim();
+        const company = String(fd.get("company") || "");
+
+        const fail = (msg) => {
+          errorEl.textContent = msg;
+          errorEl.hidden = false;
+        };
+
+        if (!prenom || !nom) return fail("Nom et prénom, s'il te plaît.");
+        if (!EMAIL_RE.test(email)) return fail("Email invalide.");
+        if (phone.replace(/\D/g, "").length < 9)
+          return fail("Numéro WhatsApp invalide.");
+        if (!leads || Number(leads) < 1)
+          return fail("Indique combien de leads tu traites par semaine.");
+        if (ca === "" || Number(ca.replace(/\s/g, "")) < 0)
+          return fail("Indique ton CA moyen mensuel.");
+
+        submit.disabled = true;
+        submit.textContent = "Création en cours…";
+
+        const source =
+          new URLSearchParams(window.location.search).get("src") || "site";
+
+        try {
+          const res = await fetch("/api/demo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prenom,
+              nom,
+              email,
+              phone,
+              leads_per_week: Number(leads),
+              ca_per_month: Number(ca.replace(/\s/g, "").replace(",", ".")),
+              company,
+              source,
+            }),
+          });
+          const data = await res.json().catch(() => null);
+          if (!res.ok || !data?.ok) {
+            const map = {
+              EMAIL_INVALID: "Email invalide.",
+              PHONE_INVALID: "Numéro WhatsApp invalide.",
+              LEADS_INVALID: "Leads / semaine invalide.",
+              CA_INVALID: "CA mensuel invalide.",
+              NAME_INVALID: "Nom et prénom requis.",
+            };
+            fail(
+              (data?.error && map[data.error]) ||
+                "Ça a coincé. Réessaie dans un instant."
+            );
+            submit.disabled = false;
+            submit.textContent = "Voir le système en vrai →";
+            return;
+          }
+
+          form.hidden = true;
+          success.hidden = false;
+          successMsg.textContent = data.has_invite
+            ? "Check ton mail. Le lien du groupe WhatsApp est dedans."
+            : "Check ton mail. Ton accès est enregistré, le lien du groupe suit dans la foulée.";
+        } catch {
+          fail("Pas de réseau. Réessaie.");
+          submit.disabled = false;
+          submit.textContent = "Voir le système en vrai →";
+        }
+      });
+    </script>
+  </body>
+</html>

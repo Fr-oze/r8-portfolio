@@ -44,7 +44,7 @@ const ui = new UI();
 // Panneau projets (liste + scroll infini), ouvert depuis le bouton haut-gauche
 // et le lien PROJECTS du nav.
 const projects = new Projects();
-const DEMO_URL = "https://waitlist.horizon-agency.co/demo?src=site";
+const DEMO_URL = "/demo/?src=site";
 const goDemo = () => {
   window.location.href = DEMO_URL;
 };

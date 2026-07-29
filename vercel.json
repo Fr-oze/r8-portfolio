@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    { "source": "/demo", "destination": "/demo/index.html" },
+    { "source": "/demo/", "destination": "/demo/index.html" },
+    {
+      "source": "/api/demo",
+      "destination": "https://waitlist.horizon-agency.co/api/demo"
+    },
+    {
+      "source": "/api/webhooks/360dialog",
+      "destination": "https://waitlist.horizon-agency.co/api/webhooks/360dialog"
+    }
+  ]
+}
