@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HORIZON AGENCY · sop · ZÉRO LEAD MORT</title>
+    <title>HORIZON · sop · INTERNE</title>
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="description" content="Doc de livraison : checklist client, accès sans login perso, tunnel et install." />
+    <meta name="description" content="SOP interne Horizon : todo kickoff + presta, oublis, lien client /kickoff." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#f4f5f7" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1042,26 +1042,38 @@
         .access__row > *:not(:last-child) { border-right: none; }
       }
 
+    
+      .me-board { background: var(--panel); border: 1px solid var(--line); margin-top: 8px; }
+      .me-board .group {
+        padding: 12px 18px 6px;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+        border-top: 1px solid var(--line);
+        background: var(--wash);
+      }
+      .me-board .group:first-child { border-top: none; }
+      .forget li { margin: 10px 0; }
+
     </style>
   </head>
-
   <body>
     <header class="hero">
       <div class="hero__grid" aria-hidden="true"></div>
       <div class="hero__orb" aria-hidden="true"></div>
       <div class="wrap">
-        <p class="eyebrow">Horizon Agency · Doc interne · Noindex</p>
-        <h1>sop<br />ZÉRO LEAD MORT</h1>
+        <p class="eyebrow">Horizon Agency · Interne · Noindex</p>
+        <h1>sop<br />TA TODO</h1>
         <p class="hero__lead">
-          Doc interne Horizon. Process, checklist admin, stack, maintenance.
+          Pour toi. Kickoff + presta : quoi faire, dans quel ordre, quoi ne pas oublier.
           Doc client à envoyer : <a href="/kickoff/"><u>/kickoff</u></a>.
         </p>
         <div class="hero__meta">
-          <span class="chip">VERSION <b>2.0</b></span>
+          <span class="chip">VERSION <b>2.1</b></span>
           <span class="chip">CLIENT <b>/kickoff</b></span>
           <span class="chip">INSTALL <b>7 JOURS</b></span>
-          <span class="chip">PRIX <b>SUR DEVIS</b></span>
-          <span class="chip">URL <b>/sop</b></span>
+          <span class="chip">RETAINER <b>~1,5K</b></span>
         </div>
       </div>
     </header>
@@ -1069,212 +1081,181 @@
     <nav class="navstrip" aria-label="Sections">
       <div class="wrap">
         <div class="navstrip__inner">
-          <a href="#process">01 Process kickoff</a>
-          <a href="#client">02 Checklist admin</a>
-          <a href="#branchement">03 Branchement</a>
-          <a href="#acces">04 Accès</a>
-          <a href="#meta-wa">05 WhatsApp</a>
-          <a href="#tunnel">06 Tunnel</a>
-          <a href="#dashboard">07 Dashboard</a>
-          <a href="#install">08 Install 7j</a>
-          <a href="#maintenance">09 Maintenance</a>
-          <a href="#regles">10 Do / Don't</a>
+          <a href="#todo-ko">01 Todo kickoff</a>
+          <a href="#todo-presta">02 Todo presta</a>
+          <a href="#oublis">03 Ne pas oublier</a>
+          <a href="#lien-client">04 Lien client</a>
+          <a href="#branchement">05 Branchement</a>
+          <a href="#acces">06 Accès</a>
+          <a href="#maintenance">07 Maintenance</a>
+          <a href="#regles">08 Do / Don't</a>
         </div>
       </div>
     </nav>
 
     <main>
-
-
-      <section id="process">
+      <section id="todo-ko">
         <div class="wrap">
-          <p class="sec-tag">01 · Process kickoff (interne)</p>
-          <h2>Avant d'appeler le client</h2>
-          <p class="lede">
-            Le client lit <a href="/kickoff/"><u>/kickoff</u></a>. Toi tu suis ce process.
-          </p>
-          <div class="plain">
-            <h3>Envoyer au client</h3>
-            <ul>
-              <li>Lien <code>/kickoff/?c=…</code> (créer via bouton checklist ci-dessous)</li>
-              <li>Facture / lien acompte (30–50 % install, fixé au devis)</li>
-              <li>2 créneaux d'appel + lien Zoom/Meet une fois acompte reçu</li>
+          <p class="sec-tag">01 · Todo kickoff (toi)</p>
+          <h2>Avant / pendant / après l'appel</h2>
+          <p class="lede">Coche au fur et à mesure. Sauvegarde locale sur cet appareil.</p>
+          <div class="me-board" id="me-ko">
+            <div class="board__bar">
+              <div class="board__meta"><b id="ko-count">0/0</b> faits</div>
+            </div>
+            <div class="board__progress"><i id="ko-bar"></i></div>
+
+            <div class="group">Avant (bloquant)</div>
+            <ul class="todo" data-board="ko">
+              <li><label class="item"><input type="checkbox" data-me="ko-devis" /><span><span class="item__title">Devis signé / accepté</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-acompte" /><span><span class="item__title">Acompte reçu</span><ul class="item__help"><li>Sinon : pas de créneau confirmé</li></ul></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-lien" /><span><span class="item__title">Lien /kickoff/?c= créé + envoyé</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-mail" /><span><span class="item__title">Mail pré-kickoff envoyé</span><ul class="item__help"><li>Docs à préparer + phrase acompte + 2 créneaux</li></ul></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-zoom" /><span><span class="item__title">Créneau + Zoom/Meet confirmés (après acompte)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-qui" /><span><span class="item__title">Qui sera sur l'appel (fondateur + accès Meta/DNS)</span></span></label></li>
             </ul>
-            <h3>Règle acompte</h3>
-            <ul>
-              <li>Pas d'acompte = pas de créneau kickoff confirmé</li>
-              <li>Formulation mail : « Dès réception de l'acompte, on bloque ton créneau kickoff et on démarre le compteur d'installation. »</li>
-              <li>Le kickoff = début de chantier, pas un call gratuit</li>
+
+            <div class="group">Pendant (45–60 min)</div>
+            <ul class="todo" data-board="ko">
+              <li><label class="item"><input type="checkbox" data-me="ko-obj" /><span><span class="item__title">Rappeler l'objectif (1 groupe WA / lead, dashboard)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-map" /><span><span class="item__title">Mapper la source des leads + qui répond aujourd'hui</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-access" /><span><span class="item__title">Faire partir les invitations Partner (Meta, DNS, forms)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-wa" /><span><span class="item__title">Avancer WhatsApp Business (docs / channel / plan)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-branch" /><span><span class="item__title">Choisir branchement A/B/C/D (systeme.io / DNS / start.)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-check" /><span><span class="item__title">Cocher la checklist client ensemble + fixer reliquats 48h</span></span></label></li>
             </ul>
-            <h3>Check avant l'appel</h3>
-            <ul>
-              <li>Acompte bien reçu</li>
-              <li>Client a ouvert /kickoff</li>
-              <li>Qui sera sur l'appel (fondateur + accès Meta/DNS si besoin)</li>
+
+            <div class="group">Juste après</div>
+            <ul class="todo" data-board="ko">
+              <li><label class="item"><input type="checkbox" data-me="ko-recap" /><span><span class="item__title">Recap mail : qui fait quoi / URL cible / date test</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-crm" /><span><span class="item__title">Fiche client créée (Brain / Notion / CRM)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="ko-start" /><span><span class="item__title">Compteur J0 → J7 lancé</span></span></label></li>
             </ul>
-          </div>
-          <div class="callout">
-            <b>Doc client</b>
-            Tout le langage non-tech + docs à préparer + déroulé + cas systeme.io / DNS / start.domaine → <a href="/kickoff/"><u>horizon-agency.co/kickoff</u></a>
           </div>
         </div>
       </section>
-      <section id="client">
-        <div class="wrap">
-          <p class="sec-tag">02 · Checklist admin</p>
-          <h2>Créer / suivre la checklist client</h2>
-          <p class="lede">
-            Crée un lien, envoie-le au client sur <code>/kickoff/?c=…</code>.
-            Tu suis ici la même progression.
-          </p>
 
-          <div class="callout" style="margin-bottom:14px">
-            <b>Rappel</b>
-            Créneau kickoff seulement après acompte. Doc client = /kickoff.
+      <section id="todo-presta">
+        <div class="wrap">
+          <p class="sec-tag">02 · Todo presta (toi)</p>
+          <h2>Install 7 jours</h2>
+          <p class="lede">Exécution. Une case = une livraison concrète.</p>
+          <div class="me-board" id="me-presta">
+            <div class="board__bar">
+              <div class="board__meta"><b id="presta-count">0/0</b> faits</div>
+            </div>
+            <div class="board__progress"><i id="presta-bar"></i></div>
+
+            <div class="group">J0–J1 · Capture</div>
+            <ul class="todo" data-board="presta">
+              <li><label class="item"><input type="checkbox" data-me="p-webhook" /><span><span class="item__title">Webhook opt-in branché (systeme.io / form / LP)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-db" /><span><span class="item__title">Lead en DB + events (optin, invite_sent, joined…)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-dns" /><span><span class="item__title">DNS / sous-domaine start. si besoin</span></span></label></li>
+            </ul>
+
+            <div class="group">J2 · Scoring</div>
+            <ul class="todo" data-board="presta">
+              <li><label class="item"><input type="checkbox" data-me="p-levels" /><span><span class="item__title">Règles niveaux A/B/C + test sur 10–20 leads</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-pipe" /><span><span class="item__title">Cases pipeline validées avec le client</span></span></label></li>
+            </ul>
+
+            <div class="group">J3 · WhatsApp</div>
+            <ul class="todo" data-board="presta">
+              <li><label class="item"><input type="checkbox" data-me="p-channel" /><span><span class="item__title">Channel 360 OK + webhook Horizon</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-tpl" /><span><span class="item__title">Templates invite (+ welcome) soumis / approuvés</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-groups" /><span><span class="item__title">Groups API testé (ou fallback 1:1 documenté)</span></span></label></li>
+            </ul>
+
+            <div class="group">J4 · Mail</div>
+            <ul class="todo" data-board="presta">
+              <li><label class="item"><input type="checkbox" data-me="p-brevo" /><span><span class="item__title">Brevo / domaine mail : SPF DKIM</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-seq" /><span><span class="item__title">Mail #1 invite + séquence no-join</span></span></label></li>
+            </ul>
+
+            <div class="group">J5–J6 · Dashboard + FUP</div>
+            <ul class="todo" data-board="presta">
+              <li><label class="item"><input type="checkbox" data-me="p-dash" /><span><span class="item__title">Dashboard : opt-ins, kanban, fiches</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-notif" /><span><span class="item__title">Notifs téléphone commercial (join / silence)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-fup" /><span><span class="item__title">Seuils FUP + liste « à faire aujourd'hui »</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-welcome" /><span><span class="item__title">Message d'accueil auto post-join</span></span></label></li>
+            </ul>
+
+            <div class="group">J7 · Go-live</div>
+            <ul class="todo" data-board="presta">
+              <li><label class="item"><input type="checkbox" data-me="p-e2e" /><span><span class="item__title">Test bout-en-bout opt-in → groupe → mail → join → notif</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-handoff" /><span><span class="item__title">Handoff commercial (15 min)</span></span></label></li>
+              <li><label class="item"><input type="checkbox" data-me="p-retainer" /><span><span class="item__title">Retainer mensuel armé (~1 500 €, abos inclus)</span></span></label></li>
+            </ul>
           </div>
+        </div>
+      </section>
+
+      <section id="oublis">
+        <div class="wrap">
+          <p class="sec-tag">03 · Ne pas oublier</p>
+          <h2>Pièges qui font perdre 1h</h2>
+          <div class="plain forget">
+            <h3>Kickoff</h3>
+            <ul>
+              <li>Ne jamais confirmer l'appel sans acompte (même « on se fait confiance »)</li>
+              <li>Envoyer /kickoff AVANT l'appel, pas pendant</li>
+              <li>Vérifier qui a les accès Meta/DNS (souvent pas le fondateur seul)</li>
+              <li>Ne pas dériver sur la strat ads pendant le kickoff</li>
+              <li>Recap écrit le jour même (sinon le client oublie ses actions)</li>
+            </ul>
+            <h3>WhatsApp / Meta</h3>
+            <ul>
+              <li>Adresse Meta = adresse banque si 2 adresses sur les docs</li>
+              <li>Pas de coexistence perso+API si on vise Groups</li>
+              <li>Webhook Channel + WABA = même URL</li>
+              <li>Groups API peut rester bloqué (OBA) → avoir le fallback 1:1 prêt</li>
+              <li>Jamais demander le mot de passe / QR WhatsApp perso</li>
+            </ul>
+            <h3>Presta</h3>
+            <ul>
+              <li>Si LP sur domaine principal → start.domaine (ne pas casser leurs LP)</li>
+              <li>systeme.io : garder leur form, brancher webhook, ne pas tout migrer jour 1</li>
+              <li>SPF/DKIM avant d'envoyer la séquence mail</li>
+              <li>1 test réel avec le commercial avant de dire « c'est live »</li>
+              <li>Abos stack (360, mail, host) = à ta charge, inclus dans le retainer</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="lien-client">
+        <div class="wrap">
+          <p class="sec-tag">04 · Lien client</p>
+          <h2>Créer / suivre /kickoff</h2>
+          <p class="lede">Le client coche de son côté. Tu suis ici la même progression.</p>
           <div class="board" id="sop-board">
             <div class="board__bar">
               <div class="board__meta">
                 <span class="sync-pill sync-pill--off" id="sync-pill">Local</span>
                 <span id="board-client"></span>
-                · <b id="board-count">0/11</b> faits
+                · <b id="board-count">0/11</b> côté client
               </div>
               <div class="board__actions">
-                <button type="button" class="board__btn" id="btn-copy">Copier le lien</button>
+                <button type="button" class="board__btn" id="btn-copy">Copier /kickoff</button>
                 <button type="button" class="board__btn board__btn--primary" id="btn-create">Créer un lien client</button>
               </div>
             </div>
-            <div class="board__progress" aria-hidden="true"><i id="board-bar"></i></div>
-
+            <div class="board__progress"><i id="board-bar"></i></div>
             <div class="kickoff">
-              <h3>Meta Business</h3>
+              <h3>Suivi client (miroir)</h3>
               <ul class="todo">
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="meta-portfolio" />
-                    <span>
-                      <span class="item__title">Ouvrir le Business Portfolio au nom de la société</span>
-                      <ul class="item__help">
-                        <li>Pas le compte Facebook perso</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="meta-infos" />
-                    <span>
-                      <span class="item__title">Remplir les infos entreprise</span>
-                      <ul class="item__help">
-                        <li>Nom légal exact (ex. Horizon Agency LLC)</li>
-                        <li>Adresse = relevé bancaire / domiciliation US</li>
-                        <li>Téléphone + site web</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="meta-docs" />
-                    <span>
-                      <span class="item__title">Lancer la Business Verification + upload docs</span>
-                      <ul class="item__help">
-                        <li>Lettre IRS 147C (ou Certificate LLC)</li>
-                        <li>Preuve ownership / relevé bancaire business</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="meta-review" />
-                    <span>
-                      <span class="item__title">Verif sous review / validée</span>
-                      <ul class="item__help">
-                        <li>« Under review » = OK, on attend</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
+                <li><label class="item"><input type="checkbox" data-id="meta-portfolio" /><span><span class="item__title">Portfolio Meta</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="meta-infos" /><span><span class="item__title">Infos entreprise</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="meta-docs" /><span><span class="item__title">Docs verif uploadés</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="meta-review" /><span><span class="item__title">Verif under review / OK</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="wa-channel" /><span><span class="item__title">Channel WA</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="wa-webhook" /><span><span class="item__title">Webhook</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="wa-display" /><span><span class="item__title">Display name</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="wa-templates" /><span><span class="item__title">Templates</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="wa-groups" /><span><span class="item__title">Ticket Groups API</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="access-invite" /><span><span class="item__title">Invitations Horizon</span></span></label></li>
+                <li><label class="item"><input type="checkbox" data-id="access-context" /><span><span class="item__title">Contexte commercial</span></span></label></li>
               </ul>
-
-              <h3>WhatsApp · 360dialog</h3>
-              <ul class="todo">
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="wa-channel" />
-                    <span><span class="item__title">Créer / ouvrir le channel Cloud API</span></span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="wa-webhook" />
-                    <span>
-                      <span class="item__title">Coller la webhook URL Horizon</span>
-                      <ul class="item__help">
-                        <li>Channel + WABA = même URL</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="wa-display" />
-                    <span><span class="item__title">Display name WhatsApp demandé / approuvé</span></span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="wa-templates" />
-                    <span><span class="item__title">Template d’invite groupe soumis / approuvé</span></span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="wa-groups" />
-                    <span>
-                      <span class="item__title">Ticket 360 : Templates + Groups API / OBA</span>
-                      <ul class="item__help">
-                        <li>Joindre Channel ID + WABA ID</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
-              </ul>
-
-              <h3>Accès + contexte</h3>
-              <ul class="todo">
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="access-invite" />
-                    <span>
-                      <span class="item__title">Inviter Horizon (Partner / user)</span>
-                      <ul class="item__help">
-                        <li>Voir section Accès ci-dessous · jamais de mot de passe</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label class="item">
-                    <input type="checkbox" data-id="access-context" />
-                    <span>
-                      <span class="item__title">Envoyer le contexte commercial</span>
-                      <ul class="item__help">
-                        <li>Qui reçoit les notifs</li>
-                        <li>Cases pipeline</li>
-                        <li>Seuils FUP</li>
-                        <li>Ton des mails</li>
-                      </ul>
-                    </span>
-                  </label>
-                </li>
-              </ul>
-
-              <p class="tip">
-                Astuce adresse : si le papier LLC et la banque ont 2 adresses
-                différentes, mets dans Meta l’adresse de la banque.
-              </p>
             </div>
           </div>
         </div>
@@ -1282,335 +1263,66 @@
 
       <section id="branchement">
         <div class="wrap">
-          <p class="sec-tag">03 · Branchement</p>
-          <h2>Où on pose le tunnel</h2>
-          <p class="lede">
-            On s'adapte à ton setup. Tu n'as pas à tout migrer. On choisit le chemin le plus simple.
-          </p>
-
-          <div class="scenario">
-            <div class="scenario__h">Cas A · Tes formulaires sont sur systeme.io</div>
-            <div class="scenario__b">
-              <ul>
-                <li>On garde systeme.io comme capture (opt-in).</li>
-                <li>Tu nous donnes accès (invitation membre) ou un webhook vers Horizon.</li>
-                <li>Dès qu'un lead s'inscrit, on crée le groupe WhatsApp + on envoie le mail.</li>
-                <li>Pas besoin de bouger tes tunnels pubs tout de suite.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="scenario">
-            <div class="scenario__h">Cas B · Ton domaine est géré ailleurs (O2switch, Ionos, Cloudflare…)</div>
-            <div class="scenario__b">
-              <ul>
-                <li>Tu restes propriétaire du domaine.</li>
-                <li>On t'envoie 1–3 lignes DNS à coller (TXT / CNAME) pour le mail et éventuellement la page.</li>
-                <li>Ou tu invites Horizon sur le DNS le temps de l'install (révocable après).</li>
-                <li>Aucun transfert de domaine obligatoire.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="scenario">
-            <div class="scenario__h">Cas C · Ton domaine principal sert déjà aux landing pages</div>
-            <div class="scenario__b">
-              <ul>
-                <li>On ne touche pas à ton domaine principal (tes LP restent intactes).</li>
-                <li>On utilise un sous-domaine dédié, ex. <b>start.tonagence.com</b> ou <b>go.tonagence.com</b>.</li>
-                <li>Tu crées un CNAME (on t'envoie la valeur exacte). Environ 2 minutes.</li>
-                <li>Le tunnel Horizon vit sur ce sous-domaine. Tes ads peuvent pointer dessus.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="scenario">
-            <div class="scenario__h">Cas D · Rien n'est prêt côté DNS (pire cas, simple)</div>
-            <div class="scenario__b">
-              <ul>
-                <li>Horizon héberge le tunnel sur un domaine provisoire le temps de l'install.</li>
-                <li>Dès que ton DNS est prêt, on bascule sur start.tondomaine.com.</li>
-                <li>Objectif : ne jamais bloquer les 7 jours pour une bagarre de DNS.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="callout">
-            <b>Décision au kickoff</b>
-            On choisit A / B / C / D ensemble en 5 minutes. Tu n'as pas à décider seul avant l'appel.
-          </div>
+          <p class="sec-tag">05 · Branchement</p>
+          <h2>Décision au kickoff</h2>
+          <div class="scenario"><div class="scenario__h">A · systeme.io</div><div class="scenario__b"><ul><li>Garder leur form + webhook Horizon</li></ul></div></div>
+          <div class="scenario"><div class="scenario__h">B · Domaine ailleurs</div><div class="scenario__b"><ul><li>TXT/CNAME à coller ou invite DNS temporaire</li></ul></div></div>
+          <div class="scenario"><div class="scenario__h">C · Domaine = LP</div><div class="scenario__b"><ul><li>Sous-domaine start. / go. · ne pas toucher au principal</li></ul></div></div>
+          <div class="scenario"><div class="scenario__h">D · Rien prêt</div><div class="scenario__b"><ul><li>Provisoire Horizon → bascule DNS plus tard</li></ul></div></div>
         </div>
       </section>
 
       <section id="acces">
         <div class="wrap">
-          <p class="sec-tag">04 · Accès propres</p>
-          <h2>Donner la main sans login perso</h2>
-          <p class="lede">
-            Principe : invitation email / Partner access. Jamais « tiens mon mot de passe ».
-            Email Horizon à inviter : fourni au kickoff.
-          </p>
-          <div class="access" role="table" aria-label="Matrice d'accès">
-            <div class="access__row" role="row">
-              <div>Outil</div>
-              <div>Comment donner accès</div>
-              <div>Droits demandés</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>Meta Business</b></div>
-              <div>Paramètres → Partenaires → Ajouter. Ou Utilisateurs → Ajouter des personnes (email Horizon).</div>
-              <div>Admin / Full control sur le portfolio (ou Partner avec assets Ads + WABA)</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>WhatsApp / WABA</b></div>
-              <div>Business Settings → Comptes WhatsApp → Assigner le partenaire / user Horizon au WABA.</div>
-              <div>Gestion complète du WABA (templates, numéro, webhooks)</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>360dialog</b></div>
-              <div>Invite un user (email Horizon) sur le projet channel. Ou Partner Hub si agence.</div>
-              <div>Admin channel (API key, webhooks, templates)</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>Facebook / Instagram Ads</b></div>
-              <div>Business Manager → Partager le compte pub avec le Partner Horizon. Pas le login Ads perso.</div>
-              <div>Publier / analyser campagnes</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>Google Ads</b></div>
-              <div>Inviter le MCC Horizon (ID fourni au kickoff) en Admin ou Standard.</div>
-              <div>Standard minimum (lire + conversions)</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>Domaine / DNS</b></div>
-              <div>Invite Cloudflare / registrar, ou le client colle lui-même les TXT/CNAME qu'on envoie.</div>
-              <div>SPF/DKIM mail + domaine Meta si besoin</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>Brevo / mail</b></div>
-              <div>Invite membre d'équipe (email Horizon), ou API key dédiée « Horizon install » (révocable).</div>
-              <div>Envoi + domaines authentifiés</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>Analytics (GA4)</b></div>
-              <div>Admin → Accès à la propriété → Ajouter Horizon.</div>
-              <div>Éditeur (events / conversions)</div>
-            </div>
-            <div class="access__row" role="row">
-              <div><b>Repo / Vercel</b></div>
-              <div>Invite GitHub org + projet Vercel Team. Jamais le compte perso Git.</div>
-              <div>Deploy prod + env vars</div>
-            </div>
-          </div>
-          <div class="rules" style="margin-top:28px">
-            <article class="rule rule--do">
-              <h3>+ Accès OK</h3>
-              <ul>
-                <li>Invitation email / Partner ID</li>
-                <li>API key dédiée, révocable</li>
-                <li>Records DNS collés par le client</li>
-                <li>Numéro WA Cloud (pas QR perso)</li>
-              </ul>
-            </article>
-            <article class="rule rule--dont">
-              <h3>− Accès interdit</h3>
-              <ul>
-                <li>Mot de passe Facebook / Google</li>
-                <li>Session partagée / code 2FA</li>
-                <li>Accès banque / boîte mail perso</li>
-                <li>Prise de contrôle WhatsApp perso</li>
-              </ul>
-            </article>
+          <p class="sec-tag">06 · Accès</p>
+          <h2>Ce que tu demandes (jamais de login perso)</h2>
+          <div class="access" role="table">
+            <div class="access__row"><div>Outil</div><div>Comment</div><div>Droits</div></div>
+            <div class="access__row"><div><b>Meta</b></div><div>Partner / user email Horizon</div><div>Admin portfolio + WABA + ads</div></div>
+            <div class="access__row"><div><b>360dialog</b></div><div>Invite user</div><div>Admin channel</div></div>
+            <div class="access__row"><div><b>DNS</b></div><div>Invite ou records collés</div><div>SPF/DKIM + CNAME</div></div>
+            <div class="access__row"><div><b>systeme.io / forms</b></div><div>Membre / webhook</div><div>Lire opt-ins</div></div>
+            <div class="access__row"><div><b>Brevo</b></div><div>Si client a déjà : invite. Sinon : ton compte (retainer)</div><div>Envoi</div></div>
           </div>
         </div>
       </section>
-
-      <section id="meta-wa">
-        <div class="wrap">
-          <p class="sec-tag">05 · Meta / WhatsApp</p>
-          <h2>Verif, adresse, Groups API</h2>
-          <p class="lede">Les pièges qu'on vient de traverser. À suivre dans cet ordre.</p>
-          <div class="split">
-            <div class="panel">
-              <div class="panel__head"><span>Business Verification</span><span>Docs</span></div>
-              <div class="panel__body">
-                <p class="lede" style="margin:0;max-width:none">
-                  Une seule adresse dans Meta : celle du relevé bancaire LLC / registered agent US.
-                  Docs typiques : lettre IRS 147C (nom + EIN) + proof of account ownership / relevé business.
-                  Si Certificate LLC et banque ont 2 adresses, Meta = adresse banque.
-                </p>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="panel__head"><span>Groups API</span><span>OBA</span></div>
-              <div class="panel__body">
-                <p class="lede" style="margin:0;max-width:none">
-                  Groups API exige souvent un Official Business Account (badge bleu).
-                  Prérequis : verif business, display name approuvé, 2FA numéro, ~30 jours Cloud API, pas coexistence perso+API.
-                  Demande via support 360dialog. Meta décide.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="tri" style="margin-top:28px">
-            <article>
-              <div class="tri__n">Page Facebook</div>
-              <h3>Pas bloquant</h3>
-              <ul>
-                <li>Rename Page ≠ verif business</li>
-                <li>Display name WhatsApp = priorité</li>
-                <li>Portfolio peut rester temporaire</li>
-              </ul>
-            </article>
-            <article>
-              <div class="tri__n">Webhooks</div>
-              <h3>À coller</h3>
-              <ul>
-                <li>Channel Webhook URL</li>
-                <li>WABA Webhook URL (même URL)</li>
-                <li>Fournie par Horizon à l'install</li>
-              </ul>
-            </article>
-            <article class="tri--mute">
-              <div class="tri__n">Fallback</div>
-              <h3>Si pas d'OBA</h3>
-              <ul>
-                <li>1:1 API + dashboard</li>
-                <li>Ou invite manuelle temporaire</li>
-                <li>Produit groupe API reporté</li>
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="tunnel">
-        <div class="wrap">
-          <p class="sec-tag">06 · Tunnel</p>
-          <h2>Opt-in → groupe API → mail → humain</h2>
-          <p class="lede">Ce qu'on installe une fois les accès et le channel prêts.</p>
-          <div class="pipe" aria-label="Tunnel">
-            <article class="pipe__step"><div class="pipe__n">01</div><div class="pipe__title">Ads → Opt-in</div><p class="pipe__desc">Form. Champs utiles au score.</p></article>
-            <article class="pipe__step"><div class="pipe__n">02</div><div class="pipe__title">Score A / B / C</div><p class="pipe__desc">Règles + IA. Case initiale.</p></article>
-            <article class="pipe__step pipe__step--hot"><div class="pipe__n">03</div><div class="pipe__title">Groupe WA · API</div><p class="pipe__desc">1 groupe / lead. Invite link.</p></article>
-            <article class="pipe__step"><div class="pipe__n">04</div><div class="pipe__title">Mail d'invite</div><p class="pipe__desc">Lien groupe. Relances no-join.</p></article>
-            <article class="pipe__step"><div class="pipe__n">05</div><div class="pipe__title">Notif téléphone</div><p class="pipe__desc">Join → alerte commercial.</p></article>
-            <article class="pipe__step"><div class="pipe__n">06</div><div class="pipe__title">Relais humain</div><p class="pipe__desc">Conv → cases → FUP.</p></article>
-          </div>
-        </div>
-      </section>
-
-      <section id="dashboard">
-        <div class="wrap">
-          <p class="sec-tag">07 · Dashboard</p>
-          <h2>La vérité du pipe</h2>
-          <p class="lede">Opt-ins, kanban, fiches IA, alertes FUP. L'humain décide.</p>
-          <div class="feat">
-            <article><h3>Opt-ins</h3><p>Source, réponses, niveau, invite / join.</p></article>
-            <article><h3>Pipeline</h3><p>Kanban drag. Suggestion IA non bloquante.</p></article>
-            <article><h3>Fiche lead</h3><p>Récap, dernier contact, prochain FUP.</p></article>
-            <article><h3>Alertes</h3><p>Nouvel opt-in, join, silence &gt; seuil.</p></article>
-          </div>
-        </div>
-      </section>
-
-      <section id="install">
-        <div class="wrap">
-          <p class="sec-tag">08 · Install</p>
-          <h2>7 jours</h2>
-          <p class="lede">~1h client (checklist). Le reste = exécution Horizon.</p>
-          <div class="timeline">
-            <div class="tl"><div class="tl__day">J0</div><div class="tl__card"><h3>Kickoff</h3><p>Invitations accès. Mapping champs → niveaux. Cases + seuils FUP.</p></div></div>
-            <div class="tl"><div class="tl__day">J1</div><div class="tl__card"><h3>Capture + DB</h3><p>Webhook opt-in, modèle lead, events.</p></div></div>
-            <div class="tl"><div class="tl__day">J2</div><div class="tl__card"><h3>Scoring</h3><p>Règles niveaux + prompt. Test 20 opt-ins.</p></div></div>
-            <div class="tl"><div class="tl__day">J3</div><div class="tl__card"><h3>WhatsApp API</h3><p>Channel, webhooks, templates, test groupe.</p></div></div>
-            <div class="tl"><div class="tl__day">J4</div><div class="tl__card"><h3>Mail</h3><p>Invite + séquence no-join. SPF/DKIM.</p></div></div>
-            <div class="tl"><div class="tl__day">J5</div><div class="tl__card"><h3>Dashboard</h3><p>Kanban, fiches, notifs téléphone.</p></div></div>
-            <div class="tl"><div class="tl__day">J6</div><div class="tl__card"><h3>FUP</h3><p>Seuils silence. Accueil auto post-join.</p></div></div>
-            <div class="tl"><div class="tl__day">J7</div><div class="tl__card"><h3>Go-live</h3><p>Test bout-en-bout + handoff commercial.</p></div></div>
-          </div>
-        </div>
-      </section>
-
 
       <section id="maintenance">
         <div class="wrap">
-          <p class="sec-tag">09 · Maintenance</p>
-          <h2>Horizon porte les abos</h2>
-          <p class="lede">
-            Tu ne jongles pas avec 6 factures outils. Horizon paie la stack,
-            tu paies un retainer mensuel qui inclut la maintenance du système.
-          </p>
+          <p class="sec-tag">07 · Maintenance</p>
+          <h2>Tu portes les abos</h2>
           <div class="price">
-            <article>
-              <div class="price__phase">Install</div>
-              <h3>Mise en place</h3>
-              <p>Tunnel + groupes WA API + dashboard + FUP. Une fois.</p>
-              <div class="price__eur">Sur devis</div>
-            </article>
-            <article>
-              <div class="price__phase">Socle</div>
-              <h3>Retainer mensuel</h3>
-              <p>Maintenance + monitoring + 1 opti / mois. Abonnements inclus.</p>
-              <div class="price__eur">~1 500 €/mois</div>
-            </article>
-            <article>
-              <div class="price__phase">Coût stack</div>
-              <h3>Côté Horizon</h3>
-              <p>WA API, mail, hosting, DB, tooling… porté par Horizon.</p>
-              <div class="price__eur">~100–150 €/mois</div>
-            </article>
-            <article>
-              <div class="price__phase">Logique</div>
-              <h3>Pourquoi</h3>
-              <p>Zéro friction client. Marge saine. Upsell expand ensuite.</p>
-              <div class="price__eur">Ancre interne</div>
-            </article>
-          </div>
-          <div class="feat" style="margin-top:14px">
-            <article>
-              <h3>Inclus dans le retainer</h3>
-              <p>Hébergement, mail transactionnel, channel WA, correctifs, 1 optimisation / mois, support.</p>
-            </article>
-            <article>
-              <h3>Hors retainer</h3>
-              <p>Nouveaux process, refonte ads lourde, features hors scope (devis expand).</p>
-            </article>
-            <article>
-              <h3>Côté client</h3>
-              <p>Une facture Horizon / mois. Pas d’abo 360 / Brevo / Vercel à gérer.</p>
-            </article>
-            <article>
-              <h3>Côté Horizon</h3>
-              <p>On mutualise la stack, on facture la valeur du système qui tourne.</p>
-            </article>
+            <article><div class="price__phase">Install</div><h3>Mise en place</h3><p>Sur devis</p><div class="price__eur">1×</div></article>
+            <article><div class="price__phase">Socle</div><h3>Retainer</h3><p>Client</p><div class="price__eur">~1 500 €/mois</div></article>
+            <article><div class="price__phase">Stack</div><h3>Coût Horizon</h3><p>WA + mail + host…</p><div class="price__eur">~100–150 €/mois</div></article>
+            <article><div class="price__phase">Inclus</div><h3>Dans le retainer</h3><p>Monitoring, correctifs, 1 opti/mois</p><div class="price__eur">Oui</div></article>
           </div>
         </div>
       </section>
 
       <section id="regles">
         <div class="wrap">
-          <p class="sec-tag">10 · Discipline</p>
+          <p class="sec-tag">08 · Discipline</p>
           <h2>Do / Don't</h2>
           <div class="rules">
             <article class="rule rule--do">
-              <h3>+ On fait</h3>
+              <h3>+ Tu fais</h3>
               <ul>
-                <li>Scorer et ranger chaque opt-in</li>
-                <li>Créer le groupe via API quand éligible</li>
-                <li>Pousser le join par mail</li>
-                <li>Notifier le commercial</li>
-                <li>Travailler en Partner access</li>
+                <li>Acompte avant kickoff</li>
+                <li>Partner access only</li>
+                <li>Recap écrit le jour J</li>
+                <li>Test e2e avec le commercial</li>
+                <li>Fallback si Groups bloqué</li>
               </ul>
             </article>
             <article class="rule rule--dont">
-              <h3>− On ne fait pas</h3>
+              <h3>− Tu ne fais pas</h3>
               <ul>
-                <li>Prendre le WhatsApp perso en QR</li>
+                <li>Kickoff gratuit « pour voir »</li>
                 <li>Demander les mots de passe</li>
-                <li>Promettre l'ajout forcé dans un groupe</li>
-                <li>Remplacer le commercial</li>
-                <li>Afficher la garantie trop tôt</li>
+                <li>Prendre le WA perso</li>
+                <li>Casser leurs LP sur le domaine principal</li>
+                <li>Dire live sans test réel</li>
               </ul>
             </article>
           </div>
@@ -1619,11 +1331,42 @@
     </main>
 
     <footer>
-      <div class="wrap">HORIZON AGENCY · /sop INTERNE · CLIENT → /kickoff · NOINDEX</div>
+      <div class="wrap">HORIZON · /sop INTERNE · CLIENT → /kickoff</div>
     </footer>
 
     <script>
 (function () {
+  // --- Mes todos (local) ---
+  function wireMe(boardKey, countId, barId, storageKey) {
+    const boxes = [...document.querySelectorAll('ul[data-board="'+boardKey+'"] input[data-me]')];
+    const countEl = document.getElementById(countId);
+    const barEl = document.getElementById(barId);
+    function render() {
+      const total = boxes.length;
+      const done = boxes.filter(b => b.checked).length;
+      countEl.textContent = done + '/' + total;
+      barEl.style.width = Math.round((done / Math.max(total,1)) * 100) + '%';
+    }
+    function load() {
+      try {
+        const map = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        boxes.forEach(b => { b.checked = !!map[b.dataset.me]; });
+      } catch(e) {}
+      render();
+    }
+    function save() {
+      const map = {};
+      boxes.forEach(b => { map[b.dataset.me] = !!b.checked; });
+      localStorage.setItem(storageKey, JSON.stringify(map));
+      render();
+    }
+    boxes.forEach(b => b.addEventListener('change', save));
+    load();
+  }
+  wireMe('ko', 'ko-count', 'ko-bar', 'horizon-sop-me-ko-v1');
+  wireMe('presta', 'presta-count', 'presta-bar', 'horizon-sop-me-presta-v1');
+
+  // --- Miroir client (API) ---
   const boxes = [...document.querySelectorAll('#sop-board input[data-id]')];
   const countEl = document.getElementById('board-count');
   const barEl = document.getElementById('board-bar');
@@ -1634,39 +1377,28 @@
   const params = new URLSearchParams(location.search);
   let checklistId = params.get('c') || '';
   let saveTimer = null;
-  const LOCAL_KEY = 'horizon-sop-checks-v1';
 
   function readChecks() {
     const out = {};
-    boxes.forEach((b) => { out[b.dataset.id] = !!b.checked; });
+    boxes.forEach(b => { out[b.dataset.id] = !!b.checked; });
     return out;
   }
-
   function applyChecks(map) {
-    boxes.forEach((b) => {
-      b.checked = !!(map && map[b.dataset.id]);
-    });
+    boxes.forEach(b => { b.checked = !!(map && map[b.dataset.id]); });
     renderProgress();
   }
-
   function renderProgress() {
     const total = boxes.length;
-    const done = boxes.filter((b) => b.checked).length;
+    const done = boxes.filter(b => b.checked).length;
     countEl.textContent = done + '/' + total;
-    barEl.style.width = Math.round((done / total) * 100) + '%';
+    barEl.style.width = Math.round((done / Math.max(total,1)) * 100) + '%';
   }
-
   function setSync(on, name) {
     pill.textContent = on ? 'Sync' : 'Local';
     pill.classList.toggle('sync-pill--on', on);
     pill.classList.toggle('sync-pill--off', !on);
     clientEl.textContent = name ? name : '';
   }
-
-  function persistLocal() {
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(readChecks()));
-  }
-
   async function persistRemote() {
     if (!checklistId) return;
     try {
@@ -1675,44 +1407,38 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ checks: readChecks() }),
       });
-    } catch (e) {
-      console.warn('sop sync failed', e);
-    }
+    } catch(e) {}
   }
-
   function scheduleSave() {
     renderProgress();
-    persistLocal();
     clearTimeout(saveTimer);
     saveTimer = setTimeout(persistRemote, 350);
   }
-
-  boxes.forEach((b) => b.addEventListener('change', scheduleSave));
+  boxes.forEach(b => b.addEventListener('change', scheduleSave));
 
   btnCopy.addEventListener('click', async () => {
     const url = checklistId
       ? location.origin + '/kickoff/?c=' + checklistId
-      : location.href.split('#')[0];
+      : location.origin + '/kickoff/';
     try {
       await navigator.clipboard.writeText(url);
       btnCopy.textContent = 'Copié';
-      setTimeout(() => { btnCopy.textContent = 'Copier le lien'; }, 1200);
+      setTimeout(() => { btnCopy.textContent = 'Copier /kickoff'; }, 1200);
     } catch {
-      prompt('Copie ce lien :', url);
+      prompt('Copie :', url);
     }
   });
 
   btnCreate.addEventListener('click', async () => {
-    const name = prompt('Nom du client (ex. Agence Dupont) :');
+    const name = prompt('Nom du client :');
     if (name === null) return;
     let secret = sessionStorage.getItem('sop_secret') || '';
     if (!secret) {
-      secret = prompt('Secret Horizon (SOP_SECRET) :') || '';
+      secret = prompt('SOP_SECRET :') || '';
       if (!secret) return;
       sessionStorage.setItem('sop_secret', secret);
     }
     btnCreate.disabled = true;
-    btnCreate.textContent = 'Création…';
     try {
       const res = await fetch('/api/sop', {
         method: 'POST',
@@ -1725,54 +1451,40 @@
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.ok) {
         if (res.status === 401) sessionStorage.removeItem('sop_secret');
-        alert('Création impossible. Vérifie le secret / le déploiement API.');
+        alert('Création impossible');
         return;
       }
       checklistId = data.id;
-      await fetch('/api/sop/' + checklistId, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ checks: readChecks() }),
-      });
       const clientUrl = location.origin + '/kickoff/?c=' + checklistId;
-      try { await navigator.clipboard.writeText(clientUrl); } catch (e) {}
-      location.href = clientUrl;
+      try { await navigator.clipboard.writeText(clientUrl); } catch(e) {}
+      history.replaceState(null, '', '/sop/?c=' + checklistId + '#lien-client');
+      setSync(true, data.client_name || name);
+      applyChecks({});
+      alert('Lien copié :\n' + clientUrl);
     } catch {
-      alert('Réseau indisponible.');
+      alert('Réseau KO');
     } finally {
       btnCreate.disabled = false;
-      btnCreate.textContent = 'Créer un lien client';
     }
   });
 
-  async function boot() {
+  async function bootClient() {
     if (checklistId) {
       try {
         const res = await fetch('/api/sop/' + checklistId);
         const data = await res.json().catch(() => null);
         if (res.ok && data?.ok) {
           applyChecks(data.checks || {});
-          setSync(true, data.client_name || 'Client');
+          setSync(true, data.client_name || '');
           return;
         }
-      } catch (e) {
-        console.warn(e);
-      }
+      } catch(e) {}
     }
-    try {
-      const raw = localStorage.getItem(LOCAL_KEY);
-      if (raw) applyChecks(JSON.parse(raw));
-      else renderProgress();
-    } catch {
-      renderProgress();
-    }
+    renderProgress();
     setSync(false, '');
   }
-
-  boot();
+  bootClient();
 })();
     </script>
-
   </body>
 </html>
-
