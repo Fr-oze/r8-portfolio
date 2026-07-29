@@ -44,11 +44,14 @@ const ui = new UI();
 // Panneau projets (liste + scroll infini), ouvert depuis le bouton haut-gauche
 // et le lien PROJECTS du nav.
 const projects = new Projects();
+const DEMO_URL = "https://waitlist.horizon-agency.co/demo?src=site";
+const goDemo = () => {
+  window.location.href = DEMO_URL;
+};
+
 document.getElementById("open-projects")?.addEventListener("click", () => projects.toggle());
-document.getElementById("open-projects-cta")?.addEventListener("click", () => contact.show());
-document.getElementById("quip-projects")?.addEventListener("click", () => {
-  document.getElementById("calc")?.scrollIntoView({ behavior: "smooth", block: "start" });
-});
+document.getElementById("open-projects-cta")?.addEventListener("click", goDemo);
+document.getElementById("quip-projects")?.addEventListener("click", goDemo);
 // Panneau About : portrait 3D data/wireframe + présentation.
 const about = new About();
 document.getElementById("about-projects")?.addEventListener("click", () => {
@@ -62,11 +65,10 @@ document.getElementById("about-mobile")?.addEventListener("click", () => about.s
 const contact = new Contact();
 // Bouton CONTACT dédié au mobile (les liens nav y sont masqués).
 document.getElementById("contact-mobile")?.addEventListener("click", () => contact.show());
-// Le bouton "ME CONTACTER" d'About ouvre le panneau Contact.
+// CTA démo About → tunnel opt-in.
 about.el.querySelector(".about__btn--ghost")?.addEventListener("click", (e) => {
   e.preventDefault();
-  about.hide();
-  contact.show();
+  goDemo();
 });
 
 // Liens de nav câblés par id (plus robuste qu'un matching sur le texte).
@@ -130,7 +132,7 @@ document.querySelectorAll(".project-card[data-project]").forEach((card) => {
 
 bindLeakCalc(document.getElementById("leak-calc"));
 
-document.getElementById("scroll-contact-cta")?.addEventListener("click", () => contact.show());
+document.getElementById("scroll-contact-cta")?.addEventListener("click", goDemo);
 document.getElementById("scroll-cases-cta")?.addEventListener("click", () => projects.show());
 
 window.addEventListener("keydown", (e) => {
