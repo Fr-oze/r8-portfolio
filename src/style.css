@@ -221,6 +221,9 @@ body.past-hero .hero-headline {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.ui__brand-short {
+  display: none;
+}
 .ui__links {
   display: flex;
   gap: 8px;
@@ -1457,8 +1460,12 @@ body.diving .ui__quip {
     font-size: 9px;
   }
 
-  /* --- CTA projets : barre pleine largeur en bas --- */
+  /* --- CTA bas : barre pleine largeur (toujours, pas seulement body.touch) --- */
+  #dive-start {
+    display: none !important;
+  }
   .ui__cta-projects {
+    display: inline-flex !important;
     left: 16px;
     right: 16px;
     width: auto;
@@ -1467,10 +1474,122 @@ body.diving .ui__quip {
     bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     padding: 16px;
     font-size: 12px;
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #f4f5f7;
+    z-index: 12;
   }
   .ui__cta-projects:hover,
   .ui__cta-projects:active {
     transform: none;
+    opacity: 0.92;
+  }
+
+  /* Nav mobile : marque courte + 3 actions égales */
+  .ui__brand {
+    max-width: none;
+    font-size: 11px;
+    overflow: visible;
+  }
+  .ui__brand-full {
+    display: none;
+  }
+  .ui__brand-short {
+    display: inline;
+  }
+  .ui__mobile-actions {
+    gap: 6px;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+  .ui__about-mobile {
+    min-height: 40px;
+    min-width: 0;
+    padding: 10px 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .ui__about-mobile--demo {
+    flex: 0 0 auto;
+  }
+
+  /* Quip : CTA en bloc sous la phrase */
+  .ui__quip {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    top: 56px;
+    max-width: calc(100vw - 32px);
+  }
+  .ui__quip-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 12px;
+    background: var(--ink);
+    color: #f4f5f7;
+    border: 0;
+    font: inherit;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  /* CTA sections : pleine largeur */
+  .scroll-cta {
+    padding: 1.25rem 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .scroll-cta__btn {
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 48px;
+  }
+  .scroll-contact__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .scroll-contact__actions .scroll-cta__btn,
+  .scroll-contact__actions .ui__drive {
+    width: 100%;
+    max-width: none;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  /* Tables / mock : scroll horizontal si besoin */
+  .leak-calc__result,
+  .dash-mock,
+  .vk-case {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .leak-table {
+    min-width: 480px;
+  }
+
+  .craft-grid {
+    grid-template-columns: 1fr;
+  }
+  .dash-kanban {
+    grid-template-columns: 1fr;
+  }
+  .stack-band {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 8px;
+  }
+  .site-legal__inner {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  .site-legal__inner span[aria-hidden="true"] {
+    display: none;
   }
 
   .projects__head {
@@ -3096,7 +3215,7 @@ a.scroll-contact__btn.ui__drive {
     margin-left: 0;
   }
   .craft-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
   .preuve-stats {
     grid-template-columns: 1fr;
@@ -3132,7 +3251,7 @@ a.scroll-contact__btn.ui__drive {
     border-top: 1px solid var(--line);
   }
   .dash-kanban {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
   .project-grid {
     grid-template-columns: 1fr;

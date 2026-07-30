@@ -158,6 +158,29 @@
         line-height: 1.6;
         color: var(--dim);
       }
+      @media (max-width: 560px) {
+        .wrap {
+          padding: 1.25rem 1rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
+        }
+        h1 {
+          font-size: 1.35rem;
+        }
+        .lead {
+          font-size: 0.82rem;
+        }
+        input,
+        button {
+          font-size: 16px;
+          min-height: 48px;
+        }
+        button {
+          text-align: center;
+          letter-spacing: 0.06em;
+        }
+        label span.label {
+          font-size: 0.7rem;
+        }
+      }
     </style>
   </head>
   <body>

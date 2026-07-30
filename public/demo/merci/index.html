@@ -113,6 +113,26 @@
         color: var(--dim);
         line-height: 1.6;
       }
+      @media (max-width: 560px) {
+        .wrap {
+          padding: 1.25rem 1rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
+        }
+        h1 {
+          font-size: 1.35rem;
+        }
+        .cta {
+          min-height: 52px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          font-size: 0.9rem;
+          padding: 1rem;
+        }
+        .steps {
+          font-size: 0.75rem;
+        }
+      }
     </style>
   </head>
   <body>
