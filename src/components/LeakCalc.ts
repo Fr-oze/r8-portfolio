@@ -119,6 +119,15 @@ export function bindLeakCalc(root: HTMLElement | null) {
 
   [leadsEl, basketEl, fastEl, closeHotEl, closeCoolEl].forEach((el) => {
     el.addEventListener("input", render);
+    el.addEventListener("change", render);
+    // iOS : certains WebViews ne fire "input" qu'à la fin ; touchmove aide
+    el.addEventListener(
+      "touchstart",
+      () => {
+        el.focus({ preventScroll: true });
+      },
+      { passive: true }
+    );
   });
   render();
 }

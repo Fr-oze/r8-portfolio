@@ -29,13 +29,8 @@ body.panel-open {
   right: 0;
 }
 
-#scene {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
-#scene canvas {
-  display: block;
+.hero-mobile-hint {
+  display: none;
 }
 
 /* Headline hero — haut gauche, lisible sans empiéter sur la sphère */
@@ -1561,15 +1556,59 @@ body.diving .ui__quip {
     justify-content: center;
   }
 
-  /* Tables / mock : scroll horizontal si besoin */
+  /* Tables / mock : scroll horizontal si besoin (pas les sliders) */
   .leak-calc__result,
   .dash-mock,
   .vk-case {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+  .leak-calc__controls {
+    overflow: visible;
+    touch-action: manipulation;
+  }
+  .leak-slider {
+    padding: 4px 0;
+  }
+  .leak-slider input[type="range"] {
+    height: 44px;
+  }
+  .leak-slider input[type="range"]::-webkit-slider-thumb {
+    width: 32px;
+    height: 32px;
+    margin-top: -14.5px;
+  }
+  .leak-slider input[type="range"]::-moz-range-thumb {
+    width: 32px;
+    height: 32px;
+  }
   .leak-table {
     min-width: 480px;
+  }
+
+  /* Hero mobile : hint tactile */
+  .hero-mobile-hint {
+    display: block;
+    position: fixed;
+    left: 50%;
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    z-index: 11;
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: rgba(244, 245, 247, 0.85);
+    border: 1px solid var(--line);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  body.past-hero .hero-mobile-hint,
+  body.diving .hero-mobile-hint {
+    opacity: 0;
+    visibility: hidden;
   }
 
   .craft-grid {
@@ -2225,6 +2264,23 @@ body.past-hero .ui__nav {
   border-bottom: 1px solid var(--line);
 }
 
+/* Une fois scrollé : la scène 3D ne vole plus les touches (sliders, boutons). */
+body.past-hero #scene {
+  pointer-events: none !important;
+}
+
+.leak-calc__controls {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  touch-action: manipulation;
+}
+
 .scroll-section {
   padding: 88px 32px 72px;
   scroll-margin-top: 88px;
@@ -2284,14 +2340,6 @@ body.past-hero .ui__nav {
   margin: 0 auto;
   align-items: start;
 }
-.leak-calc__controls {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  padding: 22px;
-  border: 1px solid var(--line);
-  background: var(--panel);
-}
 .leak-slider {
   display: flex;
   flex-direction: column;
@@ -2319,27 +2367,41 @@ body.past-hero .ui__nav {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 2px;
-  background: var(--line);
+  height: 28px;
+  background: transparent;
   outline: none;
   cursor: pointer;
+  touch-action: none;
+  margin: 0;
+}
+.leak-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
 }
 .leak-slider input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 28px;
+  height: 28px;
+  margin-top: -12.5px;
   border-radius: 50%;
   background: var(--ink);
-  border: 2px solid var(--bg);
+  border: 3px solid var(--bg);
   box-shadow: 0 0 0 1px var(--ink);
   cursor: grab;
 }
+.leak-slider input[type="range"]::-moz-range-track {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  border: 0;
+}
 .leak-slider input[type="range"]::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--ink);
-  border: 2px solid var(--bg);
+  border: 3px solid var(--bg);
   box-shadow: 0 0 0 1px var(--ink);
   cursor: grab;
 }

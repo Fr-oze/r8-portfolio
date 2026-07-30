@@ -237,36 +237,87 @@ stage.setRender(() => {
   composer.render();
 });
 
-// --- Souris ----------------------------------------------------------------
+// --- Pointer / touch : desktop = souris, mobile = drag + idle anim ----------
 const pointer = new THREE.Vector2(0, 0);
-window.addEventListener("pointermove", (e) => {
-  pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
-});
+let dragging = false;
+const isMobileHero = () =>
+  document.body.classList.contains("touch") ||
+  window.matchMedia("(max-width: 720px)").matches;
+
+window.addEventListener(
+  "pointermove",
+  (e) => {
+    // Sur mobile hors drag : pas de hover → l'idle anim pilote le pointer
+    if (isMobileHero() && e.pointerType !== "mouse" && !dragging) return;
+    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  },
+  { passive: true }
+);
 
 // --- Drag : faire tourner le disque dans son plan (rotation z) --------------
-const sceneEl = document.getElementById("scene");
-let dragging = false;
+const sceneEl = document.getElementById("scene")!;
 let dragStartX = 0;
-let userSpin = 0;      // rotation manuelle cumulée (plan du disque)
+let dragStartY = 0;
+let userSpin = 0;
+let userTiltX = 0;
+let userTiltY = 0;
 let spinAtGrab = 0;
-const DRAG_SENS = 0.006; // radians par pixel
+let tiltXAtGrab = 0;
+let tiltYAtGrab = 0;
+const DRAG_SENS = 0.006;
+const TILT_SENS = 0.004;
 
 sceneEl.style.cursor = "grab";
+sceneEl.style.touchAction = "none";
+
 sceneEl.addEventListener("pointerdown", (e) => {
   if (dive.active) return;
+  // Une fois le contenu commercial visible, ne pas capturer le scroll/sliders
+  if (document.body.classList.contains("past-hero")) return;
   dragging = true;
   dragStartX = e.clientX;
+  dragStartY = e.clientY;
   spinAtGrab = userSpin;
+  tiltXAtGrab = userTiltX;
+  tiltYAtGrab = userTiltY;
   sceneEl.style.cursor = "grabbing";
+  try {
+    sceneEl.setPointerCapture(e.pointerId);
+  } catch {
+    /* ignore */
+  }
+  const hint = document.getElementById("hero-mobile-hint");
+  if (hint) hint.style.opacity = "0";
 });
-window.addEventListener("pointerup", () => {
+
+window.addEventListener("pointerup", (e) => {
+  if (!dragging) return;
   dragging = false;
   sceneEl.style.cursor = "grab";
+  try {
+    sceneEl.releasePointerCapture(e.pointerId);
+  } catch {
+    /* ignore */
+  }
 });
-window.addEventListener("pointermove", (e) => {
-  if (dragging) userSpin = spinAtGrab + (e.clientX - dragStartX) * DRAG_SENS;
-});
+
+window.addEventListener(
+  "pointermove",
+  (e) => {
+    if (!dragging) return;
+    userSpin = spinAtGrab + (e.clientX - dragStartX) * DRAG_SENS;
+    if (isMobileHero()) {
+      userTiltY = tiltYAtGrab + (e.clientX - dragStartX) * TILT_SENS;
+      userTiltX = tiltXAtGrab + (e.clientY - dragStartY) * TILT_SENS;
+      userTiltX = Math.max(-0.35, Math.min(0.35, userTiltX));
+      userTiltY = Math.max(-0.45, Math.min(0.45, userTiltY));
+      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+      pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    }
+  },
+  { passive: true }
+);
 
 // --- Contrôles (construits une fois le DOM prêt) ----------------------------
 ui.buildControls({
@@ -295,16 +346,28 @@ stage.start((t, dt) => {
     dive.update(t, dt, pointer);
     orb.update(t, dt);
   } else {
+    const mobile = isMobileHero();
+    if (mobile && !dragging) {
+      // Idle anim mobile : l'orbe vit sans souris
+      pointer.x = Math.sin(t * 0.45) * 0.55;
+      pointer.y = Math.cos(t * 0.38) * 0.35;
+    }
     const mouseWorld = lighting.update(pointer, dt);
     orb.setMouseWorld(mouseWorld);
     orb.update(t, dt);
 
-    // Rotation lente DANS le plan du disque (pas de bascule 3D) + parallaxe
-    // discrète vers le curseur.
-    if (!dragging) spin += dt * 0.02;
+    // Rotation lente DANS le plan du disque + tilt
+    if (!dragging) spin += dt * (mobile ? 0.035 : 0.02);
     orb.group.rotation.z = spin + userSpin;
-    orb.group.rotation.y = dragging ? 0 : lighting.tiltY * 0.35;
-    orb.group.rotation.x = -0.06 + (dragging ? 0 : lighting.tiltX * 0.35);
+    if (mobile) {
+      const idleY = Math.sin(t * 0.35) * 0.1;
+      const idleX = Math.sin(t * 0.28) * 0.05;
+      orb.group.rotation.y = userTiltY + (dragging ? 0 : idleY);
+      orb.group.rotation.x = -0.06 + userTiltX + (dragging ? 0 : idleX);
+    } else {
+      orb.group.rotation.y = dragging ? 0 : lighting.tiltY * 0.35;
+      orb.group.rotation.x = -0.06 + (dragging ? 0 : lighting.tiltX * 0.35);
+    }
   }
 
   grain.uniforms.uTime.value = t;
