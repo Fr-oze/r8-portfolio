@@ -2572,6 +2572,54 @@ body.past-hero .ui__nav {
   gap: 12px;
   justify-content: center;
 }
+
+.scroll-cta {
+  margin-top: 2.5rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.scroll-cta__text {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+  max-width: 28rem;
+}
+.scroll-cta__btn.ui__drive {
+  position: static;
+  display: inline-flex;
+  text-decoration: none;
+  width: auto;
+  margin: 0;
+}
+a.scroll-contact__btn.ui__drive {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ui__about-mobile--demo {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+  text-decoration: none;
+}
+.ui__about-mobile--demo:hover {
+  opacity: 0.9;
+}
+
+.contact__channel--primary {
+  border-color: var(--ink);
+  background: #fff;
+}
+.contact__channel--primary .contact__ch-value {
+  font-weight: 700;
+}
 .ui__drive--ghost {
   background: transparent;
   color: var(--ink);

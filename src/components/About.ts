@@ -81,8 +81,8 @@ export class About {
           </p>
 
           <div class="about__cta">
-            <button id="about-projects" class="about__btn">VOIR LA PREUVE →</button>
-            <a href="/demo/?src=about" class="about__btn about__btn--ghost">VOIR LE SYSTÈME EN VRAI</a>
+            <a href="/demo/?src=about" class="about__btn">VOIR LE SYSTÈME EN VRAI →</a>
+            <button id="about-projects" class="about__btn about__btn--ghost">VOIR LA PREUVE</button>
           </div>
         </div>
       </div>`;

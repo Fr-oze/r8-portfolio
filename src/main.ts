@@ -45,13 +45,13 @@ const ui = new UI();
 // et le lien PROJECTS du nav.
 const projects = new Projects();
 const DEMO_URL = "/demo/?src=site";
-const goDemo = () => {
-  window.location.href = DEMO_URL;
+const goDemo = (src?: string) => {
+  window.location.href = src ? `/demo/?src=${encodeURIComponent(src)}` : DEMO_URL;
 };
 
 document.getElementById("open-projects")?.addEventListener("click", () => projects.toggle());
-document.getElementById("open-projects-cta")?.addEventListener("click", goDemo);
-document.getElementById("quip-projects")?.addEventListener("click", goDemo);
+document.getElementById("open-projects-cta")?.addEventListener("click", () => goDemo("hero"));
+document.getElementById("quip-projects")?.addEventListener("click", () => goDemo("quip"));
 // Panneau About : portrait 3D data/wireframe + présentation.
 const about = new About();
 document.getElementById("about-projects")?.addEventListener("click", () => {
@@ -65,11 +65,6 @@ document.getElementById("about-mobile")?.addEventListener("click", () => about.s
 const contact = new Contact();
 // Bouton CONTACT dédié au mobile (les liens nav y sont masqués).
 document.getElementById("contact-mobile")?.addEventListener("click", () => contact.show());
-// CTA démo About → tunnel opt-in.
-about.el.querySelector(".about__btn--ghost")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  goDemo();
-});
 
 // Liens de nav câblés par id (plus robuste qu'un matching sur le texte).
 const navLink = (id: string, fn: () => void) =>
@@ -80,6 +75,7 @@ const navLink = (id: string, fn: () => void) =>
 navLink("nav-projects", () => projects.show());
 navLink("nav-about", () => about.show());
 navLink("nav-contact", () => contact.show());
+// nav-demo = lien réel /demo (pas de preventDefault)
 
 // --- Sections de scroll (sous le hero — sans toucher à la scène 3D) ----------
 const heroSpacer = document.querySelector(".hero-spacer");
@@ -132,7 +128,6 @@ document.querySelectorAll(".project-card[data-project]").forEach((card) => {
 
 bindLeakCalc(document.getElementById("leak-calc"));
 
-document.getElementById("scroll-contact-cta")?.addEventListener("click", goDemo);
 document.getElementById("scroll-cases-cta")?.addEventListener("click", () => projects.show());
 
 window.addEventListener("keydown", (e) => {

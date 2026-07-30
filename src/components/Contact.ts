@@ -33,14 +33,23 @@ export class Contact {
             <span class="contact__tag">DÉMO LIVE</span>
             <h2 class="contact__lead">Optin-toi et vois<br /><span>à quoi ça ressemble</span>&nbsp;?</h2>
             <p class="contact__sub">
-              Tu vis le parcours pour de vrai : formulaire → groupe WhatsApp → suivi.
-              En attendant que le tunnel soit branché, écris-moi et on te fait entrer.
+              Tu vis le parcours pour de vrai : formulaire → WhatsApp → checklist → suivi.
+              2 minutes. Pas de call obligatoire.
             </p>
           </div>
 
           <div class="contact__channels">
-            <a class="contact__channel" href="mailto:${EMAIL}">
+            <a class="contact__channel contact__channel--primary" href="/demo/?src=contact">
               <span class="contact__ch-no">01</span>
+              <span class="contact__ch-main">
+                <span class="contact__ch-label">DÉMO OPT-IN</span>
+                <span class="contact__ch-value">Voir le système en vrai →</span>
+              </span>
+              <span class="contact__ch-arrow">→</span>
+              <span class="contact__ch-sweep"></span>
+            </a>
+            <a class="contact__channel" href="mailto:${EMAIL}">
+              <span class="contact__ch-no">02</span>
               <span class="contact__ch-main">
                 <span class="contact__ch-label">EMAIL</span>
                 <span class="contact__ch-value">${EMAIL}</span>
@@ -49,7 +58,7 @@ export class Contact {
               <span class="contact__ch-sweep"></span>
             </a>
             <a class="contact__channel" href="${WHATSAPP}" target="_blank" rel="noopener">
-              <span class="contact__ch-no">02</span>
+              <span class="contact__ch-no">03</span>
               <span class="contact__ch-main">
                 <span class="contact__ch-label">WHATSAPP</span>
                 <span class="contact__ch-value">${PHONE_DISPLAY}</span>
