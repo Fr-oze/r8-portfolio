@@ -1085,11 +1085,12 @@
           <a href="#todo-presta">02 Todo presta</a>
           <a href="#oublis">03 Ne pas oublier</a>
           <a href="#verif">04 Verif 360/Meta</a>
-          <a href="#lien-client">05 Lien client</a>
-          <a href="#branchement">06 Branchement</a>
-          <a href="#acces">07 Accès</a>
-          <a href="#maintenance">08 Maintenance</a>
-          <a href="#regles">09 Do / Don't</a>
+          <a href="#demo">05 Démo tunnel</a>
+          <a href="#lien-client">06 Lien client</a>
+          <a href="#branchement">07 Branchement</a>
+          <a href="#acces">08 Accès</a>
+          <a href="#maintenance">09 Maintenance</a>
+          <a href="#regles">10 Do / Don't</a>
         </div>
       </div>
     </nav>
@@ -1277,9 +1278,41 @@
         </div>
       </section>
 
+      <section id="demo">
+        <div class="wrap">
+          <p class="sec-tag">05 · Démo publique</p>
+          <h2>Tunnel /demo (autonome)</h2>
+          <p class="lede">
+            Preuve live sur horizon-agency.co. Groups API encore KO (Coex / pas OBA) → mode 1:1 + lien fixe.
+          </p>
+          <div class="plain">
+            <h3>Parcours</h3>
+            <ul>
+              <li>Opt-in → page <code>/demo/merci</code> (CTA WhatsApp)</li>
+              <li>Template WA <code>horizon_access_link</code> + séquence 7 mails (offre <code>demo-tunnel</code>)</li>
+              <li>Ressource : <code>/demo/ressource</code> (checklist 7 fuites)</li>
+              <li>Confirm join (bouton / lien mail) → stop séquence + alerte Max + template ressource</li>
+              <li>Prospect envoie <b>OK</b> → fenêtre 24h ouverte → tu parles libre</li>
+            </ul>
+            <h3>Env waitlist (Vercel)</h3>
+            <ul>
+              <li><code>DEMO_WA_INVITE_LINK</code> = lien groupe manuel (sinon fallback wa.me OK)</li>
+              <li><code>PUBLIC_SITE_URL</code> = https://www.horizon-agency.co</li>
+              <li>Fonds 360 + templates approved (sinon templates 403 payment)</li>
+            </ul>
+            <h3>Toi à faire une fois</h3>
+            <ul>
+              <li>Créer le groupe démo dans WhatsApp Business</li>
+              <li>Coller le lien invite dans <code>DEMO_WA_INVITE_LINK</code></li>
+              <li>Redeploy waitlist</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <section id="lien-client">
         <div class="wrap">
-          <p class="sec-tag">05 · Lien client</p>
+          <p class="sec-tag">06 · Lien client</p>
           <h2>Créer / suivre /kickoff</h2>
           <p class="lede">Le client coche de son côté. Tu suis ici la même progression.</p>
           <div class="board" id="sop-board">
@@ -1317,7 +1350,7 @@
 
       <section id="branchement">
         <div class="wrap">
-          <p class="sec-tag">06 · Branchement</p>
+          <p class="sec-tag">07 · Branchement</p>
           <h2>Décision au kickoff</h2>
           <div class="scenario"><div class="scenario__h">A · systeme.io</div><div class="scenario__b"><ul><li>Garder leur form + webhook Horizon</li></ul></div></div>
           <div class="scenario"><div class="scenario__h">B · Domaine ailleurs</div><div class="scenario__b"><ul><li>TXT/CNAME à coller ou invite DNS temporaire</li></ul></div></div>
@@ -1328,7 +1361,7 @@
 
       <section id="acces">
         <div class="wrap">
-          <p class="sec-tag">07 · Accès</p>
+          <p class="sec-tag">08 · Accès</p>
           <h2>Ce que tu demandes (jamais de login perso)</h2>
           <div class="access" role="table">
             <div class="access__row"><div>Outil</div><div>Comment</div><div>Droits</div></div>
@@ -1343,7 +1376,7 @@
 
       <section id="maintenance">
         <div class="wrap">
-          <p class="sec-tag">08 · Maintenance</p>
+          <p class="sec-tag">09 · Maintenance</p>
           <h2>Tu portes les abos</h2>
           <div class="price">
             <article><div class="price__phase">Install</div><h3>Mise en place</h3><p>Sur devis</p><div class="price__eur">1×</div></article>
@@ -1356,7 +1389,7 @@
 
       <section id="regles">
         <div class="wrap">
-          <p class="sec-tag">09 · Discipline</p>
+          <p class="sec-tag">10 · Discipline</p>
           <h2>Do / Don't</h2>
           <div class="rules">
             <article class="rule rule--do">

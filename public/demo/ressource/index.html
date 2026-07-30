@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HORIZON · Les 7 fuites qui tuent tes leads</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="description"
+      content="Checklist : les 7 fuites qui tuent tes leads avant que ton commercial réponde."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f5f7;
+        --ink: #12141a;
+        --dim: #5c6570;
+        --line: #d5dae0;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        background:
+          radial-gradient(ellipse 70% 45% at 0% 0%, #e4e7f6 0%, transparent 55%),
+          var(--bg);
+        color: var(--ink);
+        font-family: "Space Mono", ui-monospace, Menlo, monospace;
+        letter-spacing: 0.04em;
+      }
+      .wrap {
+        max-width: 36rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem 4rem;
+      }
+      .label {
+        font-size: 0.65rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      h1 {
+        margin-top: 1rem;
+        font-size: clamp(1.4rem, 4vw, 1.85rem);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      .lead {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--dim);
+      }
+      .list {
+        margin-top: 2rem;
+        display: grid;
+        gap: 0.65rem;
+      }
+      label.item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.85rem;
+        align-items: start;
+        padding: 0.95rem 0.85rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.8rem;
+        line-height: 1.55;
+      }
+      label.item input {
+        margin-top: 0.15rem;
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--ink);
+      }
+      label.item.is-on {
+        border-color: var(--ink);
+      }
+      .score {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      .cta {
+        display: block;
+        margin-top: 1.5rem;
+        width: 100%;
+        border: 0;
+        background: var(--ink);
+        color: var(--bg);
+        padding: 1.1rem 1rem;
+        font: inherit;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        text-align: left;
+      }
+      .foot {
+        margin-top: 1.5rem;
+        font-size: 0.68rem;
+        color: var(--dim);
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="label">Ressource démo · 1 page</p>
+      <h1>Les 7 fuites qui tuent tes leads</h1>
+      <p class="lead">
+        Coche ce qui te parle. Pendant que Max arrive, tu vois déjà où ton pipe
+        saigne. Ensuite envoie <b>OK</b> sur WhatsApp.
+      </p>
+
+      <div class="list" id="list">
+        <label class="item"
+          ><input type="checkbox" data-w="3" />
+          <span
+            ><b>Lead sans réponse &lt; 5 min</b><br />Le prospect chauffe, personne
+            ne répond, il part chez le concurrent.</span
+          ></label
+        >
+        <label class="item"
+          ><input type="checkbox" data-w="2" />
+          <span
+            ><b>Pas de scoring A / B / C</b><br />Tout le monde est traité pareil.
+            Les gros dossiers attendent derrière le bruit.</span
+          ></label
+        >
+        <label class="item"
+          ><input type="checkbox" data-w="3" />
+          <span
+            ><b>Relances absentes J+1 / J+3</b><br />Un seul message. Puis silence.
+            Le lead meurt sans dramaturgie.</span
+          ></label
+        >
+        <label class="item"
+          ><input type="checkbox" data-w="3" />
+          <span
+            ><b>WhatsApp perso = goulot</b><br />Tout passe par ton téléphone. Vacances,
+            réunion client, oubli = pipe mort.</span
+          ></label
+        >
+        <label class="item"
+          ><input type="checkbox" data-w="2" />
+          <span
+            ><b>Form sans suite mail</b><br />Opt-in → rien. Pas de push vers le canal
+            où tu closes vraiment.</span
+          ></label
+        >
+        <label class="item"
+          ><input type="checkbox" data-w="2" />
+          <span
+            ><b>Ads sans micro-conversions</b><br />Tu optimises des clics, pas des
+            joins / réponses / RDV.</span
+          ></label
+        >
+        <label class="item"
+          ><input type="checkbox" data-w="3" />
+          <span
+            ><b>Pas d’alerte commercial</b><br />Le lead entre. Personne n’est ping.
+            Tu découvres le message à 23h.</span
+          ></label
+        >
+      </div>
+
+      <div class="score" id="score">Coche au moins une fuite pour voir ton focus.</div>
+
+      <a
+        class="cta"
+        id="wa"
+        href="https://wa.me/33674247494?text=OK"
+        >Envoyer OK sur WhatsApp →</a
+      >
+
+      <p class="foot">
+        C’est exactement ce que le tunnel Horizon attaque : scoring, push WhatsApp,
+        ressource, alerte, relances jusqu’au join. Zéro lead mort.
+      </p>
+    </main>
+
+    <script>
+      const boxes = [...document.querySelectorAll("#list input")];
+      const score = document.getElementById("score");
+
+      const refresh = () => {
+        let n = 0;
+        let w = 0;
+        boxes.forEach((b) => {
+          const item = b.closest(".item");
+          if (b.checked) {
+            n += 1;
+            w += Number(b.dataset.w || 1);
+            item.classList.add("is-on");
+          } else item.classList.remove("is-on");
+        });
+        if (n === 0) {
+          score.textContent = "Coche au moins une fuite pour voir ton focus.";
+          return;
+        }
+        const level =
+          w >= 12 ? "critique" : w >= 7 ? "sérieux" : "à surveiller";
+        score.innerHTML =
+          "<b>" +
+          n +
+          " fuite" +
+          (n > 1 ? "s" : "") +
+          "</b> cochée" +
+          (n > 1 ? "s" : "") +
+          " · niveau <b>" +
+          level +
+          "</b>.<br/>Priorité : corriger d’abord le scoring + la réponse &lt; 5 min + l’alerte commercial.";
+      };
+
+      boxes.forEach((b) => b.addEventListener("change", refresh));
+      refresh();
+    </script>
+  </body>
+</html>

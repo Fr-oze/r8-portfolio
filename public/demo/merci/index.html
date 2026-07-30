@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HORIZON · Rejoins WhatsApp</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="description"
+      content="Rejoins le WhatsApp démo pour récupérer la checklist des 7 fuites."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f5f7;
+        --ink: #12141a;
+        --dim: #5c6570;
+        --line: #d5dae0;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        background:
+          radial-gradient(ellipse 80% 50% at 10% -10%, #e8eaf8 0%, transparent 55%),
+          radial-gradient(ellipse 60% 40% at 100% 0%, #dde8e4 0%, transparent 50%),
+          var(--bg);
+        color: var(--ink);
+        font-family: "Space Mono", ui-monospace, Menlo, monospace;
+        letter-spacing: 0.04em;
+      }
+      .wrap {
+        max-width: 34rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem 4rem;
+      }
+      .label {
+        font-size: 0.65rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      h1 {
+        margin-top: 1rem;
+        font-size: clamp(1.45rem, 4vw, 1.9rem);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      .lead {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: var(--dim);
+      }
+      .cta {
+        display: block;
+        margin-top: 2rem;
+        width: 100%;
+        border: 0;
+        background: var(--ink);
+        color: var(--bg);
+        padding: 1.15rem 1rem;
+        font: inherit;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        text-align: left;
+      }
+      .cta:hover {
+        opacity: 0.92;
+      }
+      .cta--ghost {
+        margin-top: 0.75rem;
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .steps {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+        display: grid;
+        gap: 0.85rem;
+        font-size: 0.8rem;
+        line-height: 1.55;
+        color: var(--dim);
+      }
+      .steps b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .banner {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        font-size: 0.8rem;
+        line-height: 1.6;
+      }
+      .banner[hidden] {
+        display: none;
+      }
+      .foot {
+        margin-top: 2rem;
+        font-size: 0.68rem;
+        color: var(--dim);
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="label">Horizon Agency · Démo</p>
+      <h1 id="title">Une étape : WhatsApp</h1>
+      <p class="lead" id="lead">
+        Dedans, tu récupères la checklist « Les 7 fuites qui tuent tes leads ».
+        Puis tu envoies <b>OK</b> pour ouvrir la conversation live avec Max.
+      </p>
+
+      <a class="cta" id="cta-join" href="#">Ouvrir WhatsApp →</a>
+      <button type="button" class="cta cta--ghost" id="cta-joined">
+        J’ai rejoint / j’ai écrit → stop mails
+      </button>
+
+      <div class="banner" id="done" hidden>
+        C’est noté. Les mails s’arrêtent.
+        <br />
+        <a id="resource-link" href="/demo/ressource/">Ouvre ta ressource →</a>
+        <br />
+        Puis envoie <b>OK</b> sur WhatsApp pour parler en live.
+      </div>
+
+      <div class="steps">
+        <div><b>01</b> · Tu cliques le bouton WhatsApp</div>
+        <div><b>02</b> · Tu récupères la checklist</div>
+        <div><b>03</b> · Tu réponds OK → Max te guide</div>
+        <div><b>04</b> · Les 7 mails de relance s’arrêtent dès que tu confirmes ici</div>
+      </div>
+
+      <p class="foot">
+        Tu as aussi reçu un mail + un message WhatsApp avec le même lien.
+        Si le template n’est pas passé, ce bouton suffit.
+      </p>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id") || "";
+      const token = params.get("t") || params.get("token") || "";
+      const invite =
+        params.get("invite") ||
+        "https://wa.me/33674247494?text=" +
+          encodeURIComponent("OK je veux la checklist des 7 fuites");
+      const mode = params.get("mode") || "dm";
+      const alreadyJoined = params.get("joined") === "1";
+
+      const cta = document.getElementById("cta-join");
+      const btnJoined = document.getElementById("cta-joined");
+      const done = document.getElementById("done");
+      const resourceLink = document.getElementById("resource-link");
+      const title = document.getElementById("title");
+      const lead = document.getElementById("lead");
+
+      cta.href = invite;
+      if (mode === "group") {
+        title.textContent = "Rejoins le groupe WhatsApp";
+        cta.textContent = "Rejoindre le groupe →";
+      } else {
+        title.textContent = "Ouvre WhatsApp et envoie OK";
+        cta.textContent = "Ouvrir WhatsApp →";
+        lead.innerHTML =
+          "Tu envoies le message prérempli. Tu reçois la checklist « Les 7 fuites qui tuent tes leads ». Puis Max te répond en live.";
+      }
+
+      const showDone = (resourceUrl) => {
+        done.hidden = false;
+        btnJoined.hidden = true;
+        if (resourceUrl) resourceLink.href = resourceUrl;
+      };
+
+      if (alreadyJoined) {
+        showDone(params.get("resource") || "/demo/ressource/");
+      }
+
+      btnJoined.addEventListener("click", async () => {
+        if (!id || !token) {
+          showDone("/demo/ressource/");
+          return;
+        }
+        btnJoined.disabled = true;
+        btnJoined.textContent = "Confirmation…";
+        try {
+          const res = await fetch("/api/demo/join", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, token }),
+          });
+          const data = await res.json().catch(() => null);
+          if (!res.ok || !data?.ok) {
+            btnJoined.disabled = false;
+            btnJoined.textContent = "Réessayer →";
+            return;
+          }
+          showDone(data.resource_url || "/demo/ressource/");
+        } catch {
+          btnJoined.disabled = false;
+          btnJoined.textContent = "Réessayer →";
+        }
+      });
+    </script>
+  </body>
+</html>

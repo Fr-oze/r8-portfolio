@@ -7,6 +7,10 @@
   "rewrites": [
     { "source": "/demo", "destination": "/demo/index.html" },
     { "source": "/demo/", "destination": "/demo/index.html" },
+    { "source": "/demo/merci", "destination": "/demo/merci/index.html" },
+    { "source": "/demo/merci/", "destination": "/demo/merci/index.html" },
+    { "source": "/demo/ressource", "destination": "/demo/ressource/index.html" },
+    { "source": "/demo/ressource/", "destination": "/demo/ressource/index.html" },
     { "source": "/sop", "destination": "/sop/index.html" },
     { "source": "/sop/", "destination": "/sop/index.html" },
     { "source": "/kickoff", "destination": "/kickoff/index.html" },
@@ -14,6 +18,10 @@
     {
       "source": "/api/demo",
       "destination": "https://waitlist.horizon-agency.co/api/demo"
+    },
+    {
+      "source": "/api/demo/join",
+      "destination": "https://waitlist.horizon-agency.co/api/demo/join"
     },
     {
       "source": "/api/webhooks/360dialog",

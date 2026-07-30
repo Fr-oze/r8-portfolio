@@ -6,7 +6,7 @@
     <title>HORIZON · Voir le système en vrai</title>
     <meta
       name="description"
-      content="Opt-in démo : on crée ton groupe WhatsApp (1 lead = 1 groupe) et tu reçois le lien par mail."
+      content="Opt-in démo : page WhatsApp + checklist des 7 fuites + séquence mail jusqu’au join."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -166,9 +166,9 @@
       <p class="label">Horizon · démo live</p>
       <h1>Vois le système en vrai.</h1>
       <p class="lead">
-        Tu t’inscris. On crée ton groupe WhatsApp démo (1 lead = 1 groupe). Tu
-        reçois le lien par mail. C’est exactement le format qu’on installe chez
-        toi.
+        Tu t’inscris. Tu arrives sur WhatsApp (groupe ou 1:1). Tu récupères la
+        checklist des 7 fuites. Une séquence mail te relance jusqu’à ce que tu
+        sois dedans. C’est le format qu’on installe.
       </p>
 
       <div id="success" class="ok" hidden>
@@ -248,7 +248,7 @@
         <p id="error" class="err" hidden></p>
 
         <button type="submit" id="submit">Voir le système en vrai →</button>
-        <p class="foot">Pas de spam. Un mail avec ton lien de groupe, c’est tout.</p>
+        <p class="foot">Pas de spam. Un accès WhatsApp + une checklist. Les mails s’arrêtent dès que tu rejoins.</p>
       </form>
     </main>
 
@@ -326,11 +326,15 @@
             return;
           }
 
+          if (data.next) {
+            window.location.href = data.next;
+            return;
+          }
+
           form.hidden = true;
           success.hidden = false;
-          successMsg.textContent = data.has_invite
-            ? "Check ton mail. Le lien du groupe WhatsApp est dedans."
-            : "Check ton mail. Ton accès est enregistré, le lien du groupe suit dans la foulée.";
+          successMsg.textContent =
+            "Check ton mail et WhatsApp. Le lien d’accès est dedans.";
         } catch {
           fail("Pas de réseau. Réessaie.");
           submit.disabled = false;
