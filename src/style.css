@@ -2586,12 +2586,13 @@ body.past-hero .ui__nav {
 
 .scroll-cta {
   margin-top: 2.5rem;
-  padding: 1.5rem 1.25rem;
+  padding: 1.75rem 1.5rem;
   border: 1px solid var(--line);
   background: #fff;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   gap: 1rem;
 }
 .scroll-cta__text {
@@ -2616,7 +2617,7 @@ body.past-hero .ui__nav {
   gap: 10px;
   width: 100%;
   max-width: 22rem;
-  margin: 0;
+  margin: 0 auto;
   padding: 1rem 1.25rem;
   background: var(--ink);
   border: 1px solid var(--ink);
@@ -2633,10 +2634,17 @@ body.past-hero .ui__nav {
   background: #0a0b0e;
   opacity: 0.95 !important;
 }
+.scroll-contact__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
 .scroll-contact__actions .scroll-cta__btn {
-  max-width: none;
-  width: auto;
-  min-width: 16rem;
+  max-width: 22rem;
+  width: 100%;
+  margin: 0 auto;
 }
 a.scroll-contact__btn.ui__drive {
   position: static !important;
