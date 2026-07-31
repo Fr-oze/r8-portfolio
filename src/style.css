@@ -1425,29 +1425,40 @@ body.diving .ui__quip {
 }
 
 @media (max-width: 720px) {
-  /* --- Mobile : pas de WebGL, SVG fixe, header classique cliquable --- */
+  /* --- Mobile : pas de WebGL, hero qui défile, header classique --- */
   body.mobile-layout #scene {
     display: none !important;
     pointer-events: none !important;
   }
 
-  body.mobile-layout .hero-static {
-    display: flex;
-    position: fixed;
-    inset: 0;
+  /* Hero spacer = bloc qui défile (SVG + titre partent avec le scroll) */
+  body.mobile-layout .hero-spacer {
     z-index: 0;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
+    overflow: hidden;
     background:
       radial-gradient(ellipse 70% 50% at 50% 42%, #e8eaf4 0%, transparent 60%),
       var(--bg);
+  }
+
+  body.mobile-layout .hero-static {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
   }
 
   body.mobile-layout .hero-static__svg {
     width: min(78vw, 340px);
     height: auto;
     opacity: 0.9;
+  }
+
+  /* Titre ancré dans le spacer : défile avec le SVG */
+  body.mobile-layout .hero-headline {
+    position: absolute;
+    z-index: 2;
   }
 
   body.mobile-layout .preloader {
@@ -2349,6 +2360,7 @@ body.diving .ui__quip {
 
 /* ============ SCROLL — sections sous le hero ============ */
 .hero-spacer {
+  position: relative;
   height: 100vh;
   height: 100dvh;
   pointer-events: none;

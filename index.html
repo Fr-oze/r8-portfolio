@@ -36,25 +36,6 @@
     <!-- Scène 3D (desktop uniquement) -->
     <div id="scene"></div>
 
-    <!-- Hero mobile : forme fixe, sans WebGL / sans curseur -->
-    <div class="hero-static" aria-hidden="true">
-      <svg class="hero-static__svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="200" cy="200" r="18" fill="none" stroke="#12141a" stroke-width="1.5" />
-        <circle cx="200" cy="200" r="42" fill="none" stroke="#12141a" stroke-width="0.8" opacity="0.85" />
-        <circle cx="200" cy="200" r="68" fill="none" stroke="#12141a" stroke-width="0.7" opacity="0.7" />
-        <circle cx="200" cy="200" r="96" fill="none" stroke="#12141a" stroke-width="0.6" opacity="0.55" />
-        <circle cx="200" cy="200" r="126" fill="none" stroke="#12141a" stroke-width="0.55" opacity="0.42" />
-        <circle cx="200" cy="200" r="158" fill="none" stroke="#12141a" stroke-width="0.5" opacity="0.3" />
-        <circle cx="200" cy="200" r="188" fill="none" stroke="#12141a" stroke-width="0.45" opacity="0.2" />
-        <g stroke="#12141a" stroke-width="0.4" opacity="0.35">
-          <line x1="200" y1="12" x2="200" y2="388" />
-          <line x1="12" y1="200" x2="388" y2="200" />
-          <line x1="55" y1="55" x2="345" y2="345" />
-          <line x1="345" y1="55" x2="55" y2="345" />
-        </g>
-      </svg>
-    </div>
-
     <!-- ============ PRELOADER : orbe de lignes + compteur ============ -->
     <div id="preloader" class="preloader">
       <canvas id="pixel-canvas" class="preloader__canvas"></canvas>
@@ -64,11 +45,6 @@
       </div>
     </div>
 
-    <!-- Headline hero : gauche, superposée à la sphère -->
-    <h1 class="hero-headline">
-      <span class="hero-headline__line">Imagine :</span>
-      <span class="hero-headline__line hero-headline__line--overlap">ton agence jette plus de 6k par mois sans t'en rendre compte.</span>
-    </h1>
     <!-- ============ UI OVERLAY (cachée jusqu'à la fin du scan) ============ -->
     <div id="ui" class="ui ui--hidden">
       <!-- NAV -->
@@ -155,8 +131,30 @@
       <button id="dive-exit" class="dive-hud__exit">EXIT ✕</button>
     </div>
 
-    <!-- Espace hero (100vh) — le scroll commence en dessous -->
-    <div class="hero-spacer" aria-hidden="true"></div>
+    <!-- Espace hero (100vh). Sur mobile : SVG + titre défilent avec le scroll. -->
+    <div class="hero-spacer">
+      <div class="hero-static" aria-hidden="true">
+        <svg class="hero-static__svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="200" r="18" fill="none" stroke="#12141a" stroke-width="1.5" />
+          <circle cx="200" cy="200" r="42" fill="none" stroke="#12141a" stroke-width="0.8" opacity="0.85" />
+          <circle cx="200" cy="200" r="68" fill="none" stroke="#12141a" stroke-width="0.7" opacity="0.7" />
+          <circle cx="200" cy="200" r="96" fill="none" stroke="#12141a" stroke-width="0.6" opacity="0.55" />
+          <circle cx="200" cy="200" r="126" fill="none" stroke="#12141a" stroke-width="0.55" opacity="0.42" />
+          <circle cx="200" cy="200" r="158" fill="none" stroke="#12141a" stroke-width="0.5" opacity="0.3" />
+          <circle cx="200" cy="200" r="188" fill="none" stroke="#12141a" stroke-width="0.45" opacity="0.2" />
+          <g stroke="#12141a" stroke-width="0.4" opacity="0.35">
+            <line x1="200" y1="12" x2="200" y2="388" />
+            <line x1="12" y1="200" x2="388" y2="200" />
+            <line x1="55" y1="55" x2="345" y2="345" />
+            <line x1="345" y1="55" x2="55" y2="345" />
+          </g>
+        </svg>
+      </div>
+      <h1 class="hero-headline">
+        <span class="hero-headline__line">Imagine :</span>
+        <span class="hero-headline__line hero-headline__line--overlap">ton agence jette plus de 6k par mois sans t'en rendre compte.</span>
+      </h1>
+    </div>
 
     <!-- ============ SECTIONS DE SCROLL (sous le hero) ============ -->
     <main class="page-scroll">
