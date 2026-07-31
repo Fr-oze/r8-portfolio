@@ -1283,12 +1283,14 @@
           <p class="sec-tag">05 · Démo publique</p>
           <h2>Tunnel /demo (autonome)</h2>
           <p class="lede">
-            Preuve live sur horizon-agency.co. Groups API encore KO (Coex / pas OBA) → mode 1:1 + lien fixe.
+            Preuve live sur horizon-agency.co. Objectif : 1 lead = 1 groupe via Groups API.
+            Si 403 (Coex / pas OBA) → fallback WhatsApp 1:1, jamais un groupe partagé.
           </p>
           <div class="plain">
             <h3>Parcours</h3>
             <ul>
-              <li>Opt-in → page <code>/demo/merci</code> (CTA WhatsApp)</li>
+              <li>Opt-in → <code>POST /groups</code> (1 groupe par lead) → page <code>/demo/merci</code></li>
+              <li>Si Groups API KO → CTA wa.me 1:1 + alerte mail « GROUPE KO »</li>
               <li>Template WA <code>horizon_access_link</code> + séquence 7 mails (offre <code>demo-tunnel</code>)</li>
               <li>Ressource : <code>/demo/ressource</code> (checklist 7 fuites)</li>
               <li>Confirm join (bouton / lien mail) → stop séquence + alerte Max + template ressource</li>
@@ -1296,15 +1298,13 @@
             </ul>
             <h3>Env waitlist (Vercel)</h3>
             <ul>
-              <li><code>DEMO_WA_INVITE_LINK</code> = lien groupe manuel (sinon fallback wa.me OK)</li>
               <li><code>PUBLIC_SITE_URL</code> = https://www.horizon-agency.co</li>
               <li>Fonds 360 + templates approved (sinon templates 403 payment)</li>
+              <li>Ne pas utiliser de lien groupe manuel partagé</li>
             </ul>
-            <h3>Toi à faire une fois</h3>
+            <h3>Bloquant produit</h3>
             <ul>
-              <li>Créer le groupe démo dans WhatsApp Business</li>
-              <li>Coller le lien invite dans <code>DEMO_WA_INVITE_LINK</code></li>
-              <li>Redeploy waitlist</li>
+              <li>Groups API 360 encore 403 → ouvrir ticket support / OBA pour débloquer 1 groupe / lead</li>
             </ul>
           </div>
         </div>
