@@ -18,6 +18,12 @@
     />
   </head>
   <body>
+    <script>
+      /* Mobile : header SVG fixe, pas de WebGL (avant le bundle). */
+      if (window.matchMedia("(max-width: 720px)").matches) {
+        document.body.classList.add("mobile-layout");
+      }
+    </script>
     <!-- VK Studio portfolio visits -->
     <img
       src="https://intra.vkstudio.fr/api/portfolio/track?t=c4c0b23fb61c44919c140193ecce5e0b"
@@ -27,8 +33,27 @@
       style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"
     />
 
-    <!-- Scène 3D -->
+    <!-- Scène 3D (desktop uniquement) -->
     <div id="scene"></div>
+
+    <!-- Hero mobile : forme fixe, sans WebGL / sans curseur -->
+    <div class="hero-static" aria-hidden="true">
+      <svg class="hero-static__svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="200" r="18" fill="none" stroke="#12141a" stroke-width="1.5" />
+        <circle cx="200" cy="200" r="42" fill="none" stroke="#12141a" stroke-width="0.8" opacity="0.85" />
+        <circle cx="200" cy="200" r="68" fill="none" stroke="#12141a" stroke-width="0.7" opacity="0.7" />
+        <circle cx="200" cy="200" r="96" fill="none" stroke="#12141a" stroke-width="0.6" opacity="0.55" />
+        <circle cx="200" cy="200" r="126" fill="none" stroke="#12141a" stroke-width="0.55" opacity="0.42" />
+        <circle cx="200" cy="200" r="158" fill="none" stroke="#12141a" stroke-width="0.5" opacity="0.3" />
+        <circle cx="200" cy="200" r="188" fill="none" stroke="#12141a" stroke-width="0.45" opacity="0.2" />
+        <g stroke="#12141a" stroke-width="0.4" opacity="0.35">
+          <line x1="200" y1="12" x2="200" y2="388" />
+          <line x1="12" y1="200" x2="388" y2="200" />
+          <line x1="55" y1="55" x2="345" y2="345" />
+          <line x1="345" y1="55" x2="55" y2="345" />
+        </g>
+      </svg>
+    </div>
 
     <!-- ============ PRELOADER : orbe de lignes + compteur ============ -->
     <div id="preloader" class="preloader">

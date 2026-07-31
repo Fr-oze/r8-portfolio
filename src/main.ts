@@ -23,21 +23,10 @@ const isTouch =
   navigator.maxTouchPoints > 0;
 if (isTouch) document.body.classList.add("touch");
 
-// --- Setup scène + composants ----------------------------------------------
-const stage = new Stage(document.getElementById("scene"));
-
-// La sphère est générée (aucun asset à télécharger) : le compteur du preloader
-// est piloté par une rampe courte, le temps que la scène soit prête.
-const preloader = new Preloader(() => onPreloaderDone());
-{
-  const t0 = performance.now();
-  const ramp = () => {
-    const p = Math.min(1, (performance.now() - t0) / 1400);
-    preloader.setProgress(p);
-    if (p < 1) requestAnimationFrame(ramp);
-  };
-  requestAnimationFrame(ramp);
-}
+// Mobile ≤720px : header classique + SVG fixe, pas de WebGL / pas de curseur.
+const MOBILE_MQ = window.matchMedia("(max-width: 720px)");
+const isMobileLayout = () => MOBILE_MQ.matches;
+if (isMobileLayout()) document.body.classList.add("mobile-layout");
 
 const ui = new UI();
 
@@ -146,223 +135,222 @@ window.addEventListener("keydown", (e) => {
   else projects.hide();
 });
 
-const orb = new OrbScene(stage);
-const lighting = new Lighting(stage, orb.group);
-const dive = new OrbFlightMode(stage, orb);
+// ---------------------------------------------------------------------------
+// MOBILE : pas de WebGL. Header classique + SVG fixe.
+// ---------------------------------------------------------------------------
+if (isMobileLayout()) {
+  const pre = document.getElementById("preloader");
+  pre?.classList.add("preloader--done");
+  pre?.setAttribute("aria-hidden", "true");
+  // UI tout de suite (pas d'attente scan 3D)
+  requestAnimationFrame(() => {
+    ui.reveal();
+    setTimeout(() => {
+      document.querySelector(".ui__quip")?.classList.add("ui__quip--show");
+    }, 2200);
+  });
+} else {
+  // -------------------------------------------------------------------------
+  // DESKTOP : scène 3D + orbe réactif au curseur (inchangé)
+  // -------------------------------------------------------------------------
+  const stage = new Stage(document.getElementById("scene"));
 
-document.getElementById("dive-start")?.addEventListener("click", () => dive.enter());
-document.getElementById("dive-exit")?.addEventListener("click", () => dive.exit());
-window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && dive.active) dive.exit();
-});
-
-let spin = 0; // rotation lente du disque dans son plan (z)
-let density = 0.35; // valeur courante du slider de densité
-
-// Le disque a tourné pendant le vol : on resynchronise pour éviter tout saut.
-dive.onExited = (finalSpin) => {
-  spin = finalSpin - userSpin;
-};
-
-const clampN = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
-
-// Cadrage responsive : recul de la caméra calculé d'après le ratio écran pour
-// que la sphère (déformée, donc un peu plus large que son rayon) reste entière.
-function frameOrb() {
-  const w = window.innerWidth, h = window.innerHeight;
-  const desktop = w > 720;
-  orb.group.position.set(0, desktop ? 0.15 : 0.1, 0);
-
-  const fitD = orb.radius * 2 * (desktop ? 1.5 : 1.7); // diamètre + marge
-  const aspect = w / h;
-  const vFov = (stage.camera.fov * Math.PI) / 180;
-  const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
-  const distH = fitD / 2 / Math.tan(hFov / 2);
-  const distV = fitD / 2 / Math.tan(vFov / 2);
-  stage.camera.position.z = clampN(Math.max(distH, distV) + 1.2, 6, 26);
-  stage.camera.updateProjectionMatrix();
-}
-
-orb.onReady = () => {
-  orb.setDetail(density);
-  ui.setParticles(orb.particleCount);
-  frameOrb();
-};
-orb.onScanComplete = () => {
-  ui.reveal(); // UI en cascade
-  // La phrase signature apparaît après 15 s sur l'interface.
-  setTimeout(() => {
-    document.querySelector(".ui__quip")?.classList.add("ui__quip--show");
-  }, 15000);
-};
-orb.onModeChange = (label) => {
-  ui.setMode(label);
-  ui.setModeControl(label);
-};
-
-orb.load();
-
-// --- Post-processing : bloom + grain/vignette ------------------------------
-const composer = new EffectComposer(stage.renderer);
-composer.setPixelRatio(stage.dpr);
-composer.addPass(new RenderPass(stage.scene, stage.camera));
-// Thème clair : seuil à 1 = bloom neutralisé. Avec l'ancien seuil (0.1) le
-// fond clair (#f4f5f7) passait le seuil et tout l'écran serait lavé de blanc.
-// Le slider "glow" continue de piloter uGlow (intensité de l'encre).
-const bloom = new UnrealBloomPass(
-  new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.75, 0.5, 1.0
-);
-composer.addPass(bloom);
-const grain = new ShaderPass(CinematicShader);
-grain.uniforms.uResolution.value = [window.innerWidth, window.innerHeight];
-composer.addPass(grain);
-
-stage.onResize((w, h) => {
-  composer.setSize(w, h);
-  bloom.resolution.set(w, h);
-  grain.uniforms.uResolution.value = [w, h];
-  if (orb.ready && !dive.active) frameOrb();
-});
-// Un panneau plein écran (projets/about) est opaque devant la scène → inutile de
-// rendre la sphère dessous (et ça évite tout flash qui transparaîtrait au scroll).
-const overlayOpen = () => projects.open || about.open || contact.open;
-stage.setRender(() => {
-  if (overlayOpen()) return;
-  composer.render();
-});
-
-// --- Pointer / touch : desktop = souris, mobile = drag + idle anim ----------
-const pointer = new THREE.Vector2(0, 0);
-let dragging = false;
-const isMobileHero = () =>
-  document.body.classList.contains("touch") ||
-  window.matchMedia("(max-width: 720px)").matches;
-
-window.addEventListener(
-  "pointermove",
-  (e) => {
-    // Sur mobile hors drag : pas de hover → l'idle anim pilote le pointer
-    if (isMobileHero() && e.pointerType !== "mouse" && !dragging) return;
-    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
-  },
-  { passive: true }
-);
-
-// --- Drag : faire tourner le disque dans son plan (rotation z) --------------
-const sceneEl = document.getElementById("scene")!;
-let dragStartX = 0;
-let dragStartY = 0;
-let userSpin = 0;
-let userTiltX = 0;
-let userTiltY = 0;
-let spinAtGrab = 0;
-let tiltXAtGrab = 0;
-let tiltYAtGrab = 0;
-const DRAG_SENS = 0.006;
-const TILT_SENS = 0.004;
-
-sceneEl.style.cursor = "grab";
-sceneEl.style.touchAction = "none";
-
-sceneEl.addEventListener("pointerdown", (e) => {
-  if (dive.active) return;
-  // Une fois le contenu commercial visible, ne pas capturer le scroll/sliders
-  if (document.body.classList.contains("past-hero")) return;
-  dragging = true;
-  dragStartX = e.clientX;
-  dragStartY = e.clientY;
-  spinAtGrab = userSpin;
-  tiltXAtGrab = userTiltX;
-  tiltYAtGrab = userTiltY;
-  sceneEl.style.cursor = "grabbing";
-  try {
-    sceneEl.setPointerCapture(e.pointerId);
-  } catch {
-    /* ignore */
+  const preloader = new Preloader(() => {
+    /* scène déjà en route derrière le preloader */
+  });
+  {
+    const t0 = performance.now();
+    const ramp = () => {
+      const p = Math.min(1, (performance.now() - t0) / 1400);
+      preloader.setProgress(p);
+      if (p < 1) requestAnimationFrame(ramp);
+    };
+    requestAnimationFrame(ramp);
   }
-});
 
-window.addEventListener("pointerup", (e) => {
-  if (!dragging) return;
-  dragging = false;
+  const orb = new OrbScene(stage);
+  const lighting = new Lighting(stage, orb.group);
+  const dive = new OrbFlightMode(stage, orb);
+
+  document.getElementById("dive-start")?.addEventListener("click", () => dive.enter());
+  document.getElementById("dive-exit")?.addEventListener("click", () => dive.exit());
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && dive.active) dive.exit();
+  });
+
+  let spin = 0;
+  let density = 0.35;
+  let userSpin = 0;
+  let userTiltX = 0;
+  let userTiltY = 0;
+
+  dive.onExited = (finalSpin) => {
+    spin = finalSpin - userSpin;
+  };
+
+  const clampN = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+
+  function frameOrb() {
+    const w = window.innerWidth,
+      h = window.innerHeight;
+    const desktop = w > 720;
+    orb.group.position.set(0, desktop ? 0.15 : 0.1, 0);
+
+    const fitD = orb.radius * 2 * (desktop ? 1.5 : 1.7);
+    const aspect = w / h;
+    const vFov = (stage.camera.fov * Math.PI) / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
+    const distH = fitD / 2 / Math.tan(hFov / 2);
+    const distV = fitD / 2 / Math.tan(vFov / 2);
+    stage.camera.position.z = clampN(Math.max(distH, distV) + 1.2, 6, 26);
+    stage.camera.updateProjectionMatrix();
+  }
+
+  orb.onReady = () => {
+    orb.setDetail(density);
+    ui.setParticles(orb.particleCount);
+    frameOrb();
+  };
+  orb.onScanComplete = () => {
+    ui.reveal();
+    setTimeout(() => {
+      document.querySelector(".ui__quip")?.classList.add("ui__quip--show");
+    }, 15000);
+  };
+  orb.onModeChange = (label) => {
+    ui.setMode(label);
+    ui.setModeControl(label);
+  };
+
+  orb.load();
+
+  const composer = new EffectComposer(stage.renderer);
+  composer.setPixelRatio(stage.dpr);
+  composer.addPass(new RenderPass(stage.scene, stage.camera));
+  const bloom = new UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    0.75,
+    0.5,
+    1.0
+  );
+  composer.addPass(bloom);
+  const grain = new ShaderPass(CinematicShader);
+  grain.uniforms.uResolution.value = [window.innerWidth, window.innerHeight];
+  composer.addPass(grain);
+
+  stage.onResize((w, h) => {
+    composer.setSize(w, h);
+    bloom.resolution.set(w, h);
+    grain.uniforms.uResolution.value = [w, h];
+    if (orb.ready && !dive.active) frameOrb();
+  });
+
+  const overlayOpen = () => projects.open || about.open || contact.open;
+  stage.setRender(() => {
+    if (overlayOpen()) return;
+    composer.render();
+  });
+
+  const pointer = new THREE.Vector2(0, 0);
+  let dragging = false;
+
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      if (dragging) return;
+      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+      pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    },
+    { passive: true }
+  );
+
+  const sceneEl = document.getElementById("scene")!;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let spinAtGrab = 0;
+  let tiltXAtGrab = 0;
+  let tiltYAtGrab = 0;
+  const DRAG_SENS = 0.006;
+  const TILT_SENS = 0.004;
+
   sceneEl.style.cursor = "grab";
-  try {
-    sceneEl.releasePointerCapture(e.pointerId);
-  } catch {
-    /* ignore */
-  }
-});
+  sceneEl.style.touchAction = "none";
 
-window.addEventListener(
-  "pointermove",
-  (e) => {
+  sceneEl.addEventListener("pointerdown", (e) => {
+    if (dive.active) return;
+    if (document.body.classList.contains("past-hero")) return;
+    dragging = true;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    spinAtGrab = userSpin;
+    tiltXAtGrab = userTiltX;
+    tiltYAtGrab = userTiltY;
+    sceneEl.style.cursor = "grabbing";
+    try {
+      sceneEl.setPointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+  });
+
+  window.addEventListener("pointerup", (e) => {
     if (!dragging) return;
-    userSpin = spinAtGrab + (e.clientX - dragStartX) * DRAG_SENS;
-    if (isMobileHero()) {
+    dragging = false;
+    sceneEl.style.cursor = "grab";
+    try {
+      sceneEl.releasePointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+  });
+
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      if (!dragging) return;
+      userSpin = spinAtGrab + (e.clientX - dragStartX) * DRAG_SENS;
       userTiltY = tiltYAtGrab + (e.clientX - dragStartX) * TILT_SENS;
       userTiltX = tiltXAtGrab + (e.clientY - dragStartY) * TILT_SENS;
       userTiltX = Math.max(-0.35, Math.min(0.35, userTiltX));
       userTiltY = Math.max(-0.45, Math.min(0.45, userTiltY));
       pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
       pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    }
-  },
-  { passive: true }
-);
+    },
+    { passive: true }
+  );
 
-// --- Contrôles (construits une fois le DOM prêt) ----------------------------
-ui.buildControls({
-  onDensity: (v) => {
-    density = v;
-    orb.setDetail(v);
-    if (orb.ready) ui.setParticles(orb.particleCount);
-  },
-  onGlow: (v) => {
-    bloom.strength = v;
-    orb.uniforms.uGlow.value = v;
-    lighting.setIntensity(0.4 + v);
-  },
-  onModeCycle: () => orb.cycleMode(),
-});
+  ui.buildControls({
+    onDensity: (v) => {
+      density = v;
+      orb.setDetail(v);
+      if (orb.ready) ui.setParticles(orb.particleCount);
+    },
+    onGlow: (v) => {
+      bloom.strength = v;
+      orb.uniforms.uGlow.value = v;
+      lighting.setIntensity(0.4 + v);
+    },
+    onModeCycle: () => orb.cycleMode(),
+  });
 
-// --- Boucle ----------------------------------------------------------------
-function onPreloaderDone() {
-  // rien de spécial : la scène tourne déjà derrière le preloader.
-}
+  stage.start((t, dt) => {
+    if (overlayOpen()) return;
 
-stage.start((t, dt) => {
-  if (overlayOpen()) return;
-
-  if (dive.active) {
-    dive.update(t, dt, pointer);
-    orb.update(t, dt);
-  } else {
-    const mobile = isMobileHero();
-    if (mobile && !dragging) {
-      // Idle anim mobile : l'orbe vit sans souris
-      pointer.x = Math.sin(t * 0.45) * 0.55;
-      pointer.y = Math.cos(t * 0.38) * 0.35;
-    }
-    const mouseWorld = lighting.update(pointer, dt);
-    orb.setMouseWorld(mouseWorld);
-    orb.update(t, dt);
-
-    // Rotation lente DANS le plan du disque + tilt
-    if (!dragging) spin += dt * (mobile ? 0.035 : 0.02);
-    orb.group.rotation.z = spin + userSpin;
-    if (mobile) {
-      const idleY = Math.sin(t * 0.35) * 0.1;
-      const idleX = Math.sin(t * 0.28) * 0.05;
-      orb.group.rotation.y = userTiltY + (dragging ? 0 : idleY);
-      orb.group.rotation.x = -0.06 + userTiltX + (dragging ? 0 : idleX);
+    if (dive.active) {
+      dive.update(t, dt, pointer);
+      orb.update(t, dt);
     } else {
+      const mouseWorld = lighting.update(pointer, dt);
+      orb.setMouseWorld(mouseWorld);
+      orb.update(t, dt);
+
+      if (!dragging) spin += dt * 0.02;
+      orb.group.rotation.z = spin + userSpin;
       orb.group.rotation.y = dragging ? 0 : lighting.tiltY * 0.35;
       orb.group.rotation.x = -0.06 + (dragging ? 0 : lighting.tiltX * 0.35);
     }
-  }
 
-  grain.uniforms.uTime.value = t;
-  ui.tickFps(dt);
-});
+    grain.uniforms.uTime.value = t;
+    ui.tickFps(dt);
+  });
+}

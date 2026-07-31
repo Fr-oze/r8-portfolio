@@ -36,6 +36,11 @@ body {
   width: 100% !important;
   height: 100% !important;
 }
+
+/* Hero SVG fixe : masqué sur desktop */
+.hero-static {
+  display: none;
+}
 body.panel-open {
   overflow: hidden;
   position: fixed;
@@ -1420,15 +1425,56 @@ body.diving .ui__quip {
 }
 
 @media (max-width: 720px) {
-  /* --- NAV mobile : même barre, plus compacte --- */
+  /* --- Mobile : pas de WebGL, SVG fixe, header classique cliquable --- */
+  body.mobile-layout #scene {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  body.mobile-layout .hero-static {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 42%, #e8eaf4 0%, transparent 60%),
+      var(--bg);
+  }
+
+  body.mobile-layout .hero-static__svg {
+    width: min(78vw, 340px);
+    height: auto;
+    opacity: 0.9;
+  }
+
+  body.mobile-layout .preloader {
+    display: none !important;
+  }
+
+  /* Overlay UI au-dessus du SVG, nav cliquable */
+  body.mobile-layout .ui {
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  /* Header classique : toute la barre reçoit les taps */
+  body.mobile-layout .ui__nav,
   .ui__nav {
     height: calc(56px + env(safe-area-inset-top, 0px));
     padding: env(safe-area-inset-top, 0px) 14px 0;
     font-size: 10px;
     gap: 8px;
+    pointer-events: auto;
+    z-index: 100;
+    background: #f4f5f7 !important;
+    border-bottom: 1px solid var(--line);
   }
   .ui__brand {
     font-size: 12px;
+    pointer-events: none;
   }
   .ui__brand-full {
     display: none !important;
@@ -1438,15 +1484,19 @@ body.diving .ui__quip {
   }
   .ui__links {
     gap: 2px;
+    pointer-events: auto;
   }
   .ui__link {
-    height: 32px;
-    padding: 0 8px;
+    height: 36px;
+    min-width: 44px;
+    padding: 0 10px;
     font-size: 10px;
     letter-spacing: 0.06em;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
   }
   .ui__link--demo {
-    padding: 0 10px;
+    padding: 0 12px;
   }
   .ui__mobile-actions,
   .ui__about-mobile {
@@ -1482,7 +1532,7 @@ body.diving .ui__quip {
     cursor: pointer;
   }
 
-  /* Headline hero : haut gauche, au dessus de la sphère (pas en bas) */
+  /* Headline hero : haut gauche, au dessus de la forme */
   .hero-headline {
     left: 16px;
     right: auto;
@@ -1491,6 +1541,7 @@ body.diving .ui__quip {
     width: max-content;
     max-width: calc(100vw - 32px);
     transform: translateY(8px);
+    z-index: 2;
   }
   body.ui-ready .hero-headline {
     transform: translateY(0);
