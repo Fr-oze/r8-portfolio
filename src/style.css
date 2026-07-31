@@ -21,6 +21,21 @@ body {
   font-family: "Space Mono", ui-monospace, Menlo, monospace;
   letter-spacing: 0.04em;
 }
+
+/* Scène 3D : toujours derrière l'UI, hors du flux document */
+#scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+#scene canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
 body.panel-open {
   overflow: hidden;
   position: fixed;
@@ -33,11 +48,11 @@ body.panel-open {
   display: none;
 }
 
-/* Headline hero — haut gauche, lisible sans empiéter sur la sphère */
+/* Headline hero — sous la barre header (64px) */
 .hero-headline {
   position: fixed;
   left: clamp(20px, 4vw, 56px);
-  top: clamp(148px, 17vh, 168px);
+  top: clamp(120px, 16vh, 160px);
   z-index: 2;
   pointer-events: none;
   display: flex;
@@ -130,14 +145,18 @@ body.past-hero .hero-headline {
   z-index: 10;
   pointer-events: none;
 }
-.ui--hidden .ui__nav,
+.ui--hidden .ui__nav {
+  opacity: 0;
+}
 .ui--hidden .ui__corner,
 .ui--hidden .ui__controls {
   opacity: 0;
   transform: translateY(8px);
 }
 
-.ui__nav,
+.ui__nav {
+  transition: opacity 0.7s ease-out, background 0.3s ease-out, border-color 0.3s ease-out;
+}
 .ui__corner,
 .ui__controls,
 .ui__quip {
@@ -192,7 +211,7 @@ body.past-hero .hero-headline {
 }
 
 .ui__nav {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -200,21 +219,29 @@ body.past-hero .hero-headline {
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  padding: 26px 32px;
+  height: 64px;
+  padding: 0 32px;
   font-size: 12px;
   text-transform: uppercase;
-  z-index: 12;
-  height: auto;
-  min-height: 0;
-  transition: background 0.3s ease-out, border-color 0.3s ease-out, backdrop-filter 0.3s ease-out;
+  z-index: 30;
+  background: rgba(244, 245, 247, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  box-sizing: border-box;
+  transform: none !important;
 }
 .ui__brand {
+  display: flex;
+  align-items: center;
+  height: 100%;
   font-weight: 700;
   letter-spacing: 0.1em;
   flex: 0 0 auto;
   min-width: 0;
   white-space: nowrap;
-  color: inherit;
+  line-height: 1;
+  color: var(--ink);
   text-decoration: none;
   pointer-events: none;
 }
@@ -228,19 +255,28 @@ body.past-hero .hero-headline {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   flex: 0 0 auto;
   margin-left: auto;
+  height: 100%;
 }
 .ui__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 14px;
   color: var(--dim);
   text-decoration: none;
   pointer-events: auto;
   cursor: pointer;
-  /* zone cliquable confortable (sinon on clique à côté du texte) */
-  padding: 8px 12px;
   border-radius: 2px;
-  transition: color 0.3s ease-out, background 0.3s ease-out;
+  border: 1px solid transparent;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  box-sizing: border-box;
+  transition: color 0.2s ease-out, background 0.2s ease-out, border-color 0.2s ease-out;
 }
 .ui__link:hover {
   color: var(--ink);
@@ -249,13 +285,13 @@ body.past-hero .hero-headline {
 .ui__link--demo {
   color: #f4f5f7 !important;
   background: var(--ink);
-  border: 1px solid var(--ink);
+  border-color: var(--ink);
   font-weight: 700;
 }
 .ui__link--demo:hover {
   color: #f4f5f7 !important;
   background: #0a0b0e;
-  opacity: 0.92;
+  opacity: 1;
 }
 /* Boutons mobile (ABOUT / CONTACT) : cachés sur desktop, les liens nav suffisent. */
 .ui__mobile-actions {
@@ -303,7 +339,7 @@ body.past-hero .hero-headline {
   text-align: right;
 }
 .ui__corner--tl {
-  top: 84px;
+  top: 80px;
   left: 32px;
 }
 .ui__clock {
@@ -1379,27 +1415,15 @@ body.diving .ui__quip {
 }
 
 @media (max-width: 720px) {
-  /* --- NAV classique : marque + liens texte (plus de boutons tactiles) --- */
+  /* --- NAV mobile : même barre, plus compacte --- */
   .ui__nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 12px 14px;
-    padding-top: calc(12px + env(safe-area-inset-top, 0px));
+    height: calc(56px + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 14px 0;
     font-size: 10px;
-    gap: 10px;
-    background: rgba(244, 245, 247, 0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line);
+    gap: 8px;
   }
   .ui__brand {
     font-size: 12px;
-    max-width: none;
-    overflow: visible;
-    flex: 0 0 auto;
-    pointer-events: none;
   }
   .ui__brand-full {
     display: none !important;
@@ -1408,20 +1432,16 @@ body.diving .ui__quip {
     display: inline !important;
   }
   .ui__links {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: flex-end;
     gap: 2px;
-    min-width: 0;
   }
   .ui__link {
-    padding: 6px 8px;
+    height: 32px;
+    padding: 0 8px;
     font-size: 10px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
   }
   .ui__link--demo {
-    padding: 6px 10px;
+    padding: 0 10px;
   }
   .ui__mobile-actions,
   .ui__about-mobile {
@@ -2299,43 +2319,16 @@ body.past-hero .ui__cta-projects {
   transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
 }
 
-/* Barre opaque sticky : le contenu ne passe plus sous la marque */
 body.past-hero .ui__nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: auto;
-  background: rgba(244, 245, 247, 0.96);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
+  background: rgba(244, 245, 247, 0.98);
 }
 
-/* Desktop : header classique, jamais les overrides mobile */
+/* Desktop : header barre classique (pas les overrides mobile) */
 @media (min-width: 721px) {
   .ui__nav {
-    position: absolute;
-    padding: 26px 32px;
+    height: 64px;
+    padding: 0 32px;
     font-size: 12px;
-    gap: 24px;
-    background: transparent;
-    border-bottom: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-  body.past-hero .ui__nav {
-    position: fixed;
-    padding: 20px 32px;
-    background: rgba(244, 245, 247, 0.96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line);
-  }
-  .ui__brand {
-    flex: 0 0 auto;
-    font-size: 12px;
-    overflow: visible;
   }
   .ui__brand-full {
     display: inline !important;
@@ -2345,18 +2338,19 @@ body.past-hero .ui__nav {
   }
   .ui__links {
     display: flex !important;
-    gap: 8px;
-  }
-  .ui__link {
-    padding: 8px 12px;
-    font-size: 12px;
-    letter-spacing: 0.04em;
+    gap: 4px;
   }
   .ui__cta-projects {
     display: none !important;
   }
   #dive-start {
     display: inline-flex !important;
+  }
+  .ui__quip {
+    top: 76px;
+  }
+  .ui__corner--tl {
+    top: 88px;
   }
 }
 
