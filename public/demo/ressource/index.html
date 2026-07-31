@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HORIZON · Les 7 fuites qui tuent tes leads</title>
+    <title>HORIZON · Diagnostic de fuite</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta
       name="description"
-      content="Checklist : les 7 fuites qui tuent tes leads avant que ton commercial réponde."
+      content="Calcule ce que ton pipe jette déjà chaque mois, sur le même volume de leads."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,7 +36,7 @@
         letter-spacing: 0.04em;
       }
       .wrap {
-        max-width: 36rem;
+        max-width: 38rem;
         margin: 0 auto;
         padding: 2.5rem 1.25rem 4rem;
       }
@@ -48,7 +48,7 @@
       }
       h1 {
         margin-top: 1rem;
-        font-size: clamp(1.4rem, 4vw, 1.85rem);
+        font-size: clamp(1.4rem, 4vw, 1.9rem);
         line-height: 1.2;
         letter-spacing: -0.02em;
       }
@@ -58,38 +58,100 @@
         line-height: 1.7;
         color: var(--dim);
       }
-      .list {
-        margin-top: 2rem;
+      .hero-num {
+        margin-top: 1.75rem;
+        padding: 1.15rem 1rem;
+        border: 1px solid var(--ink);
+        background: #fff;
+      }
+      .hero-num .big {
+        margin-top: 0.55rem;
+        font-size: clamp(1.6rem, 6vw, 2.1rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+      }
+      .hero-num .sub {
+        margin-top: 0.45rem;
+        font-size: 0.78rem;
+        color: var(--dim);
+        line-height: 1.55;
+      }
+      .grid {
+        margin-top: 1.5rem;
+        display: grid;
+        gap: 0.85rem;
+      }
+      .field {
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 0.85rem 0.9rem;
+      }
+      .field label {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .field input[type="range"] {
+        width: 100%;
+        margin-top: 0.65rem;
+      }
+      .field .val {
+        color: var(--ink);
+        letter-spacing: 0.04em;
+        text-transform: none;
+        font-size: 0.8rem;
+      }
+      table {
+        width: 100%;
+        margin-top: 1.5rem;
+        border-collapse: collapse;
+        font-size: 0.75rem;
+        line-height: 1.45;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 0.65rem 0.35rem;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--dim);
+        font-weight: 400;
+      }
+      td.num {
+        text-align: right;
+        white-space: nowrap;
+      }
+      .bench {
+        margin-top: 1.5rem;
         display: grid;
         gap: 0.65rem;
       }
-      label.item {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 0.85rem;
-        align-items: start;
-        padding: 0.95rem 0.85rem;
+      .bench article {
         border: 1px solid var(--line);
         background: #fff;
-        cursor: pointer;
-        font-size: 0.8rem;
+        padding: 0.9rem;
+        font-size: 0.78rem;
         line-height: 1.55;
       }
-      label.item input {
-        margin-top: 0.15rem;
-        width: 1rem;
-        height: 1rem;
-        accent-color: var(--ink);
+      .bench b {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.95rem;
       }
-      label.item.is-on {
-        border-color: var(--ink);
-      }
-      .score {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        border: 1px solid var(--line);
-        background: #fff;
-        font-size: 0.85rem;
+      .note {
+        margin-top: 1rem;
+        font-size: 0.68rem;
+        color: var(--dim);
         line-height: 1.6;
       }
       .cta {
@@ -116,26 +178,12 @@
         .wrap {
           padding: 1.25rem 1rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
         }
-        h1 {
-          font-size: 1.3rem;
-        }
-        label.item {
-          padding: 0.85rem 0.7rem;
-          font-size: 0.78rem;
-          gap: 0.7rem;
-        }
-        label.item input {
-          width: 1.15rem;
-          height: 1.15rem;
-          margin-top: 0.1rem;
-        }
         .cta {
           min-height: 52px;
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
-          font-size: 0.9rem;
           position: sticky;
           bottom: calc(12px + env(safe-area-inset-bottom, 0px));
           z-index: 2;
@@ -146,115 +194,266 @@
   </head>
   <body>
     <main class="wrap">
-      <p class="label">Ressource démo · 1 page</p>
-      <h1>Les 7 fuites qui tuent tes leads</h1>
+      <p class="label">Ressource démo · diagnostic chiffré</p>
+      <h1>Ce que ton pipe jette déjà</h1>
       <p class="lead">
-        Coche ce qui te parle. Pendant que Max arrive, tu vois déjà où ton pipe
-        saigne. Ensuite envoie <b>OK</b> sur WhatsApp.
+        Même volume de leads. Zéro euro de pub en plus. Tu vois la différence
+        entre « on répond quand on peut » et un tunnel qui tient la chaleur.
+        Ensuite envoie <b>OK</b> sur WhatsApp.
       </p>
 
-      <div class="list" id="list">
-        <label class="item"
-          ><input type="checkbox" data-w="3" />
-          <span
-            ><b>Lead sans réponse &lt; 5 min</b><br />Le prospect chauffe, personne
-            ne répond, il part chez le concurrent.</span
-          ></label
-        >
-        <label class="item"
-          ><input type="checkbox" data-w="2" />
-          <span
-            ><b>Pas de scoring A / B / C</b><br />Tout le monde est traité pareil.
-            Les gros dossiers attendent derrière le bruit.</span
-          ></label
-        >
-        <label class="item"
-          ><input type="checkbox" data-w="3" />
-          <span
-            ><b>Relances absentes J+1 / J+3</b><br />Un seul message. Puis silence.
-            Le lead meurt sans dramaturgie.</span
-          ></label
-        >
-        <label class="item"
-          ><input type="checkbox" data-w="3" />
-          <span
-            ><b>WhatsApp perso = goulot</b><br />Tout passe par ton téléphone. Vacances,
-            réunion client, oubli = pipe mort.</span
-          ></label
-        >
-        <label class="item"
-          ><input type="checkbox" data-w="2" />
-          <span
-            ><b>Form sans suite mail</b><br />Opt-in → rien. Pas de push vers le canal
-            où tu closes vraiment.</span
-          ></label
-        >
-        <label class="item"
-          ><input type="checkbox" data-w="2" />
-          <span
-            ><b>Ads sans micro-conversions</b><br />Tu optimises des clics, pas des
-            joins / réponses / RDV.</span
-          ></label
-        >
-        <label class="item"
-          ><input type="checkbox" data-w="3" />
-          <span
-            ><b>Pas d’alerte commercial</b><br />Le lead entre. Personne n’est ping.
-            Tu découvres le message à 23h.</span
-          ></label
-        >
+      <div class="hero-num">
+        <p class="label">Fuite estimée (modèle conservateur)</p>
+        <p class="big" id="delta">+ 0 € / mois</p>
+        <p class="sub" id="delta-year">soit + 0 € / an sur le même trafic</p>
       </div>
 
-      <div class="score" id="score">Coche au moins une fuite pour voir ton focus.</div>
+      <div class="grid" id="controls">
+        <div class="field">
+          <label
+            ><span>Leads / mois</span><span class="val" id="leads-val">80</span></label
+          >
+          <input id="leads" type="range" min="20" max="400" step="5" value="80" />
+        </div>
+        <div class="field">
+          <label
+            ><span>Panier moyen</span
+            ><span class="val" id="basket-val">3 500 €</span></label
+          >
+          <input
+            id="basket"
+            type="range"
+            min="800"
+            max="15000"
+            step="100"
+            value="3500"
+          />
+        </div>
+        <div class="field">
+          <label
+            ><span>Traités à chaud (&lt; 5 min)</span
+            ><span class="val" id="fast-val">25 %</span></label
+          >
+          <input id="fast" type="range" min="5" max="80" step="1" value="25" />
+        </div>
+        <div class="field">
+          <label
+            ><span>Close à chaud</span
+            ><span class="val" id="close-hot-val">22 %</span></label
+          >
+          <input
+            id="close-hot"
+            type="range"
+            min="8"
+            max="45"
+            step="1"
+            value="22"
+          />
+        </div>
+        <div class="field">
+          <label
+            ><span>Close à froid (le reste)</span
+            ><span class="val" id="close-cool-val">6 %</span></label
+          >
+          <input
+            id="close-cool"
+            type="range"
+            min="1"
+            max="18"
+            step="1"
+            value="6"
+          />
+        </div>
+      </div>
 
-      <a
-        class="cta"
-        id="wa"
-        href="https://wa.me/33674247494?text=OK"
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="num">Aujourd’hui</th>
+            <th class="num">Avec système*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Leads</td>
+            <td class="num" id="row-leads-now">—</td>
+            <td class="num" id="row-leads-sys">—</td>
+          </tr>
+          <tr>
+            <td>Traités à chaud</td>
+            <td class="num" id="row-fast-now">—</td>
+            <td class="num" id="row-fast-sys">—</td>
+          </tr>
+          <tr>
+            <td>Clients / mois</td>
+            <td class="num" id="row-clients-now">—</td>
+            <td class="num" id="row-clients-sys">—</td>
+          </tr>
+          <tr>
+            <td>CA / mois</td>
+            <td class="num" id="row-ca-now">—</td>
+            <td class="num" id="row-ca-sys">—</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">
+        * Close système plafonné (conservateur) : jamais au-dessus de ton close à
+        chaud, jamais sous ton mix actuel × 1,05. Hypothèse : le système remet
+        presque tout le volume dans la fenêtre chaude.
+      </p>
+
+      <section class="bench" aria-label="Repères agence">
+        <p class="label">Repères agences 30–50k € / mois</p>
+        <article>
+          <b>~6 000 € / mois</b>
+          Ordre de grandeur type sur le modèle (à recalibrer en audit). Pas un
+          miracle ads : du volume déjà payé qui refroidit.
+        </article>
+        <article>
+          <b>Close froid = 20–40 % du close chaud</b>
+          Dès que le lead sort de la fenêtre &lt; 5 min, tu paies le même CPL pour
+          un close qui s’effondre.
+        </article>
+        <article>
+          <b>Le goulot, c’est le suivi</b>
+          Scoring, push WhatsApp, alerte commercial, FUP. Pas « plus de pubs ».
+        </article>
+      </section>
+
+      <p class="note" id="declared" hidden></p>
+
+      <a class="cta" id="wa" href="https://wa.me/33674247494?text=OK"
         >Envoyer OK sur WhatsApp →</a
       >
 
       <p class="foot">
-        C’est exactement ce que le tunnel Horizon attaque : scoring, push WhatsApp,
-        ressource, alerte, relances jusqu’au join. Zéro lead mort.
+        C’est exactement ce que le tunnel Horizon attaque : opt-in scoré → push
+        WhatsApp → ressource → alerte → relances jusqu’au join. Zéro lead mort.
       </p>
     </main>
 
     <script>
-      const boxes = [...document.querySelectorAll("#list input")];
-      const score = document.getElementById("score");
+      const SYSTEM_CLOSE_RATIO = 0.75;
+      const COOL_VS_HOT_MAX = 0.4;
+      const MIN_UPLIFT_VS_BLEND = 1.05;
 
-      const refresh = () => {
-        let n = 0;
-        let w = 0;
-        boxes.forEach((b) => {
-          const item = b.closest(".item");
-          if (b.checked) {
-            n += 1;
-            w += Number(b.dataset.w || 1);
-            item.classList.add("is-on");
-          } else item.classList.remove("is-on");
-        });
-        if (n === 0) {
-          score.textContent = "Coche au moins une fuite pour voir ton focus.";
-          return;
-        }
-        const level =
-          w >= 12 ? "critique" : w >= 7 ? "sérieux" : "à surveiller";
-        score.innerHTML =
-          "<b>" +
-          n +
-          " fuite" +
-          (n > 1 ? "s" : "") +
-          "</b> cochée" +
-          (n > 1 ? "s" : "") +
-          " · niveau <b>" +
-          level +
-          "</b>.<br/>Priorité : corriger d’abord le scoring + la réponse &lt; 5 min + l’alerte commercial.";
+      const params = new URLSearchParams(window.location.search);
+      const leadsWeek = Number(params.get("leads") || params.get("lw") || "");
+      const caMonth = Number(params.get("ca") || "");
+
+      const leadsEl = document.getElementById("leads");
+      const basketEl = document.getElementById("basket");
+      const fastEl = document.getElementById("fast");
+      const closeHotEl = document.getElementById("close-hot");
+      const closeCoolEl = document.getElementById("close-cool");
+      const declared = document.getElementById("declared");
+
+      if (Number.isFinite(leadsWeek) && leadsWeek > 0) {
+        const lm = Math.min(400, Math.max(20, Math.round(leadsWeek * 4)));
+        leadsEl.value = String(lm);
+      }
+
+      if (Number.isFinite(caMonth) && caMonth > 0) {
+        const leadsM = Number(leadsEl.value);
+        const assumedBlend = 0.12;
+        const clients = Math.max(1, leadsM * assumedBlend);
+        let basket = Math.round(caMonth / clients / 100) * 100;
+        basket = Math.min(15000, Math.max(800, basket));
+        basketEl.value = String(basket);
+        declared.hidden = false;
+        declared.textContent =
+          "Prérempli depuis ton opt-in : " +
+          (Number.isFinite(leadsWeek) && leadsWeek > 0
+            ? leadsWeek + " leads / sem → "
+            : "") +
+          leadsEl.value +
+          " / mois · CA déclaré " +
+          new Intl.NumberFormat("fr-FR", {
+            style: "currency",
+            currency: "EUR",
+            maximumFractionDigits: 0,
+          }).format(caMonth) +
+          " (panier estimé, tu peux le bouger).";
+      }
+
+      const fmtEuro = (n) =>
+        new Intl.NumberFormat("fr-FR", {
+          style: "currency",
+          currency: "EUR",
+          maximumFractionDigits: 0,
+        }).format(Math.round(n));
+
+      const fmtNum = (n, d = 0) =>
+        new Intl.NumberFormat("fr-FR", {
+          maximumFractionDigits: d,
+          minimumFractionDigits: d,
+        }).format(n);
+
+      const fmtPct = (n) => {
+        const p = n * 100;
+        const digits = Math.abs(p - Math.round(p)) < 0.05 ? 0 : 1;
+        return fmtNum(p, digits) + " %";
       };
 
-      boxes.forEach((b) => b.addEventListener("change", refresh));
-      refresh();
+      const syncCool = () => {
+        const hot = Number(closeHotEl.value);
+        const maxCool = Math.max(1, Math.floor(hot * COOL_VS_HOT_MAX));
+        closeCoolEl.max = String(maxCool);
+        if (Number(closeCoolEl.value) > maxCool) closeCoolEl.value = String(maxCool);
+      };
+
+      const render = () => {
+        syncCool();
+        const leads = Number(leadsEl.value);
+        const basket = Number(basketEl.value);
+        const fastPct = Number(fastEl.value) / 100;
+        const closeHot = Number(closeHotEl.value) / 100;
+        const closeCool = Number(closeCoolEl.value) / 100;
+
+        const fastNow = Math.round(leads * fastPct);
+        const lateNow = leads - fastNow;
+        const clientsNow = fastNow * closeHot + lateNow * closeCool;
+        const blended = leads > 0 ? clientsNow / leads : 0;
+        const closeSys = Math.min(
+          closeHot,
+          Math.max(closeHot * SYSTEM_CLOSE_RATIO, blended * MIN_UPLIFT_VS_BLEND)
+        );
+        const clientsSys = leads * closeSys;
+        const caNow = clientsNow * basket;
+        const caSys = clientsSys * basket;
+        const delta = Math.max(0, caSys - caNow);
+
+        document.getElementById("leads-val").textContent = String(leads);
+        document.getElementById("basket-val").textContent = fmtEuro(basket);
+        document.getElementById("fast-val").textContent = fmtPct(fastPct);
+        document.getElementById("close-hot-val").textContent = fmtPct(closeHot);
+        document.getElementById("close-cool-val").textContent = fmtPct(closeCool);
+
+        document.getElementById("row-leads-now").textContent = String(leads);
+        document.getElementById("row-leads-sys").textContent = String(leads);
+        document.getElementById("row-fast-now").textContent = String(fastNow);
+        document.getElementById("row-fast-sys").textContent = String(leads);
+        document.getElementById("row-clients-now").textContent = fmtNum(
+          clientsNow,
+          1
+        );
+        document.getElementById("row-clients-sys").textContent = fmtNum(
+          clientsSys,
+          1
+        );
+        document.getElementById("row-ca-now").textContent = fmtEuro(caNow);
+        document.getElementById("row-ca-sys").textContent = fmtEuro(caSys);
+        document.getElementById("delta").textContent =
+          "+ " + fmtEuro(delta) + " / mois";
+        document.getElementById("delta-year").textContent =
+          "soit + " + fmtEuro(delta * 12) + " / an sur le même trafic";
+      };
+
+      [leadsEl, basketEl, fastEl, closeHotEl, closeCoolEl].forEach((el) =>
+        el.addEventListener("input", render)
+      );
+      render();
     </script>
   </body>
 </html>
