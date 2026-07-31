@@ -33,7 +33,7 @@ export class Contact {
             <span class="contact__tag">DÉMO LIVE</span>
             <h2 class="contact__lead">Optin-toi et vois<br /><span>à quoi ça ressemble</span>&nbsp;?</h2>
             <p class="contact__sub">
-              Tu vis le parcours pour de vrai : formulaire → WhatsApp → diagnostic chiffré → suivi.
+              Tu vis le parcours pour de vrai : formulaire → WhatsApp → dossier d’audit → suivi.
               2 minutes. Pas de call obligatoire.
             </p>
           </div>

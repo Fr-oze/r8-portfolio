@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HORIZON · Diagnostic de fuite</title>
+    <title>HORIZON · Audit de fuite (dossier)</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta
       name="description"
-      content="Calcule ce que ton pipe jette déjà chaque mois, sur le même volume de leads."
+      content="Dossier d’audit : où ton CA disparaît heure par heure, mode de panne par mode de panne, file FUP de la semaine."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,16 +29,16 @@
       body {
         min-height: 100vh;
         background:
-          radial-gradient(ellipse 70% 45% at 0% 0%, #e4e7f6 0%, transparent 55%),
+          radial-gradient(ellipse 70% 40% at 0% 0%, #e4e7f6 0%, transparent 55%),
           var(--bg);
         color: var(--ink);
         font-family: "Space Mono", ui-monospace, Menlo, monospace;
         letter-spacing: 0.04em;
       }
       .wrap {
-        max-width: 38rem;
+        max-width: 40rem;
         margin: 0 auto;
-        padding: 2.5rem 1.25rem 4rem;
+        padding: 2.5rem 1.25rem 5rem;
       }
       .label {
         font-size: 0.65rem;
@@ -47,10 +47,17 @@
         color: var(--dim);
       }
       h1 {
-        margin-top: 1rem;
-        font-size: clamp(1.4rem, 4vw, 1.9rem);
-        line-height: 1.2;
+        margin-top: 0.85rem;
+        font-size: clamp(1.45rem, 4.5vw, 2rem);
+        line-height: 1.15;
         letter-spacing: -0.02em;
+      }
+      h2 {
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
       }
       .lead {
         margin-top: 1rem;
@@ -58,71 +65,120 @@
         line-height: 1.7;
         color: var(--dim);
       }
-      .hero-num {
+      .meta {
+        margin-top: 1.25rem;
+        display: grid;
+        gap: 0.55rem;
+        font-size: 0.78rem;
+        line-height: 1.55;
+      }
+      .meta b {
+        color: var(--ink);
+      }
+      .hero {
         margin-top: 1.75rem;
-        padding: 1.15rem 1rem;
+        padding: 1.2rem 1rem;
         border: 1px solid var(--ink);
         background: #fff;
       }
-      .hero-num .big {
-        margin-top: 0.55rem;
-        font-size: clamp(1.6rem, 6vw, 2.1rem);
+      .hero .big {
+        margin-top: 0.5rem;
+        font-size: clamp(1.55rem, 5.5vw, 2rem);
         font-weight: 700;
         letter-spacing: -0.03em;
-        line-height: 1.15;
       }
-      .hero-num .sub {
+      .hero .sub {
         margin-top: 0.45rem;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         color: var(--dim);
         line-height: 1.55;
       }
-      .grid {
-        margin-top: 1.5rem;
+      .controls {
+        margin-top: 1.25rem;
         display: grid;
-        gap: 0.85rem;
+        gap: 0.7rem;
       }
       .field {
         border: 1px solid var(--line);
         background: #fff;
-        padding: 0.85rem 0.9rem;
+        padding: 0.75rem 0.85rem;
       }
       .field label {
         display: flex;
         justify-content: space-between;
         gap: 0.75rem;
-        font-size: 0.68rem;
+        font-size: 0.62rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--dim);
       }
-      .field input[type="range"] {
-        width: 100%;
-        margin-top: 0.65rem;
-      }
       .field .val {
         color: var(--ink);
-        letter-spacing: 0.04em;
         text-transform: none;
-        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        font-size: 0.78rem;
+      }
+      .field input[type="range"] {
+        width: 100%;
+        margin-top: 0.55rem;
+      }
+      .stack {
+        margin-top: 1.15rem;
+        display: grid;
+        gap: 0.65rem;
+      }
+      .card {
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 0.95rem 0.9rem;
+      }
+      .card header {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        align-items: baseline;
+      }
+      .card h3 {
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+      .card .euro {
+        font-size: 0.82rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .card p {
+        margin-top: 0.45rem;
+        font-size: 0.75rem;
+        line-height: 1.55;
+        color: var(--dim);
+      }
+      .bar {
+        margin-top: 0.7rem;
+        height: 4px;
+        background: var(--line);
+      }
+      .bar > i {
+        display: block;
+        height: 100%;
+        background: var(--ink);
       }
       table {
         width: 100%;
-        margin-top: 1.5rem;
+        margin-top: 1rem;
         border-collapse: collapse;
-        font-size: 0.75rem;
-        line-height: 1.45;
+        font-size: 0.72rem;
       }
       th,
       td {
         border-bottom: 1px solid var(--line);
-        padding: 0.65rem 0.35rem;
+        padding: 0.6rem 0.3rem;
         text-align: left;
         vertical-align: top;
       }
       th {
-        font-size: 0.62rem;
-        letter-spacing: 0.18em;
+        font-size: 0.6rem;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
         color: var(--dim);
         font-weight: 400;
@@ -131,32 +187,62 @@
         text-align: right;
         white-space: nowrap;
       }
-      .bench {
-        margin-top: 1.5rem;
-        display: grid;
-        gap: 0.65rem;
+      .muted {
+        color: var(--dim);
       }
-      .bench article {
+      .queue {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.45rem;
+      }
+      .queue li {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 2.2rem 1fr auto;
+        gap: 0.65rem;
+        align-items: start;
+        padding: 0.7rem 0.75rem;
         border: 1px solid var(--line);
         background: #fff;
-        padding: 0.9rem;
-        font-size: 0.78rem;
+        font-size: 0.72rem;
+        line-height: 1.45;
+      }
+      .queue .rank {
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        color: var(--dim);
+      }
+      .queue .why {
+        color: var(--dim);
+        margin-top: 0.2rem;
+      }
+      .days {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.55rem;
+      }
+      .days article {
+        border-left: 2px solid var(--ink);
+        padding: 0.35rem 0 0.35rem 0.85rem;
+        font-size: 0.75rem;
         line-height: 1.55;
       }
-      .bench b {
+      .days b {
         display: block;
-        margin-bottom: 0.35rem;
-        font-size: 0.95rem;
+        margin-bottom: 0.2rem;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
       }
       .note {
-        margin-top: 1rem;
+        margin-top: 0.85rem;
         font-size: 0.68rem;
         color: var(--dim);
         line-height: 1.6;
       }
       .cta {
         display: block;
-        margin-top: 1.5rem;
+        margin-top: 2rem;
         width: 100%;
         border: 0;
         background: var(--ink);
@@ -169,14 +255,14 @@
         text-align: left;
       }
       .foot {
-        margin-top: 1.5rem;
+        margin-top: 1.25rem;
         font-size: 0.68rem;
         color: var(--dim);
         line-height: 1.6;
       }
       @media (max-width: 560px) {
         .wrap {
-          padding: 1.25rem 1rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
+          padding: 1.25rem 1rem calc(2.75rem + env(safe-area-inset-bottom, 0px));
         }
         .cta {
           min-height: 52px;
@@ -194,21 +280,19 @@
   </head>
   <body>
     <main class="wrap">
-      <p class="label">Ressource démo · diagnostic chiffré</p>
-      <h1>Ce que ton pipe jette déjà</h1>
+      <p class="label">Dossier démo · audit de fuite</p>
+      <h1>Pas le calculateur du site. Le dessous.</h1>
       <p class="lead">
-        Même volume de leads. Zéro euro de pub en plus. Tu vois la différence
-        entre « on répond quand on peut » et un tunnel qui tient la chaleur.
-        Ensuite envoie <b>OK</b> sur WhatsApp.
+        Sur le site tu as vu le delta global. Ici on découpe
+        <b>où</b> ça saigne, <b>à quelle heure</b> la valeur meurt, et
+        <b>quelle file FUP</b> tu aurais déjà cette semaine si le radar tournait.
       </p>
 
-      <div class="hero-num">
-        <p class="label">Fuite estimée (modèle conservateur)</p>
-        <p class="big" id="delta">+ 0 € / mois</p>
-        <p class="sub" id="delta-year">soit + 0 € / an sur le même trafic</p>
+      <div class="meta" id="meta">
+        <div>Dossier généré depuis ton opt-in · hypothèses ajustables ci-dessous</div>
       </div>
 
-      <div class="grid" id="controls">
+      <div class="controls" aria-label="Hypothèses">
         <div class="field">
           <label
             ><span>Leads / mois</span><span class="val" id="leads-val">80</span></label
@@ -231,112 +315,160 @@
         </div>
         <div class="field">
           <label
-            ><span>Traités à chaud (&lt; 5 min)</span
+            ><span>% traités &lt; 5 min</span
             ><span class="val" id="fast-val">25 %</span></label
           >
-          <input id="fast" type="range" min="5" max="80" step="1" value="25" />
+          <input id="fast" type="range" min="5" max="70" step="1" value="25" />
         </div>
         <div class="field">
           <label
-            ><span>Close à chaud</span
-            ><span class="val" id="close-hot-val">22 %</span></label
+            ><span>Close chaud / froid</span
+            ><span class="val" id="close-val">22 % / 6 %</span></label
           >
-          <input
-            id="close-hot"
-            type="range"
-            min="8"
-            max="45"
-            step="1"
-            value="22"
-          />
-        </div>
-        <div class="field">
-          <label
-            ><span>Close à froid (le reste)</span
-            ><span class="val" id="close-cool-val">6 %</span></label
-          >
-          <input
-            id="close-cool"
-            type="range"
-            min="1"
-            max="18"
-            step="1"
-            value="6"
-          />
+          <input id="close-hot" type="range" min="10" max="40" step="1" value="22" />
+          <input id="close-cool" type="range" min="1" max="16" step="1" value="6" />
         </div>
       </div>
 
+      <div class="hero">
+        <p class="label">Masse critique (somme des modes de panne)</p>
+        <p class="big" id="total-leak">0 € / mois</p>
+        <p class="sub" id="total-year">
+          Ce n’est pas « plus de pubs ». C’est le CA déjà acheté qui refroidit.
+        </p>
+      </div>
+
+      <h2>01 · Modes de panne (en €)</h2>
+      <p class="lead" style="margin-top: 0.75rem">
+        On attribue la fuite à 5 causes. Les % sont des poids métier (audit
+        type agence 30–50k), recalés sur <b>ton</b> volume.
+      </p>
+      <div class="stack" id="modes"></div>
+      <p class="note">
+        Lecture : si tu ne corriges qu’une case, prends celle avec le plus gros €.
+        Chez la plupart des patrons d’agence, ce n’est pas le close : c’est le
+        délai + l’absence de file FUP.
+      </p>
+
+      <h2>02 · Courbe de chaleur (valeur d’un lead)</h2>
+      <p class="lead" style="margin-top: 0.75rem">
+        Même lead, même panier. Seule la fenêtre de réponse change le close
+        attendu. C’est la raison pour laquelle « je rappelle demain » tue le
+        pipe.
+      </p>
       <table>
         <thead>
           <tr>
-            <th></th>
-            <th class="num">Aujourd’hui</th>
-            <th class="num">Avec système*</th>
+            <th>Moment</th>
+            <th class="num">Close attendu</th>
+            <th class="num">EV / lead</th>
+            <th class="num">Perte vs T0</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Leads</td>
-            <td class="num" id="row-leads-now">—</td>
-            <td class="num" id="row-leads-sys">—</td>
-          </tr>
-          <tr>
-            <td>Traités à chaud</td>
-            <td class="num" id="row-fast-now">—</td>
-            <td class="num" id="row-fast-sys">—</td>
-          </tr>
-          <tr>
-            <td>Clients / mois</td>
-            <td class="num" id="row-clients-now">—</td>
-            <td class="num" id="row-clients-sys">—</td>
-          </tr>
-          <tr>
-            <td>CA / mois</td>
-            <td class="num" id="row-ca-now">—</td>
-            <td class="num" id="row-ca-sys">—</td>
-          </tr>
-        </tbody>
+        <tbody id="heat-body"></tbody>
       </table>
+      <p class="note" id="heat-note"></p>
+
+      <h2>03 · File FUP de ta semaine (simulation)</h2>
+      <p class="lead" style="margin-top: 0.75rem">
+        Si le radar tournait déjà : voici les dossiers que ton commercial
+        devrait toucher en premier. Ordre = score (chaleur × panier × risque de
+        mort).
+      </p>
+      <ol class="queue" id="queue"></ol>
       <p class="note">
-        * Close système plafonné (conservateur) : jamais au-dessus de ton close à
-        chaud, jamais sous ton mix actuel × 1,05. Hypothèse : le système remet
-        presque tout le volume dans la fenêtre chaude.
+        Noms fictifs, volumes calés sur ton rythme. En prod, chaque ligne = un
+        vrai lead, un stage, un next FUP, une alerte téléphone.
       </p>
 
-      <section class="bench" aria-label="Repères agence">
-        <p class="label">Repères agences 30–50k € / mois</p>
-        <article>
-          <b>~6 000 € / mois</b>
-          Ordre de grandeur type sur le modèle (à recalibrer en audit). Pas un
-          miracle ads : du volume déjà payé qui refroidit.
-        </article>
-        <article>
-          <b>Close froid = 20–40 % du close chaud</b>
-          Dès que le lead sort de la fenêtre &lt; 5 min, tu paies le même CPL pour
-          un close qui s’effondre.
-        </article>
-        <article>
-          <b>Le goulot, c’est le suivi</b>
-          Scoring, push WhatsApp, alerte commercial, FUP. Pas « plus de pubs ».
-        </article>
-      </section>
+      <h2>04 · Ordre d’attaque (ROI effort)</h2>
+      <div class="stack" id="priority"></div>
 
-      <p class="note" id="declared" hidden></p>
+      <h2>05 · Ce qu’on monte en 7 jours</h2>
+      <div class="days">
+        <article>
+          <b>J1–J2</b>
+          Cartographie de tes sources + règles de scoring A/B/C. Opt-in unique,
+          plus de leads « orphelins ».
+        </article>
+        <article>
+          <b>J3–J4</b>
+          Tunnel : push WhatsApp (1 groupe / lead dès que l’API le permet),
+          séquence mail stop-on-join, template d’accueil.
+        </article>
+        <article>
+          <b>J5</b>
+          Alertes commercial + dashboard pipeline / FUP (celui que tu as vu en
+          ops).
+        </article>
+        <article>
+          <b>J6–J7</b>
+          Recalage des délais, test live, bascule. Le CA récupéré commence sur
+          le stock déjà chaud, pas sur de nouvelles ads.
+        </article>
+      </div>
 
-      <a class="cta" id="wa" href="https://wa.me/33674247494?text=OK"
-        >Envoyer OK sur WhatsApp →</a
+      <a class="cta" href="https://wa.me/33674247494?text=OK"
+        >OK · on décortique mon dossier en live →</a
       >
-
       <p class="foot">
-        C’est exactement ce que le tunnel Horizon attaque : opt-in scoré → push
-        WhatsApp → ressource → alerte → relances jusqu’au join. Zéro lead mort.
+        Le calculateur public reste sur horizon-agency.co. Ce dossier est la
+        couche audit : causes, timing, file, ordre d’attaque.
       </p>
     </main>
 
     <script>
-      const SYSTEM_CLOSE_RATIO = 0.75;
-      const COOL_VS_HOT_MAX = 0.4;
-      const MIN_UPLIFT_VS_BLEND = 1.05;
+      const MODE_WEIGHTS = [
+        {
+          id: "delay",
+          title: "Réponse hors fenêtre chaude",
+          weight: 0.34,
+          copy: "Lead traité après 5–60 min (ou jamais). Close qui s’effondre, CPL inchangé.",
+        },
+        {
+          id: "fup",
+          title: "Pas de file FUP J+1 / J+3",
+          weight: 0.22,
+          copy: "Un message. Puis silence. Le lead meurt sans dramaturgie ni owner.",
+        },
+        {
+          id: "score",
+          title: "Pas de scoring A / B / C",
+          weight: 0.16,
+          copy: "Les gros dossiers attendent derrière le bruit. Le commercial tire au hasard.",
+        },
+        {
+          id: "wa",
+          title: "WhatsApp perso = goulot",
+          weight: 0.16,
+          copy: "Réunion, week-end, oubli = pipe mort. Pas de groupe / alerte / backup.",
+        },
+        {
+          id: "alert",
+          title: "Zéro alerte commercial",
+          weight: 0.12,
+          copy: "Le lead entre. Personne n’est ping. Tu le découvres à 23h.",
+        },
+      ];
+
+      const HEAT = [
+        { label: "T+0 (immédiat)", close: 1.0 },
+        { label: "T+5 min", close: 0.92 },
+        { label: "T+1 h", close: 0.7 },
+        { label: "T+24 h", close: 0.38 },
+        { label: "T+72 h", close: 0.18 },
+      ];
+
+      const NAMES = [
+        ["Léa", "M.", "A", "Ads Meta · form audit"],
+        ["Karim", "B.", "A", "Referral · devis site"],
+        ["Sophie", "R.", "B", "SEO · pack mensuel"],
+        ["Julien", "T.", "B", "LinkedIn · branding"],
+        ["Nina", "C.", "A", "Ads · landing ops"],
+        ["Hugo", "D.", "C", "Site · contact générique"],
+        ["Clara", "V.", "B", "Webinar · replay"],
+        ["Amine", "K.", "A", "Ads · lead magnet"],
+      ];
 
       const params = new URLSearchParams(window.location.search);
       const leadsWeek = Number(params.get("leads") || params.get("lw") || "");
@@ -347,34 +479,18 @@
       const fastEl = document.getElementById("fast");
       const closeHotEl = document.getElementById("close-hot");
       const closeCoolEl = document.getElementById("close-cool");
-      const declared = document.getElementById("declared");
 
       if (Number.isFinite(leadsWeek) && leadsWeek > 0) {
-        const lm = Math.min(400, Math.max(20, Math.round(leadsWeek * 4)));
-        leadsEl.value = String(lm);
+        leadsEl.value = String(
+          Math.min(400, Math.max(20, Math.round(leadsWeek * 4)))
+        );
       }
-
       if (Number.isFinite(caMonth) && caMonth > 0) {
         const leadsM = Number(leadsEl.value);
-        const assumedBlend = 0.12;
-        const clients = Math.max(1, leadsM * assumedBlend);
+        const clients = Math.max(1, leadsM * 0.12);
         let basket = Math.round(caMonth / clients / 100) * 100;
         basket = Math.min(15000, Math.max(800, basket));
         basketEl.value = String(basket);
-        declared.hidden = false;
-        declared.textContent =
-          "Prérempli depuis ton opt-in : " +
-          (Number.isFinite(leadsWeek) && leadsWeek > 0
-            ? leadsWeek + " leads / sem → "
-            : "") +
-          leadsEl.value +
-          " / mois · CA déclaré " +
-          new Intl.NumberFormat("fr-FR", {
-            style: "currency",
-            currency: "EUR",
-            maximumFractionDigits: 0,
-          }).format(caMonth) +
-          " (panier estimé, tu peux le bouger).";
       }
 
       const fmtEuro = (n) =>
@@ -383,33 +499,24 @@
           currency: "EUR",
           maximumFractionDigits: 0,
         }).format(Math.round(n));
-
       const fmtNum = (n, d = 0) =>
         new Intl.NumberFormat("fr-FR", {
           maximumFractionDigits: d,
           minimumFractionDigits: d,
         }).format(n);
+      const fmtPct = (n) => fmtNum(n * 100, Math.abs(n * 100 - Math.round(n * 100)) < 0.05 ? 0 : 1) + " %";
 
-      const fmtPct = (n) => {
-        const p = n * 100;
-        const digits = Math.abs(p - Math.round(p)) < 0.05 ? 0 : 1;
-        return fmtNum(p, digits) + " %";
-      };
-
-      const syncCool = () => {
-        const hot = Number(closeHotEl.value);
-        const maxCool = Math.max(1, Math.floor(hot * COOL_VS_HOT_MAX));
-        closeCoolEl.max = String(maxCool);
-        if (Number(closeCoolEl.value) > maxCool) closeCoolEl.value = String(maxCool);
-      };
-
-      const render = () => {
-        syncCool();
+      function model() {
         const leads = Number(leadsEl.value);
         const basket = Number(basketEl.value);
         const fastPct = Number(fastEl.value) / 100;
-        const closeHot = Number(closeHotEl.value) / 100;
-        const closeCool = Number(closeCoolEl.value) / 100;
+        let closeHot = Number(closeHotEl.value) / 100;
+        let closeCool = Number(closeCoolEl.value) / 100;
+        const maxCool = Math.max(0.01, closeHot * 0.4);
+        if (closeCool > maxCool) {
+          closeCool = maxCool;
+          closeCoolEl.value = String(Math.round(maxCool * 100));
+        }
 
         const fastNow = Math.round(leads * fastPct);
         const lateNow = leads - fastNow;
@@ -417,38 +524,178 @@
         const blended = leads > 0 ? clientsNow / leads : 0;
         const closeSys = Math.min(
           closeHot,
-          Math.max(closeHot * SYSTEM_CLOSE_RATIO, blended * MIN_UPLIFT_VS_BLEND)
+          Math.max(closeHot * 0.75, blended * 1.05)
         );
         const clientsSys = leads * closeSys;
         const caNow = clientsNow * basket;
         const caSys = clientsSys * basket;
-        const delta = Math.max(0, caSys - caNow);
+        const leak = Math.max(0, caSys - caNow);
+        const evHot = basket * closeHot;
 
-        document.getElementById("leads-val").textContent = String(leads);
-        document.getElementById("basket-val").textContent = fmtEuro(basket);
-        document.getElementById("fast-val").textContent = fmtPct(fastPct);
-        document.getElementById("close-hot-val").textContent = fmtPct(closeHot);
-        document.getElementById("close-cool-val").textContent = fmtPct(closeCool);
+        return {
+          leads,
+          basket,
+          fastPct,
+          closeHot,
+          closeCool,
+          leak,
+          evHot,
+          leadsWeek: leads / 4,
+        };
+      }
 
-        document.getElementById("row-leads-now").textContent = String(leads);
-        document.getElementById("row-leads-sys").textContent = String(leads);
-        document.getElementById("row-fast-now").textContent = String(fastNow);
-        document.getElementById("row-fast-sys").textContent = String(leads);
-        document.getElementById("row-clients-now").textContent = fmtNum(
-          clientsNow,
-          1
+      function render() {
+        const m = model();
+        document.getElementById("leads-val").textContent = String(m.leads);
+        document.getElementById("basket-val").textContent = fmtEuro(m.basket);
+        document.getElementById("fast-val").textContent = fmtPct(m.fastPct);
+        document.getElementById("close-val").textContent =
+          fmtPct(m.closeHot) + " / " + fmtPct(m.closeCool);
+
+        const meta = document.getElementById("meta");
+        meta.innerHTML =
+          "<div><b>Volume</b> · " +
+          m.leads +
+          " leads / mois (" +
+          fmtNum(m.leadsWeek, 1) +
+          " / sem)</div>" +
+          "<div><b>Panier retenu</b> · " +
+          fmtEuro(m.basket) +
+          (Number.isFinite(caMonth) && caMonth > 0
+            ? " · CA déclaré " + fmtEuro(caMonth)
+            : "") +
+          "</div>" +
+          "<div><b>EV lead à chaud</b> · " +
+          fmtEuro(m.evHot) +
+          " (panier × close chaud)</div>";
+
+        document.getElementById("total-leak").textContent =
+          fmtEuro(m.leak) + " / mois";
+        document.getElementById("total-year").textContent =
+          "≈ " +
+          fmtEuro(m.leak * 12) +
+          " / an · somme des 5 modes ci-dessous (modèle conservateur).";
+
+        const modesEl = document.getElementById("modes");
+        const maxW = Math.max(...MODE_WEIGHTS.map((x) => x.weight));
+        modesEl.innerHTML = MODE_WEIGHTS.map((mode) => {
+          const euro = m.leak * mode.weight;
+          const pct = maxW > 0 ? (mode.weight / maxW) * 100 : 0;
+          return (
+            '<article class="card"><header><h3>' +
+            mode.title +
+            '</h3><span class="euro">' +
+            fmtEuro(euro) +
+            " / mois</span></header><p>" +
+            mode.copy +
+            '</p><div class="bar" aria-hidden="true"><i style="width:' +
+            pct +
+            '%"></i></div></article>'
+          );
+        }).join("");
+
+        const heatBody = document.getElementById("heat-body");
+        const baseClose = m.closeHot;
+        const ev0 = m.basket * baseClose;
+        heatBody.innerHTML = HEAT.map((h) => {
+          const close = baseClose * h.close;
+          const ev = m.basket * close;
+          const loss = Math.max(0, ev0 - ev);
+          return (
+            "<tr><td>" +
+            h.label +
+            '</td><td class="num">' +
+            fmtPct(close) +
+            '</td><td class="num">' +
+            fmtEuro(ev) +
+            '</td><td class="num muted">' +
+            (loss > 0 ? "− " + fmtEuro(loss) : "—") +
+            "</td></tr>"
+          );
+        }).join("");
+        document.getElementById("heat-note").textContent =
+          "Sur " +
+          m.leads +
+          " leads / mois, si 40 % glissent de T0 vers T+24h, tu brûles ≈ " +
+          fmtEuro(m.leads * 0.4 * (ev0 - m.basket * baseClose * 0.38)) +
+          " / mois rien que sur le délai.";
+
+        const week = Math.max(4, Math.round(m.leadsWeek));
+        const queue = document.getElementById("queue");
+        const items = [];
+        for (let i = 0; i < Math.min(8, week); i++) {
+          const [prenom, nom, grade, src] = NAMES[i % NAMES.length];
+          const ageH =
+            grade === "A" ? 2 + i : grade === "B" ? 18 + i * 3 : 40 + i * 5;
+          const risk =
+            ageH < 6 ? "encore chaud" : ageH < 30 ? "refroidit" : "presque mort";
+          const score =
+            (grade === "A" ? 90 : grade === "B" ? 65 : 40) - ageH * 0.8;
+          items.push({
+            prenom,
+            nom,
+            grade,
+            src,
+            ageH,
+            risk,
+            score,
+            ev: m.evHot * (grade === "A" ? 1 : grade === "B" ? 0.7 : 0.4),
+          });
+        }
+        items.sort((a, b) => b.score - a.score);
+        queue.innerHTML = items
+          .map((it, idx) => {
+            return (
+              "<li><span class=\"rank\">#" +
+              String(idx + 1).padStart(2, "0") +
+              "</span><div><b>" +
+              it.prenom +
+              " " +
+              it.nom +
+              "</b> · " +
+              it.grade +
+              "<div class=\"why\">" +
+              it.src +
+              " · " +
+              it.ageH +
+              " h · " +
+              it.risk +
+              "</div></div><span>" +
+              fmtEuro(it.ev) +
+              "</span></li>"
+            );
+          })
+          .join("");
+
+        const sortedModes = [...MODE_WEIGHTS].sort(
+          (a, b) => b.weight - a.weight
         );
-        document.getElementById("row-clients-sys").textContent = fmtNum(
-          clientsSys,
-          1
-        );
-        document.getElementById("row-ca-now").textContent = fmtEuro(caNow);
-        document.getElementById("row-ca-sys").textContent = fmtEuro(caSys);
-        document.getElementById("delta").textContent =
-          "+ " + fmtEuro(delta) + " / mois";
-        document.getElementById("delta-year").textContent =
-          "soit + " + fmtEuro(delta * 12) + " / an sur le même trafic";
-      };
+        const effort = {
+          delay: "Installer push WA + alerte &lt; 5 min",
+          fup: "Activer file FUP + stages CRM",
+          score: "Règles A/B/C sur l’opt-in",
+          wa: "Groupes API / numéro WABA dédié",
+          alert: "Ping téléphone commercial",
+        };
+        document.getElementById("priority").innerHTML = sortedModes
+          .map((mode, i) => {
+            const euro = m.leak * mode.weight;
+            return (
+              '<article class="card"><header><h3>' +
+              String(i + 1).padStart(2, "0") +
+              " · " +
+              mode.title +
+              '</h3><span class="euro">' +
+              fmtEuro(euro) +
+              "</span></header><p>" +
+              effort[mode.id] +
+              " · impact estimé " +
+              fmtPct(mode.weight) +
+              " de ta fuite mensuelle.</p></article>"
+            );
+          })
+          .join("");
+      }
 
       [leadsEl, basketEl, fastEl, closeHotEl, closeCoolEl].forEach((el) =>
         el.addEventListener("input", render)

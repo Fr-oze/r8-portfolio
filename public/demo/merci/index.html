@@ -140,8 +140,9 @@
       <p class="label">Horizon Agency · Démo</p>
       <h1 id="title">Étape 1 : WhatsApp</h1>
       <p class="lead" id="lead">
-        Tu ouvres WhatsApp, tu récupères ton <b>diagnostic de fuite</b> (CA perdu /
-        mois sur tes volumes), puis tu envoies <b>OK</b> pour le live avec Max.
+        Tu ouvres WhatsApp, tu récupères ton <b>dossier d’audit</b> (où ça saigne
+        en €, à quelle heure, quelle file FUP), puis tu envoies <b>OK</b> pour le
+        live avec Max.
       </p>
 
       <a class="cta" id="cta-join" href="#">Ouvrir WhatsApp →</a>
@@ -152,14 +153,14 @@
       <div class="banner" id="done" hidden>
         C’est noté. Les mails s’arrêtent.
         <br />
-        <a id="resource-link" href="/demo/ressource/">Étape 2 : ouvre ton diagnostic →</a>
+        <a id="resource-link" href="/demo/ressource/">Étape 2 : ouvre ton dossier →</a>
         <br />
         Étape 3 : envoie <b>OK</b> sur WhatsApp pour le live.
       </div>
 
       <div class="steps">
         <div><b>01</b> · WhatsApp (groupe dédié ou 1:1)</div>
-        <div><b>02</b> · Diagnostic de fuite chiffré</div>
+        <div><b>02</b> · Dossier d’audit de fuite</div>
         <div><b>03</b> · OK → conversation live avec Max</div>
         <div><b>04</b> · Les 7 mails s’arrêtent dès que tu confirmes ici</div>
       </div>
@@ -177,7 +178,7 @@
       const invite =
         params.get("invite") ||
         "https://wa.me/33674247494?text=" +
-          encodeURIComponent("OK je veux mon diagnostic de fuite");
+          encodeURIComponent("OK je veux mon dossier d’audit");
       const mode = params.get("mode") || "dm";
       const alreadyJoined = params.get("joined") === "1";
 
@@ -193,13 +194,13 @@
         title.textContent = "Étape 1 : rejoins ton groupe WhatsApp";
         cta.textContent = "Rejoindre le groupe →";
         lead.innerHTML =
-          "1 lead = 1 groupe. Dedans : ton diagnostic de fuite chiffré, puis tu envoies <b>OK</b> pour le live avec Max.";
+          "1 lead = 1 groupe. Dedans : ton dossier d’audit de fuite, puis tu envoies <b>OK</b> pour le live avec Max.";
         btnJoined.textContent = "J’ai rejoint le groupe → stop mails";
       } else {
         title.textContent = "Étape 1 : ouvre WhatsApp";
         cta.textContent = "Ouvrir WhatsApp →";
         lead.innerHTML =
-          "Tu envoies le message prérempli. Tu reçois ton diagnostic de fuite. Puis tu envoies <b>OK</b> : Max te guide en live.";
+          "Tu envoies le message prérempli. Tu reçois ton dossier d’audit. Puis tu envoies <b>OK</b> : Max te guide en live.";
       }
 
       const showDone = (resourceUrl) => {
