@@ -2332,7 +2332,7 @@ body.past-hero .ui__nav {
 @media (min-width: 721px) {
   .ui__nav {
     height: 64px;
-    padding: 0 32px;
+    padding: 0 40px;
     font-size: 12px;
   }
   .ui__brand-full {
