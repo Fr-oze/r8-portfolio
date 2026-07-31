@@ -58,13 +58,8 @@ document.getElementById("about-projects")?.addEventListener("click", () => {
   about.hide();
   projects.show();
 });
-// Bouton ABOUT dédié au mobile (les liens nav y sont masqués).
-document.getElementById("about-mobile")?.addEventListener("click", () => about.show());
-
 // Panneau Contact : canal de transmission (email + téléphone).
 const contact = new Contact();
-// Bouton CONTACT dédié au mobile (les liens nav y sont masqués).
-document.getElementById("contact-mobile")?.addEventListener("click", () => contact.show());
 
 // Liens de nav câblés par id (plus robuste qu'un matching sur le texte).
 const navLink = (id: string, fn: () => void) =>
@@ -287,8 +282,6 @@ sceneEl.addEventListener("pointerdown", (e) => {
   } catch {
     /* ignore */
   }
-  const hint = document.getElementById("hero-mobile-hint");
-  if (hint) hint.style.opacity = "0";
 });
 
 window.addEventListener("pointerup", (e) => {
