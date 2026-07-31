@@ -411,8 +411,8 @@
 
       <h2>2. Ce que vaut un lead selon le délai de réponse</h2>
       <p class="lead" style="margin-top: 0.75rem">
-        Même lead. Même panier. Seul le délai change. « Je rappelle demain »
-        baisse directement l’argent que tu peux en tirer.
+        Même lead acheté. Même panier. Seul le délai change. Tu as payé pour un
+        intérêt chaud : chaque heure sans réponse le déchauffe.
       </p>
       <table>
         <thead>
@@ -429,13 +429,13 @@
 
       <h2>3. Qui tu aurais dû rappeler en premier cette semaine</h2>
       <p class="lead" style="margin-top: 0.75rem">
-        Simulation : si tu avais déjà une liste « à relancer », voici l’ordre.
-        Les noms sont fictifs. Les volumes suivent ton rythme de leads.
+        Simulation : une liste « à relancer », classée par urgence (leads pub
+        récents d’abord). Les noms sont fictifs. Les volumes suivent ton rythme.
       </p>
       <ol class="queue" id="queue"></ol>
       <p class="note">
-        Grade A = gros dossier prioritaire. B = correct. C = bruit / petit
-        ticket. « h » = heures depuis le premier contact.
+        Pas de notes magiques dans WhatsApp. L’ordre vient du délai depuis le
+        clic pub et de la source. « h » = heures depuis le premier contact.
       </p>
 
       <h2>4. Par quoi commencer (dans l’ordre)</h2>
@@ -445,22 +445,25 @@
       <div class="days">
         <article>
           <b>Jours 1 et 2</b>
-          On regarde d’où viennent tes leads et on met des notes A / B / C pour
-          que le commercial ne tire plus au hasard.
+          On mappe tes sources de leads et on fixe une règle simple : qui
+          répond, en combien de temps, et où ça doit atterrir (plus le téléphone
+          perso comme seul filet).
         </article>
         <article>
           <b>Jours 3 et 4</b>
-          Opt-in → message WhatsApp automatique → mails de relance jusqu’à ce
-          que la personne confirme. (Idéalement 1 groupe WhatsApp par lead.)
+          Après le clic : message WhatsApp automatique + mails de relance
+          jusqu’à confirmation. Idéalement 1 conversation / groupe dédié par
+          lead, pour que rien ne se noie dans ton fil perso.
         </article>
         <article>
           <b>Jour 5</b>
-          Alerte téléphone pour le commercial + tableau des leads à relancer.
+          Alerte téléphone dès qu’un lead confirme + tableau des gens à
+          relancer (avec une date de prochain contact).
         </article>
         <article>
           <b>Jours 6 et 7</b>
           Tests, réglages des délais, mise en route. On récupère d’abord sur les
-          leads que tu as déjà, pas en achetant plus de pub.
+          leads que tu as déjà payés, pas en achetant plus de pub.
         </article>
       </div>
 
@@ -478,32 +481,32 @@
         {
           id: "delay",
           title: "Tu réponds trop tard",
-          weight: 0.34,
-          copy: "Le lead a demandé un devis. Personne ne répond dans les 5 minutes. Il passe chez un concurrent. Tu as déjà payé la pub.",
+          weight: 0.36,
+          copy: "Tu as acheté le lead (pub). La personne a montré un intérêt pour ton offre. Si personne ne répond en moins de 5 minutes, elle refroidit. La pub est payée pour rien.",
         },
         {
           id: "fup",
           title: "Personne ne relance à J+1 / J+3",
-          weight: 0.22,
-          copy: "Un premier message, puis plus rien. Le lead n’est pas perdu parce qu’il a dit non : il est perdu parce que personne n’a suivi.",
-        },
-        {
-          id: "score",
-          title: "Tous les leads sont traités pareil",
-          weight: 0.16,
-          copy: "Le gros dossier attend derrière 10 petits messages. Sans note A/B/C, le commercial ne sait pas qui appeler en premier.",
+          weight: 0.24,
+          copy: "Un premier message, puis plus rien. Le lead n’est pas perdu parce qu’il a dit non : il est perdu parce que personne n’a suivi pendant qu’il était encore chaud.",
         },
         {
           id: "wa",
-          title: "Tout passe par ton WhatsApp perso",
-          weight: 0.16,
-          copy: "Réunion, week-end, oubli : le pipe s’arrête. Pas de numéro dédié, pas d’alerte, pas de backup.",
+          title: "Tout atterrit sur ton WhatsApp perso",
+          weight: 0.22,
+          copy: "Le lead payé arrive pendant que tu es en réunion, en rdv, ou le week-end. Sur ton téléphone perso : pas de premier message auto, pas de backup. Quand tu relis le fil le soir, l’intérêt est déjà mort et le coût pub est à zéro.",
+        },
+        {
+          id: "mix",
+          title: "Tous les leads se noient dans le même fil",
+          weight: 0.1,
+          copy: "Une conversation WhatsApp, c’est une conversation. On ne « note » pas magiquement dedans. Le vrai problème : pub fraîche, vieux dossiers, orga, tout mélangé. Sans liste « à relancer » avec une date, tu traites au feeling.",
         },
         {
           id: "alert",
-          title: "Le commercial n’est pas prévenu",
-          weight: 0.12,
-          copy: "Le lead arrive dans un formulaire. Personne ne reçoit de ping. Tu le vois le soir, trop tard.",
+          title: "Personne n’est ping au bon moment",
+          weight: 0.08,
+          copy: "Le lead confirme qu’il est chaud. Personne ne reçoit d’alerte. Tu le vois trop tard, quand il a déjà scrollé autre chose.",
         },
       ];
 
@@ -516,14 +519,14 @@
       ];
 
       const NAMES = [
-        ["Léa", "M.", "A", "Pub Meta · formulaire"],
-        ["Karim", "B.", "A", "Reco client · devis site"],
-        ["Sophie", "R.", "B", "SEO · pack mensuel"],
-        ["Julien", "T.", "B", "LinkedIn · branding"],
-        ["Nina", "C.", "A", "Pub · landing"],
-        ["Hugo", "D.", "C", "Site · contact général"],
-        ["Clara", "V.", "B", "Webinar · replay"],
-        ["Amine", "K.", "A", "Pub · lead magnet"],
+        ["Léa", "M.", "Pub Meta · formulaire", 3],
+        ["Karim", "B.", "Pub Meta · formulaire", 5],
+        ["Sophie", "R.", "Pub · landing", 14],
+        ["Julien", "T.", "Site · formulaire", 22],
+        ["Nina", "C.", "Pub · lead magnet", 8],
+        ["Hugo", "D.", "Site · contact", 36],
+        ["Clara", "V.", "Pub Meta · formulaire", 11],
+        ["Amine", "K.", "Pub · landing", 28],
       ];
 
       const params = new URLSearchParams(window.location.search);
@@ -686,26 +689,25 @@
         const queue = document.getElementById("queue");
         const items = [];
         for (let i = 0; i < Math.min(8, week); i++) {
-          const [prenom, nom, grade, src] = NAMES[i % NAMES.length];
-          const ageH =
-            grade === "A" ? 2 + i : grade === "B" ? 18 + i * 3 : 40 + i * 5;
+          const [prenom, nom, src, baseAge] = NAMES[i % NAMES.length];
+          const ageH = baseAge + i;
           const risk =
             ageH < 6
-              ? "encore intéressé"
-              : ageH < 30
+              ? "encore chaud (intérêt fraîchement payé)"
+              : ageH < 24
                 ? "en train de refroidir"
-                : "presque perdu";
-          const score =
-            (grade === "A" ? 90 : grade === "B" ? 65 : 40) - ageH * 0.8;
+                : "presque perdu (pub déjà jetée)";
+          const isAds = /Pub/i.test(src);
+          const score = (isAds ? 80 : 50) - ageH * 1.2;
+          const heat = ageH < 6 ? 1 : ageH < 24 ? 0.7 : 0.4;
           items.push({
             prenom,
             nom,
-            grade,
             src,
             ageH,
             risk,
             score,
-            ev: m.evHot * (grade === "A" ? 1 : grade === "B" ? 0.7 : 0.4),
+            ev: m.evHot * heat,
           });
         }
         items.sort((a, b) => b.score - a.score);
@@ -718,9 +720,7 @@
               it.prenom +
               " " +
               it.nom +
-              "</b> · priorité " +
-              it.grade +
-              "<div class=\"why\">" +
+              "</b><div class=\"why\">" +
               it.src +
               " · contact il y a " +
               it.ageH +
@@ -738,13 +738,12 @@
         );
         const effort = {
           delay:
-            "Action : message WhatsApp auto + alerte au commercial en moins de 5 min.",
-          fup: "Action : liste des gens à rappeler à J+1 et J+3, avec responsable nommé.",
-          score:
-            "Action : noter chaque lead A, B ou C dès l’arrivée du formulaire.",
-          wa: "Action : numéro WhatsApp pro dédié (plus le téléphone perso comme seul canal).",
+            "Action : dès le clic pub, premier message WhatsApp automatique en moins de 5 min (même si tu es en rdv).",
+          fup: "Action : liste des gens à rappeler à J+1 et J+3, avec une date et un responsable.",
+          wa: "Action : numéro WhatsApp pro dédié + premier push auto. Ton téléphone perso n’est plus le seul endroit où le lead payé peut mourir.",
+          mix: "Action : une file « à relancer » à côté de WhatsApp (date du prochain contact). On ne note pas la conv : on range l’urgence.",
           alert:
-            "Action : notification téléphone dès qu’un lead A arrive.",
+            "Action : notification téléphone dès qu’un lead confirme / répond, pas quand tu ouvres WhatsApp le soir.",
         };
         document.getElementById("priority").innerHTML = sortedModes
           .map((mode, i) => {
